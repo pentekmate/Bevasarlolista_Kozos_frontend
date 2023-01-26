@@ -44,6 +44,7 @@ function Elso_lap({ navigation }) {
 
   );
 }
+//Szia
 function Toltes({ navigation }) {
   return (
     <Toltokep navigation={navigation}></Toltokep>
