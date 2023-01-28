@@ -36,8 +36,6 @@ export default class Fooldal extends Component {
 
     }
 
-
-
     render() {
         return (
             <View style={styles.container}>

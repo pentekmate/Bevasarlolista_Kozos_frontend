@@ -16,8 +16,9 @@ import Regisztracio from './Regisztracio';
 import Profil from './Profilom';
 import Toltokep from './Tolto'
 import Fooldal from './Home';
-
-
+import Seged from './Seged';
+import Felvitel from './Felvitel';
+import Szerkeszt from './Szerkeszt'
 
 function HomeScreen({ navigation }) {
 
@@ -26,9 +27,24 @@ function HomeScreen({ navigation }) {
   );
 }
 
+function SzerkesztScreen({ navigation }) {
 
+  return (
+    <Szerkeszt navigation={navigation}></Szerkeszt>
+  );
+}
 
+function Listafel({ navigation }) {
+  return (
+    <Felvitel navigation={navigation}></Felvitel>
+  );
+}
 
+function Segedkep({ navigation }) {
+  return (
+    <Seged navigation={navigation}></Seged>
+  );
+}
 
 function NotificationsScreen({ navigation }) {
   return (
@@ -41,7 +57,6 @@ function NotificationsScreen({ navigation }) {
 function Elso_lap({ navigation }) {
   return (
     <Listaad navigation={navigation}></Listaad>
-
   );
 }
 //Szia
@@ -92,7 +107,8 @@ function Root({ navigation }) {
         drawerItemStyle: { height: 0 }, headerShown: false,
       }} />
 
-      <Drawer.Screen name="Notifications" component={NotificationsScreen} />
+      <Drawer.Screen name="Meglévő listák" component={Listafel} />
+
       <Drawer.Screen name="Listalétrehozás" component={Elso_lap} options={{
         title: 'Listalétrehozása',
         drawerIcon: ({ }) => (
@@ -134,6 +150,8 @@ const menu = () => {
         />
         <Stack.Screen name="Listalétrehozása" component={Listainputsr} options={{ title: "Keresés", headerTitle: "Keresés", headerStyle: { backgroundColor: '#01c29a', headerTintColor: '#181818' } }} />
         <Stack.Screen name="Regisztráció" component={Regisztracio} />
+        <Stack.Screen name="Seged" component={Seged} options={{ headerStyle: { backgroundColor: '#01c29a' }, headerTintColor: "rgb(18,18,18)", headerTitle: "" }} />
+        <Stack.Screen name="Szerkeszt" component={Szerkeszt} options={{headerStyle: { backgroundColor: '#01c29a' }, headerTintColor: "rgb(18,18,18)", headerTitle: "Lista módosítása"}}/>
       </Stack.Navigator>
     </NavigationContainer>
 
@@ -142,4 +160,3 @@ const menu = () => {
 
 
 export default menu;
-

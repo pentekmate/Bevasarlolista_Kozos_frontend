@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ChildComponent, FlatList, Text, StyleSheet, View, TextInput, Button } from 'react-native';
+import { FlatList, Text, StyleSheet, View,TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ipcim } from "./IPcim";
 const IP = require('./IPcim')
@@ -45,6 +45,22 @@ export default class Kiir extends Component {
                     console.error(error);
                 });
         });
+    }
+    getParsedDate(strDate) {
+        var strSplitDate = String(strDate).split(' ');
+        var date = new Date(strSplitDate[0]);
+        var dd = date.getDate();
+        var mm = date.getMonth() + 1;
+
+        var yyyy = date.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        date = yyyy + "-" + mm + "-" + dd;
+        return date.toString();
     }
 
     componentDidMount() {
@@ -99,14 +115,17 @@ export default class Kiir extends Component {
 
     render() {
         return (
-            <View
-                style={{ flexDirection: 'column', flex: 1,backgroundColor:"rgb(50,50,50)" }}>
-                <View style={{ flex: 1, alignSelf: "center" }} ><Text style={{ fontSize: 30,color:"white" }}> Üdv!{this.state.felhasznalonev} </Text></View>
-                <View style={{ flex: 1, alignContent: "center", justifyContent: "center" }}
-                >{this.state.data.map((item, key) => <Text key={key}>{item.listak_nev}</Text>)}
-                </View>
+            <View style={{ flex: 1, backgroundColor: "rgb(18,18, 18)" }}>
+            <FlatList
+                data={this.state.data}
+                renderItem={({ item }) => (
 
-            </View>
+                    <TouchableOpacity style={{ backgroundColor: "rgb(32,32, 32)", height: 60, justifyContent: 'center', marginTop: 10 }}
+                        onPress={() => this.props.navigation.navigate('Seged', { aktid: item.listak_id, akttart: item.listak_tartalom })} ><Text style={{ marginLeft: 3, fontSize: 20, color: "white" }}>{item.listak_nev}{"\n"} {this.getParsedDate(item.listak_datum)}</Text></TouchableOpacity>
+
+                )}
+            />
+        </View>
         );
     }
 };

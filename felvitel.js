@@ -1,17 +1,32 @@
 import * as React from 'react';
 import { List, Checkbox } from 'react-native-paper';
 import { View, Text, FlatList } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-const IP = require('./Ipcim');
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ipcim } from "./IPcim";
+const IP = require('./IPcim')
 
-class MyComponent extends React.Component {
+
+
+class Felvitel extends React.Component {
     state = {
         adatok: [],
         tartalom: [],
+        felhasznalonev:""
     }
+    getData = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@felhasznalo')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch (e) {
 
+        }
+    }
     componentDidMount() {
-        this.getLista();
+        this.getData().then((vissza_adatok2) => {
+            this.setState({ felhasznalonev: vissza_adatok2 })
+          console.log(vissza_adatok2)
+        }).then(this.getLista())
+
         let tartalomSplitelve = "";
         for (let i = 0; i < this.state.adatok.length; i++) {
             tartalomSplitelve = this.state.adatok[i].listak_tartalom.split(',')
@@ -44,15 +59,22 @@ class MyComponent extends React.Component {
     }
 
     async getLista() {
-        try {
-            const response = await fetch(IP.ipcim + 'listak');
-            const json = await response.json();
-            this.setState({ adatok: json });
-        } catch (error) {
-            console.log(error);
-        } finally {
-            this.setState({ isLoading: false });
+        var bemenet = {
+            bevitel1: this.state.felhasznalonev
         }
+        //szűrt adatok lefetchelése backendről
+        fetch(IP.ipcim + 'felhasznalolistai', {
+            method: "POST",
+            body: JSON.stringify(bemenet),
+            headers: { "Content-type": "application/json; charset=UTF-8" }
+        }
+        ).then((response) => response.json())
+            .then((responseJson) => {
+                this.setState({ adatok: responseJson, }, function () { });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
 
     }
 
@@ -124,4 +146,4 @@ class MyComponent extends React.Component {
     }
 }
 
-export default MyComponent;
+export default Felvitel;

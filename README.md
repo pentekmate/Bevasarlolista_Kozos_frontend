@@ -1,2 +1,1 @@
-# Bevasarlolista_Kozos_frontend
-Bevasarlo_lista_Tomival
+# mobilfrontend

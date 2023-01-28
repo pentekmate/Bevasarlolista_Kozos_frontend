@@ -36,20 +36,20 @@ export default class Profil extends Component {
 
     storeData3 = async (value) => {
         try {
-            const jsonValue = JSON.stringify(value)
-            await AsyncStorage.setItem('@listaelemek', jsonValue)
+          const jsonValue = JSON.stringify(value)
+          await AsyncStorage.setItem('@listaelemek', jsonValue)
         } catch (e) {
-            // saving error
+          // saving error
         }
-    }
-    storeData2 = async (value) => {
+      }
+      storeData2 = async (value) => {
         try {
-            const jsonValue = JSON.stringify(value)
-            await AsyncStorage.setItem('@localadatok', jsonValue)
+          const jsonValue = JSON.stringify(value)
+          await AsyncStorage.setItem('@localadatok', jsonValue)
         } catch (e) {
-            // saving error
+          // saving error
         }
-    }
+      }
     getListakszama() {
         var bemenet = {
             bevitel1: this.state.felhasznalonev
@@ -57,14 +57,19 @@ export default class Profil extends Component {
         fetch(IP.ipcim + 'felhasznaloossz', {
             method: "POST",
             body: JSON.stringify(bemenet),
-            headers: { "Content-type": "application/json; charset=UTF-8" }
+            headers: { 
+            "Content-type": "application/json; charset=UTF-8",
+        }
         }
 
         ).then((response) => response.json())
             .then((responseJson) => {
                 (
-                    this.state.osszlista = responseJson, this.setState({ isLoading: false },));
+                    console.log("response:",responseJson),
+                    this.setState({osszlista:responseJson}),
+                    this.setState({ isLoading: false },));
             })
+           
     }
     getData = async () => {
         try {
@@ -88,8 +93,9 @@ export default class Profil extends Component {
             this.state.felhasznalonev = vissza_adatok2
             this.getListakszama();
             this.getRegisztracioDatum();
-
-
+            console.log(this.state.osszlista)
+         
+           
         });
         this.navFocusListener = this.props.navigation.addListener('focus', () => {
             this.getData().then((vissza_adatok2) => {
@@ -97,7 +103,6 @@ export default class Profil extends Component {
                 this.state.felhasznalonev = vissza_adatok2
                 this.getListakszama();
                 this.getRegisztracioDatum();
-
             });
         })
 
@@ -117,55 +122,46 @@ export default class Profil extends Component {
     render() {
         const { data, isLoading } = this.state;
         return (
-            <View style={{ flexDirection: 'column', flex: 1, backgroundColor: "rgb(50,50,50)" }}>
-                {isLoading ? <ActivityIndicator /> :
-                    <View style={{ flex: 1, alignItems: "center" }} >
-                        <Text style={{ fontSize: 25, color: "white" }}> {this.state.felhasznalonev} felhasználó adatai: </Text>
-                    </View>}
-                <View style={{ flex: 12 }}>
-                    <View style={{ flex: 1, flexDirection: 'row' }}>
-                        <View style={{ flex: 3, alignItems: "flex-start" }}>
-                            <Text style={{ textAlign: "left", fontSize: 16, color: "white" }}> Általad létrehozott listák száma:</Text>
-                            <Text style={{ textAlign: "left", fontSize: 16, marginTop: 10, marginBottom: 10, color: "white" }}> Felhasználó neved:</Text>
-                            <Text style={{ textAlign: "left", fontSize: 16, marginTop: 10, marginBottom: 10, color: "white" }}> Regisztráció dátuma:</Text>
-                            <Button title='Kijelentkezés' onPress={this.kilepes}></Button>
-                        </View>
-                        <View style={{ flex: 1 }}>
-                            <Text><FlatList
-                                data={this.state.osszlista}
-                                keyExtractor={(item, index) => String(index)}
-                                renderItem={({ item, key }) => (
-                                    <View key={key}>
-                                        <Text style={{ fontSize: 16, color: "white" }}>{item.osszes}</Text>
-                                    </View>
-                                )}
-                            /></Text>
-
-                            <Text style={{ fontSize: 16, marginTop: 10, marginBottom: 20, color: "white" }}>{this.state.felhasznalonev}</Text>
-                            <Text><FlatList
-                                data={this.state.regisztrdatum}
-                                keyExtractor={(item, index) => String(index)}
-                                renderItem={({ item, key }) => (
-                                    <View key={key}>
-                                        <Text style={{ fontSize: 16, color: "white" }}>{item.datum}-{item.honap}</Text>
-                                    </View>
-                                )}
-                            /></Text>
-                        </View>
+            <View style={{ flexDirection: 'column', flex: 1,backgroundColor:"rgb(50,50,50)"}}>
+                {isLoading ? <ActivityIndicator size={"large"} /> :
+               <View style={{flex:1,marginTop:20}}>
 
 
-
-
-
-
-
-                    </View>
+                <View style={{borderColor:"rgb(120, 130, 130)",backgroundColor:"rgb(18,18,18)",borderWidth:1,height:'20%',width:'50%',borderRadius:15,alignItems:"center"}}>
+                    <Text style={{color:"white",fontSize:15}}>Felhasználó neved:</Text>
+                    <Text style={{color:"white",fontSize:30,marginTop:20}}>{this.state.felhasznalonev}</Text>
+                </View>
+                <View style={{borderColor:"rgb(120, 130, 130)",backgroundColor:"rgb(18,18,18)",borderWidth:1,height:'30%',width:'45%',borderRadius:15,alignItems:"center",alignSelf:"flex-end",top:'-20%'}}>
+                    <Text style={{color:"white",fontSize:15}}>Összes listád:</Text>
+                {this.state.osszlista.map((item,key)=><Text style={{color:"white",width:"100%",height:"100%",fontSize:50,textAlign:"center",textAlignVertical:"center"}} key={key}>{item.osszes}</Text>)}
                 </View>
 
 
+                <View style={{borderColor:"rgb(120, 130, 130)",backgroundColor:"rgb(18,18,18)",borderWidth:1,height:'20%',width:'50%',borderRadius:15,alignItems:"center",alignSelf:"flex-start",bottom:'26%'}}>
+                    <Text style={{color:"white",fontSize:15}}>Regisztrációd dátuma:</Text>
+                    <Text style={{color:"white"}}>
+                        
+                    </Text>
+                </View>
+      
+                <Button title='Kijelentkezés' onPress={this.kilepes}></Button>
 
 
 
+
+
+
+
+
+
+
+
+               </View>
+
+
+
+
+        }
             </View>
         );
     }

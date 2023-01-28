@@ -3,10 +3,11 @@ import { View, FlatList, Text, Pressable } from 'react-native';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TextInput } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-const IP = require('./Ipcim');
+import { ipcim } from "./IPcim";
+const IP = require('./IPcim')
 
 
-export default class App extends Component {
+export default class Seged extends Component {
     constructor(props) {
         super(props);
 

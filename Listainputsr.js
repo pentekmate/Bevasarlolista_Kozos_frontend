@@ -439,7 +439,8 @@ export default class ButtonBasics extends Component {
                 "Zsemle",
             ],
             latszodik: false,
-            darab: 0
+            darab: 0,
+            fokusz1:false
         };
     }
 
@@ -546,16 +547,17 @@ export default class ButtonBasics extends Component {
                 <View style={{ flexDirection: "column", flex: 1, backgroundColor: "rgb(50,50,50)", }}>
 
                     {/*------------------------------------------------------------------VIEW RENDEZÉSE SEARCHBAR---------------------------------------------------------------------------------------------------------*/}
-                    <View style={[styles.keresesdiv, { flexDirection: "row", height: height * 0.06, backgroundColor: "rgb(1,194,154)", }]}>
-                        <Feather style={{ paddingTop: 5, }} name="search" size={28} color="rgb(50,50,50)" />
+                    <View style={[this.state.fokusz1?styles.keresedfocus:styles.keresesdiv, { flexDirection: "row", height: height * 0.06, backgroundColor: "rgb(18,18,18)", }]}>
+                        <Feather style={{ paddingTop: 5, }} name="search" size={28} color="white" />
                         <TextInput
-                            inlineImageLeft='logo.png'
+                            onFocus={() => this.setState({ fokusz1: true })}
+                            onBlur={() => this.setState({ fokusz1: false })}
                             autoFocus={true}
-                            cursorColor={"rgb(50,50,50)"}
+                            cursorColor={"white"}
                             style={styles.textInputStyle}
                             onChangeText={(text) => this.searchFilterFunction(text)}
                             value={this.state.listaelem}
-                            placeholderTextColor="rgb(50,50,50)"
+                            placeholderTextColor="white"
                             placeholder="Termék keresése.."
                         ></TextInput>
                     </View>
@@ -596,7 +598,7 @@ export default class ButtonBasics extends Component {
                                                 source={require('./feher-removebg-preview.png')} //Change your icon image here
                                                 style={{ width: 23, height: 23 }}
                                             />
-                                            <Text key={key} style={{ fontSize: 20, color: "rgb(50,50,50)", fontWeight: "bold", position: "absolute", paddingLeft: 25 }}>{item}</Text>
+                                            <Text key={key} style={{ fontSize: 20, color: "white", fontWeight: "bold", position: "absolute", paddingLeft: 25 }}>{item}</Text>
                                             <View key={item.key} style={styles.segedview}></View>
                                         </View>
                                         <View style={styles.pluszjel}>
@@ -606,11 +608,11 @@ export default class ButtonBasics extends Component {
                                                 backgroundColor="rgb(50,50,50)"
                                                 increaseButtonBackgroundColor="rgb(1,194,154)"
                                                 decreaseButtonBackgroundColor="rgb(1,194,154)"
-                                                style={{ borderColor: "rgb(18,18,18)", borderWidth: 1, height: height * 0.01, width: width * 0.45, backgroundColor: "white", color: "red" }}
+                                                style={{height: height * 0.01, width: width * 0.45, backgroundColor: "white", color: "red" }}
                                                 onChange={(counter) => this.setState({ darab: counter })}
                                             />
                                         </View>
-                                        <TouchableOpacity style={styles.hozzaadas} onPress={() => this.getItem(item)}><FontAwesome5 name="plus" size={20} color="white" /></TouchableOpacity>
+                                        <TouchableOpacity style={styles.hozzaadas} onPress={() => this.getItem(item)}><FontAwesome5 name="plus" size={20} color="rgb(1,194,154)" /></TouchableOpacity>
                                     </View>
 
                                 )}
@@ -634,13 +636,14 @@ const styles = StyleSheet.create({
 
     },
     textInputStyle: {
-        backgroundColor: "rgb(1,194,154)",
+        backgroundColor: "rgb(18,18,18)",
         textAlignVertical: "top",
         borderRadius: 10,
         textAlignVertical: "auto",
         fontStyle: "italic",
-        color: "rgb(50,50,50)",
-        fontWeight: "500"
+        color: "white",
+        fontWeight: "500",
+        padding:5
     }
     ,
     image: {
@@ -651,10 +654,10 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     }, listaelemek: {
         margin: 10,
-        backgroundColor: "rgb(1,194,154)",
+        backgroundColor: "rgb(18,18,18)",
         borderRadius: 15,
         height: 150,
-        borderColor: "lightgrey",
+        borderColor:"rgb(120, 130, 130)",
         borderWidth: 1
 
     },
@@ -682,9 +685,11 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         flexDirection: "row",
         borderWidth: 1,
-        paddingBottom: 10,
         borderColor: "black",
         borderWidth: 2,
+        marginTop:5,
+        borderWidth:1,
+        borderColor:"rgb(120, 130, 130)"
     },
     hozzaadas: {
         alignSelf: "flex-end",
@@ -695,8 +700,17 @@ const styles = StyleSheet.create({
         marginRight: 10,
         alignItems: "center",
         justifyContent: "center",
-
-
+    },
+    keresedfocus:{
+        alignItems: "center",
+        borderRadius: 10,
+        flexDirection: "row",
+        borderWidth: 1,
+        borderColor: "black",
+        borderWidth: 2,
+        marginTop:5,
+        borderWidth:2,
+        borderColor:"rgb(1,194,154)"
     }
 
 });

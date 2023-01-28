@@ -29,7 +29,7 @@ export default class Toltokep extends Component {
       
     componentDidMount() {
       this.timeoutHandle = setTimeout(()=>{
-              this.kepernyoDobas();
+              this.kepernyoDobas();  
          }, 1000);
        
     }

@@ -18,7 +18,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DialogInput from "react-native-dialog-input";
 import { Entypo } from '@expo/vector-icons';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import { AntDesign } from '@expo/vector-icons';
 import { ipcim } from "./IPcim";
+import { Button } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 const IP = require('./IPcim')
 
@@ -161,7 +164,6 @@ export default class Listaad extends Component {
     });
 
     this.navFocusListener = this.props.navigation.addListener('focus', () => {
-      this.storeData2([]).then(this.storeData2(this.state.data))
       this.getLocaladatok().then((vissza_adatok2) => {
         this.setState({ data: vissza_adatok2 })
       });
@@ -177,6 +179,7 @@ export default class Listaad extends Component {
   }
   componentWillUnmount() {
     this.navFocusListener();
+
   }
 
   mindentorles = () => {
@@ -229,7 +232,7 @@ export default class Listaad extends Component {
 
   };
   ListaelemTorles = (termeknev) => {
-
+    console.log(this.state.data)
     let tomb = this.state.data
     let tomb1 = this.state.termekektomb
     let tomb2 = this.state.segeddata
@@ -238,7 +241,7 @@ export default class Listaad extends Component {
       if (termeknev == termekvissza.megnevezes) {
         termekvissza.isChecked = false
         this.setState({ termekektomb: tomb1 })
-
+        //this.setState({ data: tomb1 });
       }
     })
     //
@@ -286,12 +289,33 @@ export default class Listaad extends Component {
 
       <ScrollView onScrollEndDrag={this.teszt} style={{ flexDirection: "column", backgroundColor: "rgb(50,50,50)" }}>
 
-        <View style={[styles.keresesdiv, { flex: 1, flexDirection: "row", backgroundColor: "rgb(1,194,154)" }]}>
-          <Feather style={{ paddingTop: 5, }} name="search" size={28} color="rgb(50,50,50)" />
+        <AwesomeAlert
+          show={this.state.alertMutatasa}
+          showProgress={false}
+          title="Hiba"
+          message="A listád üres!"
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          confirmText="OK"
+          cancelText="Lista készítése"
+          confirmButtonColor="#DD6B55"
+          onConfirmPressed={() => {
+            this.setState({ alertMutatasa: false });
+          }}
+          onCancelPressed={() => {
+            this.setState({ alertMutatasa: false });
+          }}
+        />
+
+
+        <View style={[styles.keresesdiv, { flex: 1, flexDirection: "row", backgroundColor: "rgb(18,18,18)" }]}>
+          <Feather style={{ paddingTop: 5, }} name="search" size={28} color="white" />
           <TouchableOpacity
             onPress={this.Ugras}
             style={styles.textInputStyle} >
-            <Text style={{ fontStyle: "italic", color: "rgb(50,50,50)" }}>Termék keresése..</Text>
+            <Text style={{ fontStyle: "italic", color: "white" }}>Termék keresése..</Text>
           </TouchableOpacity>
         </View>
 
@@ -327,12 +351,12 @@ export default class Listaad extends Component {
                       />
                     </Pressable>
                   </View>
-                  <Text style={{ color: "rgb(50,50,50)", fontSize: 15 }}>{item.megnevezes}</Text>
+                  <Text style={{ color: "white", fontSize: 15 }}>{item.megnevezes}</Text>
                 </View>
                   : <Text></Text>}
               </View>
               <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)" }}>{item.id > 2 ? <View
-                style={[styles.felsocheck, { top: '-68%' }]}
+                style={[styles.felsocheck, { top: '-71%' }]}
               >
                 <View style={styles.icon}>
                   <Pressable onPress={() => this.handleChange(item.id, item.megnevezes)}>
@@ -347,7 +371,7 @@ export default class Listaad extends Component {
                     />
                   </Pressable>
                 </View>
-                <Text style={{ color: "rgb(50,50,50)", fontSize: 15 }}>{item.megnevezes}</Text>
+                <Text style={{ color: "white", fontSize: 15 }}>{item.megnevezes}</Text>
               </View>
                 : <Text></Text>}</View>
 
@@ -366,17 +390,17 @@ export default class Listaad extends Component {
 
             <View style={{ flexDirection: "row", flex: 1 }}>
               <View style={{ flex: 1, justifyContent: "center" }}>
-                <Entypo style={{ marginLeft: 10 }} name="shop" size={25} color="rgb(50,50,50)" />
+                <Entypo style={{ marginLeft: 10 }} name="shop" size={25} color="white" />
               </View>
               <View style={{ flex: 13, justifyContent: "center" }}>
-                <Text style={{ color: "rgb(50,50,50)", marginLeft: 10 }}>{item.megnevezes}</Text>
+                <Text style={{ color: "white", marginLeft: 10 }}>{item.megnevezes}</Text>
               </View>
               <View style={styles.torlesgomb}>
                 <TouchableOpacity onPress={() => this.ListaelemTorles(item.megnevezes)}>
                   <MaterialCommunityIcons
                     name="delete"
                     size={24}
-                    color="rgb(50,50,50)"
+                    color="white"
                   />
                 </TouchableOpacity>
               </View>
@@ -386,17 +410,17 @@ export default class Listaad extends Component {
             <View key={key} style={styles.listatartalom}>
               <View style={{ flexDirection: "row", flex: 1 }}>
                 <View style={{ flex: 1, justifyContent: "center" }}>
-                  <Entypo style={{ marginLeft: 10 }} name="shop" size={25} color="rgb(50,50,50)" />
+                  <Entypo style={{ marginLeft: 10 }} name="shop" size={25} color="white" />
                 </View>
                 <View style={{ flex: 13, justifyContent: "center" }}>
-                  <Text style={{ color: "rgb(50,50,50)", marginLeft: 10 }}>{item.megnevezes}</Text>
+                  <Text style={{ color: "white", marginLeft: 10 }}>{item.megnevezes}</Text>
                 </View>
                 <View style={styles.torlesgomb}>
                   <TouchableOpacity onPress={() => this.ListaelemTorles(item.megnevezes)}>
                     <MaterialCommunityIcons
                       name="delete"
                       size={24}
-                      color="rgb(50,50,50)"
+                      color="white"
                     />
                   </TouchableOpacity>
                 </View>
@@ -429,13 +453,14 @@ const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   listatartalom: {
-    backgroundColor: "rgb(1,194,154)",
+    backgroundColor: "rgb(18,18,18)",
     height: height * 0.06,
     width: width * 1,
     alignSelf: "center",
     borderRadius: 15,
-    margin: 10
-
+    margin: 10,
+    borderWidth:1,
+    borderColor:"rgb(120, 130, 130)"
 
   },
   text: { textAlign: "center", fontSize: 18 },
@@ -455,13 +480,13 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
   },
   felsocheck: {
-    backgroundColor: "red",
     flexDirection: "row",
     margin: 5,
-    backgroundColor: "rgb(1,194,154)",
+    backgroundColor: "#505050",
     borderRadius: 15,
     alignItems: "center",
-    color: "rgb(50,50,50)"
+    borderWidth:1,
+    borderColor:"#6C8389"
   },
   icon: {
     backgroundColor: "rgb(50,50,50)",
@@ -475,19 +500,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignSelf: "center",
-    //backgroundColor: "rgb(50,50,50)",
     width: 30,
     height: 30,
     marginRight: 5,
     borderRadius: 5
   },
   keresesdiv: {
+    marginTop:10,
     alignItems: "center",
     borderRadius: 10,
     flexDirection: "row",
     borderWidth: 1,
     paddingBottom: 10,
-    borderColor: "black",
+    borderColor: "rgb(120, 130, 130)",
     borderWidth: 2
   },
   textInputStyle: {
