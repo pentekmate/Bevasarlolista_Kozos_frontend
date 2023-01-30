@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, FlatList, Text, Pressable } from 'react-native';
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { View, FlatList, Text, Pressable,  StyleSheet,Dimensions} from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons'; 
 import { TextInput } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { ipcim } from "./IPcim";
@@ -327,23 +327,23 @@ export default class Seged extends Component {
 
     render() {
         return (
-            <View style={{flex: 1, backgroundColor: "rgb(18,18,18)"}}>
+            <View style={{flex: 1, backgroundColor: "rgb(50,50,50)"}}>
             <View>
                 <FlatList
                     data={this.state.tartalom_tomb}
                     renderItem={({ item }) => (
                         <View>
-                            <View style={{ flexDirection: 'row', flex: 1 }}>
-                                {item.nev == "péksütemény" || item.nev == "zöldségek" || item.nev == "tejtermék" || item.nev == "Egyéb"? <Text style={{ fontSize: 20 , color: "grey", marginLeft: 10}}> -{item.nev}</Text> :
+                            <View style={styles.elemek}>
+                                {item.nev == "péksütemény" || item.nev == "zöldségek" || item.nev == "tejtermék" || item.nev == "Egyéb"? <Text style={styles.kategorianev}> {item.nev}</Text> :
+                                  
                                     <Pressable onPress={() => { this.handleChange(item.id); }}>
-                                        <MaterialCommunityIcons
-                                            name={item.isChecked ? 'checkbox-marked' : 'checkbox-blank-outline'} size={30} color="grey" />
+                                       <MaterialIcons name={item.isChecked?"radio-button-checked":"radio-button-unchecked"} size={27} color="white" />
                                     </Pressable>
-
+                                 
                                 }{item.nev == "péksütemény" || item.nev == "zöldségek" || item.nev == "tejtermék" || item.nev == "Egyéb"?
-                                    <Text style={{marginBottom: 15}}></Text> : <Text style={{ fontSize: 20 , color: "grey"}}> {item.nev}</Text>
+                                    <Text style={{marginBottom: 15}}></Text> : <Text style={{ fontSize: 20 , color: "white"}}> {item.nev}</Text>
                                 }
-
+                                
                             </View>
                         </View>
                     )}
@@ -365,3 +365,24 @@ export default class Seged extends Component {
         );
     }
 }
+const { width, height } = Dimensions.get("window");
+const styles = StyleSheet.create({
+   elemek:{
+    backgroundColor:"rgb(50,50,50)",
+    flexDirection: 'row', 
+    flex: 1 ,
+    height:height*0.08,
+    alignItems:"center",
+   },
+   kategorianev:{
+    alignSelf:"center",
+    fontSize: 25 , 
+    color: "white", 
+    width:"100%",
+    height:"100%",
+    textAlignVertical:"center",
+    backgroundColor:"rgb(18,18,18)",
+    borderRadius:5
+   }
+  });
+  

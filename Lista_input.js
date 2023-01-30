@@ -3,14 +3,10 @@ import { Feather } from '@expo/vector-icons';
 import {
   StyleSheet,
   View,
-  FlatList,
   Text,
   TouchableOpacity,
-  TextInput,
   Pressable,
   Dimensions,
-  SafeAreaView,
-  Image,
   Animated,
   PanResponder
 } from "react-native";
@@ -19,9 +15,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DialogInput from "react-native-dialog-input";
 import { Entypo } from '@expo/vector-icons';
 import AwesomeAlert from 'react-native-awesome-alerts';
-import { AntDesign } from '@expo/vector-icons';
 import { ipcim } from "./IPcim";
-import { Button } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
 const IP = require('./IPcim')
 
