@@ -17,7 +17,7 @@ import Profil from './Profilom';
 import Toltokep from './Tolto'
 import Fooldal from './Home';
 import Seged from './Seged';
-import Felvitel from './Felvitel';
+import Felvitel from './felvitel';
 import Szerkeszt from './Szerkeszt'
 
 function HomeScreen({ navigation }) {
@@ -151,7 +151,7 @@ const menu = () => {
         <Stack.Screen name="Listalétrehozása" component={Listainputsr} options={{ title: "Keresés", headerTitle: "Keresés", headerStyle: { backgroundColor: '#01c29a', headerTintColor: '#181818' } }} />
         <Stack.Screen name="Regisztráció" component={Regisztracio} />
         <Stack.Screen name="Seged" component={Seged} options={{ headerStyle: { backgroundColor: '#01c29a' }, headerTintColor: "rgb(18,18,18)", headerTitle: "" }} />
-        <Stack.Screen name="Szerkeszt" component={Szerkeszt} options={{headerStyle: { backgroundColor: '#01c29a' }, headerTintColor: "rgb(18,18,18)", headerTitle: "Lista módosítása"}}/>
+        <Stack.Screen name="Szerkeszt" component={Szerkeszt} options={{ headerStyle: { backgroundColor: '#01c29a' }, headerTintColor: "rgb(18,18,18)", headerTitle: "Lista módosítása" }} />
       </Stack.Navigator>
     </NavigationContainer>
 

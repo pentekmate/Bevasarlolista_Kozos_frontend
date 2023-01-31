@@ -17,6 +17,7 @@ import { Entypo } from '@expo/vector-icons';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import { ipcim } from "./IPcim";
 import { ScrollView } from "react-native-gesture-handler";
+import { Ionicons } from "@expo/vector-icons";
 const IP = require('./IPcim')
 
 
@@ -391,8 +392,8 @@ export default class Listaad extends Component {
               </View>
               <View style={styles.torlesgomb}>
                 <TouchableOpacity onPress={() => this.ListaelemTorles(item.megnevezes)}>
-                  <MaterialCommunityIcons
-                    name="delete"
+                  <Ionicons
+                    name="trash-outline"
                     size={24}
                     color="white"
                   />
@@ -411,8 +412,8 @@ export default class Listaad extends Component {
                 </View>
                 <View style={styles.torlesgomb}>
                   <TouchableOpacity onPress={() => this.ListaelemTorles(item.megnevezes)}>
-                    <MaterialCommunityIcons
-                      name="delete"
+                    <Ionicons
+                      name="trash-outline"
                       size={24}
                       color="white"
                     />
@@ -453,8 +454,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 15,
     margin: 10,
-    borderWidth:1,
-    borderColor:"rgb(120, 130, 130)"
+    borderWidth: 1,
+    borderColor: "rgb(120, 130, 130)"
 
   },
   text: { textAlign: "center", fontSize: 18 },
@@ -479,8 +480,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#505050",
     borderRadius: 15,
     alignItems: "center",
-    borderWidth:1,
-    borderColor:"#6C8389"
+    borderWidth: 1,
+    borderColor: "#6C8389"
   },
   icon: {
     backgroundColor: "rgb(50,50,50)",
@@ -500,7 +501,7 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   keresesdiv: {
-    marginTop:10,
+    marginTop: 10,
     alignItems: "center",
     borderRadius: 10,
     flexDirection: "row",

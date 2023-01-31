@@ -3,9 +3,8 @@ import { StyleSheet, View, Text, TouchableOpacity, TextInput, Dimensions, FlatLi
 import CounterInput from "react-native-counter-input";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Feather } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { color } from "react-native-reanimated";
+import { AntDesign } from '@expo/vector-icons';
 
 
 export default class ButtonBasics extends Component {
@@ -47,12 +46,12 @@ export default class ButtonBasics extends Component {
                 "Halványító zeller",
                 "Jégcsapsaláta",
                 "Káposzta",
-                "Káposzta, savanyított",
+                "Káposzta savanyított",
                 "Karalábé",
                 "Karfiol",
                 "Kelkáposzta",
                 "Kínai kel",
-                "Kukorica, tejes",
+                "Kukorica tejes",
                 "Mangold",
                 "Olívabogyó",
                 "Padlizsán",
@@ -70,7 +69,7 @@ export default class ButtonBasics extends Component {
                 "Spárga",
                 "Sütőtök",
                 "Torma",
-                "Tök, főző",
+                "Tök főző",
                 "Uborka",
                 "Újhagyma",
                 "Vöröshagyma",
@@ -90,8 +89,8 @@ export default class ButtonBasics extends Component {
                 "Datolya",
                 "Egres",
                 "Eper, fa",
-                "Füge, friss",
-                "Füge, szárított",
+                "Füge friss",
+                "Füge szárított",
                 "Gránátalma",
                 "Grapefruit",
                 "Görögdinnye",
@@ -110,14 +109,15 @@ export default class ButtonBasics extends Component {
                 "Nektarin",
                 "Őszibarack",
                 "Papaya",
-                "Ribiszke, fekete",
-                "Ribiszke, piros",
-                "Szamóca, földieper",
+                "Ribiszke fekete",
+                "Ribiszke piros",
+                "Szamóca földieper",
                 "Szeder",
-                "Szilva, besztercei",
-                "Szilva, vörös",
+                "Szilva besztercei",
+                "Szilva vörös",
                 "Szőlő",
-                "Zöldringló", "Aludttej",
+                "Zöldringló",
+                "Aludttej",
                 "Bivalytej",
                 "Brick sajt",
                 "Brie sajt",
@@ -251,12 +251,12 @@ export default class ButtonBasics extends Component {
                 "Halványító zeller",
                 "Jégcsapsaláta",
                 "Káposzta",
-                "Káposzta, savanyított",
+                "Káposzta savanyított",
                 "Karalábé",
                 "Karfiol",
                 "Kelkáposzta",
                 "Kínai kel",
-                "Kukorica, tejes",
+                "Kukorica tejes",
                 "Mangold",
                 "Olívabogyó",
                 "Padlizsán",
@@ -274,7 +274,7 @@ export default class ButtonBasics extends Component {
                 "Spárga",
                 "Sütőtök",
                 "Torma",
-                "Tök, főző",
+                "Tök főző",
                 "Uborka",
                 "Újhagyma",
                 "Vöröshagyma",
@@ -294,8 +294,8 @@ export default class ButtonBasics extends Component {
                 "Datolya",
                 "Egres",
                 "Eper, fa",
-                "Füge, friss",
-                "Füge, szárított",
+                "Füge friss",
+                "Füge szárított",
                 "Gránátalma",
                 "Grapefruit",
                 "Görögdinnye",
@@ -314,14 +314,15 @@ export default class ButtonBasics extends Component {
                 "Nektarin",
                 "Őszibarack",
                 "Papaya",
-                "Ribiszke, fekete",
-                "Ribiszke, piros",
-                "Szamóca, földieper",
+                "Ribiszke fekete",
+                "Ribiszke piros",
+                "Szamóca földieper",
                 "Szeder",
-                "Szilva, besztercei",
-                "Szilva, vörös",
+                "Szilva besztercei",
+                "Szilva vörös",
                 "Szőlő",
-                "Zöldringló", "Aludttej",
+                "Zöldringló",
+                "Aludttej",
                 "Bivalytej",
                 "Brick sajt",
                 "Brie sajt",
@@ -440,7 +441,7 @@ export default class ButtonBasics extends Component {
             ],
             latszodik: false,
             darab: 0,
-            fokusz1:false
+            fokusz1: false
         };
     }
 
@@ -547,7 +548,7 @@ export default class ButtonBasics extends Component {
                 <View style={{ flexDirection: "column", flex: 1, backgroundColor: "rgb(50,50,50)", }}>
 
                     {/*------------------------------------------------------------------VIEW RENDEZÉSE SEARCHBAR---------------------------------------------------------------------------------------------------------*/}
-                    <View style={[this.state.fokusz1?styles.keresedfocus:styles.keresesdiv, { flexDirection: "row", height: height * 0.06, backgroundColor: "rgb(18,18,18)", }]}>
+                    <View style={[this.state.fokusz1 ? styles.keresedfocus : styles.keresesdiv, { flexDirection: "row", height: height * 0.06, backgroundColor: "rgb(18,18,18)", }]}>
                         <Feather style={{ paddingTop: 5, }} name="search" size={28} color="white" />
                         <TextInput
                             onFocus={() => this.setState({ fokusz1: true })}
@@ -595,11 +596,11 @@ export default class ButtonBasics extends Component {
 
                                         <View key={key} style={styles.listaelemektext} >
                                             <Image
-                                                source={require('./feher-removebg-preview.png')} //Change your icon image here
+                                                source={require('./feher-removebg-preview.png')}
                                                 style={{ width: 23, height: 23 }}
                                             />
-                                            <Text key={key} style={{ fontSize: 20, color: "white", fontWeight: "bold", position: "absolute", paddingLeft: 25 }}>{item}</Text>
-                                            <View key={item.key} style={styles.segedview}></View>
+                                            <Text key={key} style={{ fontSize: 20, color: "white", fontWeight: "bold", position: "absolute", paddingLeft: 35 }}>{item}</Text>
+
                                         </View>
                                         <View style={styles.pluszjel}>
                                             <CounterInput
@@ -608,11 +609,11 @@ export default class ButtonBasics extends Component {
                                                 backgroundColor="rgb(50,50,50)"
                                                 increaseButtonBackgroundColor="rgb(1,194,154)"
                                                 decreaseButtonBackgroundColor="rgb(1,194,154)"
-                                                style={{height: height * 0.01, width: width * 0.45, backgroundColor: "white", color: "red" }}
+                                                style={{ height: height * 0.01, width: width * 0.45, backgroundColor: "white", color: "red" }}
                                                 onChange={(counter) => this.setState({ darab: counter })}
                                             />
                                         </View>
-                                        <TouchableOpacity style={styles.hozzaadas} onPress={() => this.getItem(item)}><FontAwesome5 name="plus" size={20} color="rgb(1,194,154)" /></TouchableOpacity>
+                                        <TouchableOpacity style={styles.hozzaadas} onPress={() => this.getItem(item)}><AntDesign name="check" size={30} color="rgb(1,194,154)" /></TouchableOpacity>
                                     </View>
 
                                 )}
@@ -643,7 +644,7 @@ const styles = StyleSheet.create({
         fontStyle: "italic",
         color: "white",
         fontWeight: "500",
-        padding:5
+        padding: 5
     }
     ,
     image: {
@@ -657,7 +658,7 @@ const styles = StyleSheet.create({
         backgroundColor: "rgb(18,18,18)",
         borderRadius: 15,
         height: 150,
-        borderColor:"rgb(120, 130, 130)",
+        borderColor: "rgb(120, 130, 130)",
         borderWidth: 1
 
     },
@@ -687,9 +688,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "black",
         borderWidth: 2,
-        marginTop:5,
-        borderWidth:1,
-        borderColor:"rgb(120, 130, 130)"
+        marginTop: 5,
+        borderWidth: 1,
+        borderColor: "rgb(120, 130, 130)"
     },
     hozzaadas: {
         alignSelf: "flex-end",
@@ -701,16 +702,16 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-    keresedfocus:{
+    keresedfocus: {
         alignItems: "center",
         borderRadius: 10,
         flexDirection: "row",
         borderWidth: 1,
         borderColor: "black",
         borderWidth: 2,
-        marginTop:5,
-        borderWidth:2,
-        borderColor:"rgb(1,194,154)"
+        marginTop: 5,
+        borderWidth: 2,
+        borderColor: "rgb(1,194,154)"
     }
 
 });

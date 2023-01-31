@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View, FlatList, Text, Pressable,  StyleSheet,Dimensions} from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons'; 
+import { View, FlatList, Text, Pressable, StyleSheet, Dimensions } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import { TextInput } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { ipcim } from "./IPcim";
+import { ScrollView } from 'react-native-gesture-handler';
 const IP = require('./IPcim')
 
 
@@ -39,7 +40,7 @@ export default class Seged extends Component {
                 "Karfiol",
                 "Kelkáposzta",
                 "Kínai kel",
-                "Kukorica, tejes",
+                "Kukorica tejes",
                 "Mangold",
                 "Olívabogyó",
                 "Padlizsán",
@@ -227,7 +228,8 @@ export default class Seged extends Component {
             zoldseggyumolcsTalal: [],
             tejtermekekTalal: [],
             pekTalal: [],
-            valogatott: []
+            valogatott: [],
+            szam: 0
 
         };
     }
@@ -237,7 +239,7 @@ export default class Seged extends Component {
             bevitel3: this.state.ar,
             bevitel4: this.props.route.params.aktid
         }
-       
+
         const response = fetch(IP.ipcim + 'arfel', {
             method: "POST",
             body: JSON.stringify(adatok),
@@ -251,53 +253,60 @@ export default class Seged extends Component {
         uj = this.state.zsolt.split(',')
         this.setState({ data: uj })
         this.state.data = uj;
+        console.log("teeeee")
 
         this.state.zoldseggyumolcs.map((item) => {
             this.state.data.map((item1) => {
-                if (item == item1) {
-                   let index = this.state.data.indexOf(item)
-                   this.state.data.splice(index, 1)
-                    this.state.zoldseggyumolcsTalal.push(item)
+                if (item1.includes(item)) {
+                    let index = this.state.data.indexOf(item1)
+                    this.state.data.splice(index, 1)
+                    this.state.zoldseggyumolcsTalal.push(item1)
                 }
             })
         })
         this.state.tejtermekek.map((item) => {
             this.state.data.map((item1) => {
-                if (item == item1) {
-                    let index = this.state.data.indexOf(item)
+                if (item1.includes(item)) {
+                    let index = this.state.data.indexOf(item1)
                     this.state.data.splice(index, 1)
-                    this.state.tejtermekekTalal.push(item)
+                    this.state.tejtermekekTalal.push(item1)
                 }
             })
         })
         this.state.pek.map((item) => {
             this.state.data.map((item1) => {
-                if (item == item1) {
-                    let index = this.state.data.indexOf(item)
+                if (item1.includes(item)) {
+                    let index = this.state.data.indexOf(item1)
                     this.state.data.splice(index, 1)
-                    this.state.pekTalal.push(item)
+                    this.state.pekTalal.push(item1)
                 }
             })
         })
-        this.state.valogatott.push("péksütemény")
-        for (let i = 0; i < this.state.pekTalal.length; i++) {
-            this.state.valogatott.push(this.state.pekTalal[i])
+        if (this.state.pekTalal.length > 0) {
+            this.state.valogatott.push("Péksütemény")
+            for (let i = 0; i < this.state.pekTalal.length; i++) {
+                this.state.valogatott.push(this.state.pekTalal[i])
+            }
         }
 
-        this.state.valogatott.push("zöldségek")
-        for (let i = 0; i < this.state.zoldseggyumolcsTalal.length; i++) {
-            this.state.valogatott.push(this.state.zoldseggyumolcsTalal[i])
-        } 
-
-        this.state.valogatott.push("tejtermék")
-        for (let i = 0; i < this.state.tejtermekekTalal.length; i++) {
-            this.state.valogatott.push(this.state.tejtermekekTalal[i])
+        if (this.state.zoldseggyumolcsTalal.length > 0) {
+            this.state.valogatott.push("Zöldségek")
+            for (let i = 0; i < this.state.zoldseggyumolcsTalal.length; i++) {
+                this.state.valogatott.push(this.state.zoldseggyumolcsTalal[i])
+            }
         }
+
+        if (this.state.tejtermekekTalal.length > 0) {
+            this.state.valogatott.push("Tejtermék")
+            for (let i = 0; i < this.state.tejtermekekTalal.length; i++) {
+                this.state.valogatott.push(this.state.tejtermekekTalal[i])
+            }
+        }
+
 
         this.state.valogatott.push("Egyéb")
-
         this.state.data.map((item) => {
-                    this.state.valogatott.push(item)
+            this.state.valogatott.push(item)
         })
 
         for (let i = 0; i < this.state.valogatott.length; i++) {
@@ -310,6 +319,13 @@ export default class Seged extends Component {
     }
 
     handleChange = (id) => {
+        let Noveltszam = this.state.szam
+        let maxHossz = this.state.tartalom_tomb.length / 2
+        let novelesErteke = (1 / maxHossz) * 100
+        let zoldNoveles = (width / 100) * novelesErteke
+
+
+
         let temp = this.state.tartalom_tomb.map((product) => {
             if (id === product.id) {
                 return { ...product, isChecked: !product.isChecked };
@@ -317,9 +333,18 @@ export default class Seged extends Component {
             return product;
         });
         this.setState({ tartalom_tomb: temp })
+
+        this.state.tartalom_tomb.map((item) => {
+            if (item.isChecked == true) {
+                Noveltszam += zoldNoveles
+            }
+        })
+        this.setState({ szam: Noveltszam })
+
     }
 
     componentDidMount() {
+
         this.funckio();
         fetch(IP.ipcim + 'regilistatorles', { method: 'DELETE' })
         console.log(this.state.valogatott)
@@ -327,62 +352,62 @@ export default class Seged extends Component {
 
     render() {
         return (
-            <View style={{flex: 1, backgroundColor: "rgb(50,50,50)"}}>
-            <View>
-                <FlatList
-                    data={this.state.tartalom_tomb}
-                    renderItem={({ item }) => (
-                        <View>
-                            <View style={styles.elemek}>
-                                {item.nev == "péksütemény" || item.nev == "zöldségek" || item.nev == "tejtermék" || item.nev == "Egyéb"? <Text style={styles.kategorianev}> {item.nev}</Text> :
-                                  
-                                    <Pressable onPress={() => { this.handleChange(item.id); }}>
-                                       <MaterialIcons name={item.isChecked?"radio-button-checked":"radio-button-unchecked"} size={27} color="white" />
-                                    </Pressable>
-                                 
-                                }{item.nev == "péksütemény" || item.nev == "zöldségek" || item.nev == "tejtermék" || item.nev == "Egyéb"?
-                                    <Text style={{marginBottom: 15}}></Text> : <Text style={{ fontSize: 20 , color: "white"}}> {item.nev}</Text>
-                                }
-                                
-                            </View>
-                        </View>
-                    )}
-                />
-                <View style={{ marginTop: 40 }}>
-                    <Text style={{ fontSize: 20, color: "grey" , marginLeft: 5}}>Fizetett összeg:</Text>
-                    <TextInput
-                        style={{ height: 40, backgroundColor: "rgb(1,194, 154)",marginLeft: 5, width: 150, borderRadius: 10, borderColor: "black", borderWidth: 2 }}
-                        onChangeText={szoveg => this.setState({ ar: szoveg })}
-                        keyboardType = 'numeric'
-                        value={this.state.ar}
-                    />
-                    <TouchableOpacity onPress={this.felvitel()}>
-                        <View ><Text style={{ fontSize: 20 , color: "grey", marginLeft: 5}}>Mentés</Text></View>
-                    </TouchableOpacity>
+            <ScrollView style={{ flex: 1, backgroundColor: "rgb(50,50,50)" }}>
+                <View style={{ borderWidth: 1, borderColor: "grey", backgroundColor: "red", height: "5%" }}>
+                    <View style={{ backgroundColor: "green", width: this.state.szam, height: "100%" }}><Text></Text></View>
                 </View>
-            </View>
-            </View>
+                <View style={{ marginTop: 40 }}>
+
+                    {this.state.tartalom_tomb.map((item, key) =>
+                        <View key={key}>
+                            <View style={styles.elemek}>
+                                {item.nev == "Péksütemény" || item.nev == "Zöldségek" || item.nev == "Tejtermék" || item.nev == "Egyéb" ?
+                                    <Text style={styles.kategorianev}> {item.nev}</Text> :
+
+                                    <Pressable onPress={() => { this.handleChange(item.id); }}>
+                                        <MaterialIcons name={item.isChecked ? "radio-button-checked" : "radio-button-unchecked"} size={27} color="white" />
+                                    </Pressable>
+
+                                }{item.nev == "Péksütemény" || item.nev == "Zöldségek" || item.nev == "Tejtermék" || item.nev == "Egyéb" ?
+                                    <Text style={{ marginBottom: 15 }}></Text> : <Text style={{ fontSize: 20, color: "white" }}> {item.nev}</Text>
+                                }
+
+                            </View>
+                        </View>)}
+                    <View style={{ marginTop: 40 }}>
+                        <Text style={{ fontSize: 20, color: "white", marginLeft: 5 }}>Fizetett összeg:</Text>
+                        <TextInput
+                            style={{ height: 40, backgroundColor: "rgb(1,194, 154)", marginLeft: 5, width: 150, borderRadius: 10, borderColor: "black", borderWidth: 2 }}
+                            onChangeText={szoveg => this.setState({ ar: szoveg })}
+                            keyboardType='numeric'
+                            value={this.state.ar}
+                        />
+                        <TouchableOpacity onPress={this.felvitel()}>
+                            <Text style={{ fontSize: 20, color: "white", marginLeft: 5 }}>Mentés</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </ScrollView>
         );
     }
 }
 const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
-   elemek:{
-    backgroundColor:"rgb(50,50,50)",
-    flexDirection: 'row', 
-    flex: 1 ,
-    height:height*0.08,
-    alignItems:"center",
-   },
-   kategorianev:{
-    alignSelf:"center",
-    fontSize: 25 , 
-    color: "white", 
-    width:"100%",
-    height:"100%",
-    textAlignVertical:"center",
-    backgroundColor:"rgb(18,18,18)",
-    borderRadius:5
-   }
-  });
-  
+    elemek: {
+        backgroundColor: "rgb(50,50,50)",
+        flexDirection: 'row',
+        flex: 1,
+        height: height * 0.08,
+        alignItems: "center",
+    },
+    kategorianev: {
+        alignSelf: "center",
+        fontSize: 25,
+        color: "white",
+        width: "100%",
+        height: "100%",
+        textAlignVertical: "center",
+        backgroundColor: "rgb(18,18,18)",
+        borderRadius: 5
+    }
+});
