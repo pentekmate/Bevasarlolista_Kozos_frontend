@@ -59,14 +59,6 @@ export default class Listaad extends Component {
       felhasznalonev: ""
     };
   }
-
-  getCurrentDate = () => {
-    var date = new Date().getDate();
-    var month = new Date().getMonth() + 1;
-    var year = new Date().getFullYear();
-
-    return year + "-" + month + "-" + date + ". napi lista";
-  };
   adatatad = () => {
 
     if (this.state.data.length == 0 && this.state.segeddata.length == 0) {
@@ -75,6 +67,14 @@ export default class Listaad extends Component {
       this.setState({ visible: true });
     }
   };
+  getCurrentDate = () => {
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear();
+
+    return year + "-" + month + "-" + date + ". napi lista";
+  };
+
   submit_atad(input) {
     var tartalom = [];
     this.state.data.map((item) => tartalom.push(item.megnevezes));
@@ -198,10 +198,10 @@ export default class Listaad extends Component {
 
       return product;
     });
-    let x = this.state.data.length;
+    let x = this.state.data?.length;
     this.setState({ termekektomb: temp });
 
-    x = this.state.data.length
+    x = this.state.data?.length
     this.state.termekektomb.map((termek) => {
       if (id === termek.id && termek.isChecked == false) {
         this.state.data.push({
@@ -281,10 +281,10 @@ export default class Listaad extends Component {
   }
   render() {
     return (
+      
 
       <ScrollView onScrollEndDrag={this.teszt} style={{ flexDirection: "column", backgroundColor: "rgb(50,50,50)" }}>
-
-        <AwesomeAlert
+       <AwesomeAlert
           show={this.state.alertMutatasa}
           showProgress={false}
           title="Hiba"
@@ -303,8 +303,6 @@ export default class Listaad extends Component {
             this.setState({ alertMutatasa: false });
           }}
         />
-
-
         <View style={[styles.keresesdiv, { flex: 1, flexDirection: "row", backgroundColor: "rgb(18,18,18)" }]}>
           <Feather style={{ paddingTop: 5, }} name="search" size={28} color="white" />
           <TouchableOpacity
@@ -381,7 +379,7 @@ export default class Listaad extends Component {
         <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)", paddingTop: 50 }}>
 
 
-          {this.state.data.map((item, key) => <View key={key} style={styles.listatartalom}>
+          {this.state.data?.map((item, key) => <View key={key} style={styles.listatartalom}>
 
             <View style={{ flexDirection: "row", flex: 1 }}>
               <View style={{ flex: 1, justifyContent: "center" }}>
@@ -401,7 +399,8 @@ export default class Listaad extends Component {
               </View>
             </View>
           </View>)}
-          {this.state.segeddata.map((item, key) =>
+          {this.state.segeddata?.length>0?
+          this.state.segeddata?.map((item, key) =>
             <View key={key} style={styles.listatartalom}>
               <View style={{ flexDirection: "row", flex: 1 }}>
                 <View style={{ flex: 1, justifyContent: "center" }}>
@@ -420,7 +419,9 @@ export default class Listaad extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-            </View>)}
+            </View>):
+            <Text></Text>}
+          
 
         </View>
         <Animated.View
@@ -430,7 +431,7 @@ export default class Listaad extends Component {
           }}
           {...this.panResponder.panHandlers}>
           <View style={{ flex: 1, backgroundColor: "696969" }}>
-            {this.state.data.length > 0 || this.state.segeddata.length > 0 ?
+            {this.state.data?.length > 0 || this.state.segeddata?.length > 0 ?
               <TouchableOpacity
                 onPress={(this.adatatad)}
                 style={{ backgroundColor: "rgb(1,194,154)", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 1, }}>

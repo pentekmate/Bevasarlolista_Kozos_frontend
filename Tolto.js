@@ -11,13 +11,13 @@ export default class Toltokep extends Component {
         this.state = {
             felhasznalonev:"",
             timePassed:false
-        };
+        }
     }
     kepernyoDobas()
     {
         this.getData().then((vissza_adatok2) => {
             this.setState({ felhasznalonev: vissza_adatok2 })
-            if(this.state.felhasznalonev.length>0)
+            if(this.state.felhasznalonev?.length>0)
             {
                 this.props.navigation.navigate('Home')
             }

@@ -569,7 +569,7 @@ export default class ButtonBasics extends Component {
                         }}
                         {...this.panResponder.panHandlers}>
                         <View style={{ flex: 1, backgroundColor: "696969" }}>
-                            {this.state.tomb.length > 0 ?
+                            {this.state.tomb?.length > 0 ?
                                 <TouchableOpacity
                                     onPress={(this.tarol)}
                                     style={{ backgroundColor: "rgb(1,194,154)", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 2, bottom: -width * 1.57, left: -width * 0.03 }}>

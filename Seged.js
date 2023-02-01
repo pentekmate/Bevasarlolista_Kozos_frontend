@@ -3,6 +3,7 @@ import { View, FlatList, Text, Pressable, StyleSheet, Dimensions } from 'react-n
 import { MaterialIcons } from '@expo/vector-icons';
 import { TextInput } from 'react-native';
 import { TouchableOpacity } from 'react-native';
+import ProgressBar from "react-native-animated-progress";
 import { ipcim } from "./IPcim";
 import { ScrollView } from 'react-native-gesture-handler';
 const IP = require('./IPcim')
@@ -225,11 +226,13 @@ export default class Seged extends Component {
                 "Zabkorpás kenyér",
                 "Zsemle"
             ],
+            egyeb:[],
             zoldseggyumolcsTalal: [],
             tejtermekekTalal: [],
             pekTalal: [],
             valogatott: [],
-            szam: 0
+            szam: 0,
+            tombHossz:0
 
         };
     }
@@ -253,7 +256,8 @@ export default class Seged extends Component {
         uj = this.state.zsolt.split(',')
         this.setState({ data: uj })
         this.state.data = uj;
-        console.log("teeeee")
+        let x =uj.length
+        this.setState({tombHossz:x})
 
         this.state.zoldseggyumolcs.map((item) => {
             this.state.data.map((item1) => {
@@ -303,11 +307,13 @@ export default class Seged extends Component {
             }
         }
 
-
-        this.state.valogatott.push("Egyéb")
-        this.state.data.map((item) => {
-            this.state.valogatott.push(item)
-        })
+        if(this.state.data.length>0){
+            this.state.valogatott.push("Egyéb")
+            this.state.data.map((item) => {
+                this.state.valogatott.push(item)
+            })
+        }
+      
 
         for (let i = 0; i < this.state.valogatott.length; i++) {
             this.state.tartalom_tomb.push({
@@ -320,26 +326,36 @@ export default class Seged extends Component {
 
     handleChange = (id) => {
         let Noveltszam = this.state.szam
-        let maxHossz = this.state.tartalom_tomb.length / 2
-        let novelesErteke = (1 / maxHossz) * 100
-        let zoldNoveles = (width / 100) * novelesErteke
+       
+        let novelesErteke = (1 / this.state.tombHossz) * 100
+        let zoldNoveles = (100 / 100) * novelesErteke
 
-
-
+        
         let temp = this.state.tartalom_tomb.map((product) => {
             if (id === product.id) {
                 return { ...product, isChecked: !product.isChecked };
             }
             return product;
         });
+    
         this.setState({ tartalom_tomb: temp })
-
-        this.state.tartalom_tomb.map((item) => {
-            if (item.isChecked == true) {
-                Noveltszam += zoldNoveles
+       
+       temp.map((item) => {
+            if (item.isChecked == true && id==item.id) {
+               Noveltszam+=zoldNoveles
+               
+            }
+            else if(item.isChecked==false && id==item.id)
+            {
+            
+                Noveltszam-=zoldNoveles
             }
         })
-        this.setState({ szam: Noveltszam })
+
+        
+        
+     
+        this.setState({ szam: Noveltszam})
 
     }
 
@@ -352,10 +368,17 @@ export default class Seged extends Component {
 
     render() {
         return (
-            <ScrollView style={{ flex: 1, backgroundColor: "rgb(50,50,50)" }}>
-                <View style={{ borderWidth: 1, borderColor: "grey", backgroundColor: "red", height: "5%" }}>
-                    <View style={{ backgroundColor: "green", width: this.state.szam, height: "100%" }}><Text></Text></View>
-                </View>
+            <ScrollView style={{backgroundColor: "rgb(50,50,50)" }}>
+           
+             <View style={{position:"relative",top:height*0.02}}>
+             <Text style={{color:"white",fontSize:18}}>Termékek megvásárolva:</Text>
+             <Text style={{alignSelf:"flex-end"}}>a</Text>
+                <ProgressBar  progress={this.state.szam} 
+                height={8} 
+                backgroundColor="rgb(1,194,154)"
+                trackColor="red" />
+            </View>
+       
                 <View style={{ marginTop: 40 }}>
 
                     {this.state.tartalom_tomb.map((item, key) =>
@@ -387,6 +410,7 @@ export default class Seged extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+                <View style={{margin:height*0.01}}></View>
             </ScrollView>
         );
     }
