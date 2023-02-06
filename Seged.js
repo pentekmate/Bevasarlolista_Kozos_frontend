@@ -1,15 +1,34 @@
 import React, { Component } from 'react';
-import { View, FlatList, Text, Pressable, StyleSheet, Dimensions } from 'react-native';
+import { View,  Text, Pressable, StyleSheet, Dimensions ,  Animated,PanResponder} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { TextInput } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import ProgressBar from "react-native-animated-progress";
+import DialogInput from "react-native-dialog-input";
 import { ipcim } from "./IPcim";
 import { ScrollView } from 'react-native-gesture-handler';
+import { AntDesign } from '@expo/vector-icons'; 
+import { FontAwesome } from '@expo/vector-icons'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const IP = require('./IPcim')
 
 
 export default class Seged extends Component {
+    pan = new Animated.ValueXY();
+
+    panResponder = PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderMove: Animated.event([
+        null,
+        { dx: this.pan.x, dy: this.pan.y },],
+        { useNativeDriver: false }
+      ),
+      onPanResponderRelease: () => {
+        Animated.spring(this.pan, {
+          toValue: { x: 0, y: 0 },
+          useNativeDriver: false,
+        }).start();
+      },
+    });
     constructor(props) {
         super(props);
 
@@ -18,7 +37,6 @@ export default class Seged extends Component {
             tartalom_tomb: [],
             zsolt: "",
             adat: [],
-            ar: 0,
             zoldseggyumolcs: ["Articsóka",
                 "Bimbós kel",
                 "Brokkoli",
@@ -232,28 +250,53 @@ export default class Seged extends Component {
             pekTalal: [],
             valogatott: [],
             szam: 0,
-            tombHossz:0
-
+            tombHossz:0,
+            megvasaroltElemek:0,
+            alertMutatasa:false,
         };
     }
+    storeListaId = async (value) => {
+        let a= String(this.props.route.params.aktid)
+        try {
+          const jsonValue = JSON.stringify(value)
+          await AsyncStorage.setItem(a, jsonValue)
+        } catch (e) {
+          // saving error
+        }
+      }
+      getListaId = async () => {
+        let a= String(this.props.route.params.aktid)
+        try {
+            const jsonValue = await AsyncStorage.getItem(a)
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch (e) {
 
-    felvitel = () => {
-        var adatok = {
-            bevitel3: this.state.ar,
+        }
+    }
+
+    felvitel = (ar) => {
+        try{ var adatok = {
+            bevitel3: ar,
             bevitel4: this.props.route.params.aktid
         }
 
-        const response = fetch(IP.ipcim + 'arfel', {
+        const response = fetch(IP.ipcim + 'listabefejezese', {
             method: "POST",
             body: JSON.stringify(adatok),
             headers: { "Content-type": "application/json; charset=UTF-8" }
-        });
+        });}
+        catch(e){console.log(e)}
+        finally{
+            alert("Sikeres mentés")
+            this.setState({alertMutatasa:false})
+        }
+       
     }
 
     funckio = () => {
         let uj = [];
         this.state.zsolt = this.props.route.params.akttart;
-        uj = this.state.zsolt.split(',')
+        uj = this.state.zsolt?.split(',')
         this.setState({ data: uj })
         this.state.data = uj;
         let x =uj.length
@@ -326,7 +369,7 @@ export default class Seged extends Component {
 
     handleChange = (id) => {
         let Noveltszam = this.state.szam
-       
+        let Megvasarolva=this.state.megvasaroltElemek
         let novelesErteke = (1 / this.state.tombHossz) * 100
         let zoldNoveles = (100 / 100) * novelesErteke
 
@@ -343,95 +386,189 @@ export default class Seged extends Component {
        temp.map((item) => {
             if (item.isChecked == true && id==item.id) {
                Noveltszam+=zoldNoveles
-               
+               Megvasarolva+=1
             }
             else if(item.isChecked==false && id==item.id)
             {
-            
+                Megvasarolva-=1
                 Noveltszam-=zoldNoveles
             }
         })
 
         
         
-     
+        this.setState({megvasaroltElemek:Megvasarolva})
         this.setState({ szam: Noveltszam})
 
     }
 
     componentDidMount() {
-
         this.funckio();
         fetch(IP.ipcim + 'regilistatorles', { method: 'DELETE' })
-        console.log(this.state.valogatott)
+        
+        this.getListaId().then((vissza_adatok2) => {
+            if(vissza_adatok2?.length>0)
+            {
+                vissza_adatok2?.map((item)=>{
+                    if(item.id==this.props.route.params.aktid)
+                    {
+                        this.setState({tartalom_tomb:item.tartalom})
+                        this.setState({megvasaroltElemek:item.megvasarolva})
+                        this.setState({szam:item.haladas})
+                    }
+                })
+            }
+            else{
+                let osszes=[]
+                osszes.push({
+                    id:this.props.route.params.aktid,
+                    tartalom:this.state.tartalom_tomb,
+                    megvasarolva:this.state.megvasaroltElemek,
+                    haladas:this.state.szam
+                })
+                this.storeListaId(osszes)
+            }
+        });
+
+       
+    }
+    componentWillUnmount() {
+        let osszes=[]
+        osszes?.push({
+            id:this.props.route.params.aktid,
+            tartalom:this.state.tartalom_tomb,
+            megvasarolva:this.state.megvasaroltElemek,
+            haladas:this.state.szam
+        })
+        this.storeListaId(osszes)
+        //this.storeListaId([])
     }
 
+    
+    
     render() {
         return (
-            <ScrollView style={{backgroundColor: "rgb(50,50,50)" }}>
-           
-             <View style={{position:"relative",top:height*0.02}}>
-             <Text style={{color:"white",fontSize:18}}>Termékek megvásárolva:</Text>
-             <Text style={{alignSelf:"flex-end"}}>a</Text>
-                <ProgressBar  progress={this.state.szam} 
+            <ScrollView
+            stickyHeaderIndices={[0]}
+            showsVerticalScrollIndicator={false}
+
+            style={{backgroundColor: "rgb(50,50,50)"}}>
+            <View style={{position:"relative",backgroundColor:"rgb(18,18,18)",borderBottomRadius:5}}>
+             <View style={{position:"relative",flexDirection:"row",}}>
+             <View style={{flex:10}}><Text style={{color:"white",fontSize:18,margin:10}}>Termékek megvásárolva:</Text></View>
+             <View style={{flex:2}}><Text style={{color:"white",margin:10}}>{this.state.tombHossz}/{this.state.megvasaroltElemek}</Text></View>
+             </View>
+            <View style={{margin:10}}>
+                <ProgressBar 
+                
+                progress={this.state.szam} 
                 height={8} 
                 backgroundColor="rgb(1,194,154)"
-                trackColor="red" />
+                trackColor="#505050" />
             </View>
-       
-                <View style={{ marginTop: 40 }}>
+            </View>
+            
+            <View style={{flex:1,height:height*1.1,flexDirection:"column"}}>
+           
+   
+         
+            <View style={{flex:8}}>
 
-                    {this.state.tartalom_tomb.map((item, key) =>
-                        <View key={key}>
-                            <View style={styles.elemek}>
-                                {item.nev == "Péksütemény" || item.nev == "Zöldségek" || item.nev == "Tejtermék" || item.nev == "Egyéb" ?
-                                    <Text style={styles.kategorianev}> {item.nev}</Text> :
+                {this.state.tartalom_tomb.map((item, key) =>
+                    <View key={key}>
+                        <View style={styles.elemektrue}>
+                            {item.nev == "Péksütemény" || item.nev == "Zöldségek" || item.nev == "Tejtermék" || item.nev == "Egyéb" ?
+                                <Text style={styles.kategorianev}> {item.nev}</Text> :
 
-                                    <Pressable onPress={() => { this.handleChange(item.id); }}>
-                                        <MaterialIcons name={item.isChecked ? "radio-button-checked" : "radio-button-unchecked"} size={27} color="white" />
-                                    </Pressable>
+                                <Pressable onPress={() => { this.handleChange(item.id); }}>
+                                    {item.isChecked?<AntDesign name="check" size={27} color="rgb(1,194,154)" />:
+                                    <MaterialIcons name="radio-button-unchecked"size={27} color="rgb(1,194,154)"/>}
+                                    
+                                </Pressable>
+                            }
+                            {item.nev == "Péksütemény" || item.nev == "Zöldségek" || item.nev == "Tejtermék" || item.nev == "Egyéb" ?
+                                <Text style={{ marginBottom: 15 }}></Text> : <Text style={item.isChecked?styles.betutrue:styles.betufalse}> {item.nev}</Text>
+                            }
 
-                                }{item.nev == "Péksütemény" || item.nev == "Zöldségek" || item.nev == "Tejtermék" || item.nev == "Egyéb" ?
-                                    <Text style={{ marginBottom: 15 }}></Text> : <Text style={{ fontSize: 20, color: "white" }}> {item.nev}</Text>
-                                }
-
-                            </View>
-                        </View>)}
-                    <View style={{ marginTop: 40 }}>
-                        <Text style={{ fontSize: 20, color: "white", marginLeft: 5 }}>Fizetett összeg:</Text>
-                        <TextInput
-                            style={{ height: 40, backgroundColor: "rgb(1,194, 154)", marginLeft: 5, width: 150, borderRadius: 10, borderColor: "black", borderWidth: 2 }}
-                            onChangeText={szoveg => this.setState({ ar: szoveg })}
-                            keyboardType='numeric'
-                            value={this.state.ar}
-                        />
-                        <TouchableOpacity onPress={this.felvitel()}>
-                            <Text style={{ fontSize: 20, color: "white", marginLeft: 5 }}>Mentés</Text>
-                        </TouchableOpacity>
-                    </View>
+                        </View>
+                    </View>)}
+                 
                 </View>
-                <View style={{margin:height*0.01}}></View>
+
+                <View style={{flex:6}}>
+                <Animated.View
+                style={{
+                    zIndex: 2,
+                    transform: [{ translateX: this.pan.x }, { translateY: this.pan.y }],
+                }}
+                {...this.panResponder.panHandlers}>
+                <View style={{ flex: 1, backgroundColor: "696969" }}>
+                    <TouchableOpacity
+                        onPress={(()=>this.setState({alertMutatasa:true}))}
+                        style={{ backgroundColor: "rgb(1,194,154)", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 1, }}>
+                        <FontAwesome name="money" size={24} color="black" />
+            </TouchableOpacity>
+
+          </View>
+        </Animated.View>
+                </View>
+                <DialogInput
+                    isDialogVisible={this.state.alertMutatasa}
+                    message={"Fizetett összeg:"}
+                    submitInput={(fizetettosszeg) => {
+                    this.felvitel(fizetettosszeg),this.props.navigation.navigate('Listák')
+                    }}
+                    closeDialog={() => this.setState({ alertMutatasa: false })}
+                ></DialogInput>
+            
+                </View>
+     
             </ScrollView>
         );
     }
 }
 const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
-    elemek: {
+    elemektrue: {
         backgroundColor: "rgb(50,50,50)",
         flexDirection: 'row',
-        flex: 1,
-        height: height * 0.08,
         alignItems: "center",
+        marginTop:20,
     },
     kategorianev: {
         alignSelf: "center",
         fontSize: 25,
         color: "white",
         width: "100%",
-        height: "100%",
         textAlignVertical: "center",
         backgroundColor: "rgb(18,18,18)",
         borderRadius: 5
+    },
+    betutrue:{
+        color:"grey",
+        fontSize:20
+    },
+    betufalse:{
+        color:"white",
+        fontSize:20
+    },
+    blur:{
+       width:width*0.3,
+       backgroundColor:"black",
+       borderRadius:5,
+       borderWidth:2,
+       borderColor: "rgb(120, 130, 130)",
+    },
+    focus:{
+        width:width*0.3,
+        backgroundColor:"black",
+        borderRadius:5,
+        borderWidth:2,
+        borderColor: "rgb(1,194,154)",
+    },
+    mentesgomb:{
+        width:width*0.3,
+        borderRadius:5,
+        backgroundColor: "rgb(1,194,154)",
     }
 });

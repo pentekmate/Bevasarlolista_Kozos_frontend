@@ -470,7 +470,7 @@ export default class ButtonBasics extends Component {
         else {
             console.log("counter:", this.state.darab, item)
 
-            this.state.tomb.push({
+            this.state.tomb?.push({
 
                 megnevezes: this.state.darab + " " + item
 

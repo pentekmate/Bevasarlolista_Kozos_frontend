@@ -8,16 +8,18 @@ import {
   Pressable,
   Dimensions,
   Animated,
-  PanResponder
+  PanResponder,
+  Modal
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DialogInput from "react-native-dialog-input";
 import { Entypo } from '@expo/vector-icons';
-import AwesomeAlert from 'react-native-awesome-alerts';
 import { ipcim } from "./IPcim";
 import { ScrollView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from '@expo/vector-icons'; 
+import { Row } from "native-base";
 const IP = require('./IPcim')
 
 
@@ -41,6 +43,7 @@ export default class Listaad extends Component {
     super(props);
 
     this.state = {
+    
       alertMutatasa: false,
       data: [],
       segeddata: [],
@@ -56,7 +59,9 @@ export default class Listaad extends Component {
       visible: false,
       setVisible: false,
       bevittadat: "",
-      felhasznalonev: ""
+      felhasznalonev: "",
+      modal:false
+   
     };
   }
   adatatad = () => {
@@ -94,7 +99,7 @@ export default class Listaad extends Component {
     } catch (err) {
       alert("Sikertelen feltöltés");
     } finally {
-      alert("Sikeres feltöltés");
+      this.modalMutat()
     }
     this.setState({ visible: false });
     this.state.termekektomb.map((item) => {
@@ -174,20 +179,9 @@ export default class Listaad extends Component {
   }
   componentWillUnmount() {
     this.navFocusListener();
+    this.storeData(this.state.data)
 
   }
-
-  mindentorles = () => {
-    this.setState({ data: [] });
-    this.setState({ segeddata: [] })
-    this.storeData([]);
-
-    this.state.termekektomb.map((product) => {
-      product.isChecked = false;
-    });
-    this.state.listanev = "";
-  };
-
 
   handleChange = (id, nev) => {
     var tomb = this.state.data;
@@ -204,7 +198,7 @@ export default class Listaad extends Component {
     x = this.state.data?.length
     this.state.termekektomb.map((termek) => {
       if (id === termek.id && termek.isChecked == false) {
-        this.state.data.push({
+        this.state.data?.push({
           id: x,
           megnevezes: termek.megnevezes,
           isChecked: false,
@@ -215,7 +209,7 @@ export default class Listaad extends Component {
     console.log(this.state.data)
     this.state.termekektomb.map((termek) => {
       if (nev == termek.megnevezes && termek.isChecked == true) {
-        let index = this.state.data.findIndex((item) => item.megnevezes == nev)
+        let index = this.state.data?.findIndex((item) => item.megnevezes == nev)
         if (index !== -1) {
           tomb.splice(index, 1);
           this.setState({ data: tomb });
@@ -243,7 +237,7 @@ export default class Listaad extends Component {
 
     this.state.termekektomb.map((termek) => {
       if (termeknev == termek.megnevezes) {
-        let index = this.state.data.findIndex((item) => item.megnevezes == termeknev)
+        let index = this.state.data?.findIndex((item) => item.megnevezes == termeknev)
         if (index !== -1) {
           tomb.splice(index, 1);
           this.setState({ data: tomb });
@@ -252,7 +246,7 @@ export default class Listaad extends Component {
     })
     this.state.data.map((termek) => {
       if (termeknev == termek.megnevezes) {
-        let index = this.state.data.findIndex((item) => item.megnevezes == termeknev)
+        let index = this.state.data?.findIndex((item) => item.megnevezes == termeknev)
         if (index !== -1) {
           tomb.splice(index, 1);
           this.setState({ data: tomb });
@@ -262,7 +256,7 @@ export default class Listaad extends Component {
 
     this.state.segeddata.map((termek) => {
       if (termeknev == termek.megnevezes) {
-        let index = this.state.segeddata.findIndex((item) => item.megnevezes == termeknev)
+        let index = this.state.segeddata?.findIndex((item) => item.megnevezes == termeknev)
         if (index !== -1) {
           tomb2.splice(index, 1);
           this.setState({ segeddata: tomb2 });
@@ -276,33 +270,20 @@ export default class Listaad extends Component {
   Ugras = () => {
     this.storeData2(this.state.data).then(console.log("siker")).then(this.props.navigation.navigate('Listalétrehozása'))
   }
-  teszt() {
-
+  modalMutat=()=> {
+    this.setState({modal:true})
+    setTimeout(() => {
+      this.setState({
+        modal: false
+      });
+    }, 2000);
+   
   }
   render() {
     return (
       
 
-      <ScrollView onScrollEndDrag={this.teszt} style={{ flexDirection: "column", backgroundColor: "rgb(50,50,50)" }}>
-       <AwesomeAlert
-          show={this.state.alertMutatasa}
-          showProgress={false}
-          title="Hiba"
-          message="A listád üres!"
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showCancelButton={true}
-          showConfirmButton={true}
-          confirmText="OK"
-          cancelText="Lista készítése"
-          confirmButtonColor="#DD6B55"
-          onConfirmPressed={() => {
-            this.setState({ alertMutatasa: false });
-          }}
-          onCancelPressed={() => {
-            this.setState({ alertMutatasa: false });
-          }}
-        />
+      <ScrollView onScrollEndDrag={this.modalMutat} style={{ flexDirection: "column", backgroundColor: "rgb(50,50,50)" }}>
         <View style={[styles.keresesdiv, { flex: 1, flexDirection: "row", backgroundColor: "rgb(18,18,18)" }]}>
           <Feather style={{ paddingTop: 5, }} name="search" size={28} color="white" />
           <TouchableOpacity
@@ -424,6 +405,26 @@ export default class Listaad extends Component {
           
 
         </View>
+            
+          <Modal
+          style={{backgroundColor:"red"}}
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modal}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            this.setState({modalVisible: !modalVisible});
+          }}>
+            <View style={styles.modalView}>
+              <View style={{flex:1}}><Text style={{color:"white",alignSelf:"flex-start"}}>A listád mentésre került!</Text>
+           </View>
+              <View style={{flex:1}}>
+              <Pressable style={{alignSelf:"flex-end"}} onPress={()=>this.setState({modal:false})}><MaterialIcons name="close" size={24} color="white"/>
+              </Pressable></View>
+           
+            </View>
+          </Modal>
+         
         <Animated.View
           style={{
             zIndex: 2,
@@ -515,5 +516,14 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     justifyContent: "center",
+  },
+  modalView: {
+    flexDirection:"row",
+    bottom:50,
+    position:"absolute",
+    backgroundColor: '#181818',
+    alignItems: 'center',
+    width:"100%",
+    height:"5%"
   }
 });

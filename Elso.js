@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FlatList, Text, StyleSheet, View,TouchableOpacity} from 'react-native';
+import { FlatList, Text, StyleSheet, View,TouchableOpacity, ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ipcim } from "./IPcim";
 const IP = require('./IPcim')
@@ -10,8 +10,9 @@ export default class Kiir extends Component {
         super(props);
 
         this.state = {
-            data: [""],
+            data: [],
             felhasznalonev: "",
+            isLoading:true
         };
     }
 
@@ -28,11 +29,12 @@ export default class Kiir extends Component {
         this.getData().then((vissza_adatok2) => {
             this.setState({ felhasznalonev: vissza_adatok2 })
             this.state.felhasznalonev = vissza_adatok2
+            try{    
             var bemenet = {
                 bevitel1: this.state.felhasznalonev
             }
             //szűrt adatok lefetchelése backendről
-            fetch(IP.ipcim + 'felhasznalolistai', {
+            fetch(IP.ipcim + 'felhasznalolistainincskesz', {
                 method: "POST",
                 body: JSON.stringify(bemenet),
                 headers: { "Content-type": "application/json; charset=UTF-8" }
@@ -44,6 +46,10 @@ export default class Kiir extends Component {
                 .catch((error) => {
                     console.error(error);
                 });
+            }catch(e){console.log(e)}
+            finally{
+               // this.setState({isLoading:false})
+            }
         });
     }
     getParsedDate(strDate) {
@@ -66,44 +72,14 @@ export default class Kiir extends Component {
     componentDidMount() {
         this.getData().then((vissza_adatok2) => {
             this.setState({ felhasznalonev: vissza_adatok2 })
-            this.state.felhasznalonev = vissza_adatok2
-            var bemenet = {
-                bevitel1: this.state.felhasznalonev
-            }
-            //szűrt adatok lefetchelése backendről
-            fetch(IP.ipcim + 'felhasznalolistai', {
-                method: "POST",
-                body: JSON.stringify(bemenet),
-                headers: { "Content-type": "application/json; charset=UTF-8" }
-            }
-            ).then((response) => response.json())
-                .then((responseJson) => {
-                    this.setState({ data: responseJson, }, function () { });
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+            this.adatLekeres()
+            this.setState({isLoading:false})
         });
+      
         this.navFocusListener = this.props.navigation.addListener('focus', () => {
             this.getData().then((vissza_adatok2) => {
                 this.setState({ felhasznalonev: vissza_adatok2 })
-                this.state.felhasznalonev = vissza_adatok2
-                var bemenet = {
-                    bevitel1: this.state.felhasznalonev
-                }
-                //szűrt adatok lefetchelése backendről
-                fetch(IP.ipcim + 'felhasznalolistai', {
-                    method: "POST",
-                    body: JSON.stringify(bemenet),
-                    headers: { "Content-type": "application/json; charset=UTF-8" }
-                }
-                ).then((response) => response.json())
-                    .then((responseJson) => {
-                        this.setState({ data: responseJson, }, function () { });
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
+                this.adatLekeres()
             });
         })
     }
@@ -115,16 +91,32 @@ export default class Kiir extends Component {
 
     render() {
         return (
-            <View style={{ flex: 1, backgroundColor: "rgb(18,18, 18)" }}>
-            <FlatList
-                data={this.state.data}
-                renderItem={({ item }) => (
-
-                    <TouchableOpacity style={{ backgroundColor: "rgb(32,32, 32)", height: 60, justifyContent: 'center', marginTop: 10 }}
-                        onPress={() => this.props.navigation.navigate('Seged', { aktid: item.listak_id, akttart: item.listak_tartalom })} ><Text style={{ marginLeft: 3, fontSize: 20, color: "white" }}>{item.listak_nev}{"\n"} {this.getParsedDate(item.listak_datum)}</Text></TouchableOpacity>
-
-                )}
-            />
+            <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)" }}>
+                {this.state.isLoading ? <ActivityIndicator size={"large"} /> :
+                this.state.data.length>0?
+                 <FlatList
+                    data={this.state.data}
+                    renderItem={({ item }) => (
+                        
+                        <TouchableOpacity style={{ backgroundColor: "rgb(32,32, 32)", height: 80, justifyContent: 'center', marginTop: 10,borderRadius:10}}
+                            onPress={() => this.props.navigation.navigate('Seged', { aktid: item.listak_id, akttart: item.listak_tartalom })} >
+                            <View>
+                            <Text style={{fontSize: 20, color: "white",margin:10}}>{item.listak_nev}</Text>
+                            <Text style={{color:"rgb(1,194,154)",margin:10}}>{this.getParsedDate(item.listak_datum)}</Text>
+                            </View>
+                            </TouchableOpacity>
+    
+                    )}
+                />
+            :<View style={{alignSelf:"center",flex:1,justifyContent:"center"}}>
+            <Text style={{color:"white",fontSize:15,margin:10}}>Úgy tűnik jelenleg nem hoztál létre egy listát sem.</Text>
+            <TouchableOpacity
+            onPress={()=>this.props.navigation.navigate('Listalétrehozás')}>
+                <Text style={{alignSelf:"center",color:"rgb(1,194,154)",fontSize:20}}>Listalétrehozása!</Text>
+            </TouchableOpacity>
+            </View>}
+              
+           
         </View>
         );
     }

@@ -90,7 +90,7 @@ function Root({ navigation }) {
   return (
     <Drawer.Navigator initialRouteName="Toltokep"
       screenOptions=
-      {{ lazy: false, headerStyle: { backgroundColor: '#01c29a' }, headerTintColor: '#181818', drawerStyle: { backgroundColor: 'rgb(32,32,32)' }, drawerActiveBackgroundColor: "rgb(18,18,18)", drawerActiveTintColor: "white", drawerInactiveTintColor: "white", headerTitleAlign: "center" }} >
+      {{ lazy: false, headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: 'white', drawerStyle: { backgroundColor: 'rgb(32,32,32)' }, drawerActiveBackgroundColor: "rgb(18,18,18)", drawerActiveTintColor: "white", drawerInactiveTintColor: "white", headerTitleAlign: "center" }} >
       <Drawer.Screen name="Home" component={HomeScreen} options={{
         title: "Home",
         drawerIcon: ({ }) => (
@@ -148,10 +148,10 @@ const menu = () => {
           component={Root}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Listalétrehozása" component={Listainputsr} options={{ title: "Keresés", headerTitle: "Keresés", headerStyle: { backgroundColor: '#01c29a', headerTintColor: '#181818' } }} />
+        <Stack.Screen name="Listalétrehozása" component={Listainputsr} options={{headerStyle: { backgroundColor: 'rgb(18,18,18)'},headerTitleAlign:"center",headerTintColor: "white" , headerTitle: "Keresés"}} />
         <Stack.Screen name="Regisztráció" component={Regisztracio} />
-        <Stack.Screen name="Seged" component={Seged} options={{ headerStyle: { backgroundColor: '#01c29a' }, headerTintColor: "rgb(18,18,18)", headerTitle: "" }} />
-        <Stack.Screen name="Szerkeszt" component={Szerkeszt} options={{ headerStyle: { backgroundColor: '#01c29a' }, headerTintColor: "rgb(18,18,18)", headerTitle: "Lista módosítása" }} />
+        <Stack.Screen name="Seged" component={Seged} options={{headerStyle: {backgroundColor: 'rgb(18,18,18)' }, headerTintColor: "white", title:"Tartalom",headerTitleAlign:"center" }} />
+        <Stack.Screen name="Szerkeszt" component={Szerkeszt} options={{ headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: "white", headerTitle: "Lista módosítása" }} />
       </Stack.Navigator>
     </NavigationContainer>
 
