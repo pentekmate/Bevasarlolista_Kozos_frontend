@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Animated,PanResponder, Button, StyleSheet, View, Text, TouchableOpacity, TextInput, Dimensions, FlatList ,ActivityIndicator,Image} from "react-native";
+import { StyleSheet, View,Dimensions,Image} from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 

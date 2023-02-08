@@ -17,7 +17,7 @@ import Profil from './Profilom';
 import Toltokep from './Tolto'
 import Fooldal from './Home';
 import Seged from './Seged';
-import Felvitel from './Felvitel';
+import Felvitel from './felvitel';
 import Szerkeszt from './Szerkeszt'
 
 function HomeScreen({ navigation }) {

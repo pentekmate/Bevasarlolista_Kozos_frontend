@@ -5,6 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ipcim } from "./IPcim";
 const IP = require('./IPcim')
 import { AntDesign } from '@expo/vector-icons'; 
+import { ScrollView } from 'react-navigation';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 class Felvitel extends React.Component {
@@ -26,9 +28,8 @@ class Felvitel extends React.Component {
     
      getLista() {
         var bemenet = {
-            bevitel1: this.state.felhasznalonev
+            bevitel1:"Admin"
         }
-        //szűrt adatok lefetchelése backendről
         fetch(IP.ipcim + 'felhasznalolistaikesz', {
             method: "POST",
             body: JSON.stringify(bemenet),
@@ -36,28 +37,27 @@ class Felvitel extends React.Component {
         }
         ).then((response) => response.json())
             .then((responseJson) => {
-                this.setState({ adatok: responseJson}, function () { });
-                console.log(responseJson)
+             this.setState({data:responseJson})
             })
             .catch((error) => {
                 console.error(error);
-            }).then(this.setState({isLoading:false}));
+            });
            
 
     }
     componentDidMount() {
         this.getData().then((vissza_adatok2) => {
             this.setState({ felhasznalonev: vissza_adatok2 })
-        }).then(this.getLista())
-        this.getLista()
+        }).then(this.getLista)
+       
         let tartalomSplitelve = "";
         for (let i = 0; i < this.state.adatok.length; i++) {
             tartalomSplitelve = this.state.adatok[i].listak_tartalom.split(',')
             this.state.adatok[i].listak_tartalom = tartalomSplitelve
             this.state.adatok[i].kinyitott = false
         }
-        this.navFocusListener = this.props.navigation.addListener('focus', () => { this.getLista()
-        
+        this.navFocusListener = this.props.navigation.addListener('focus', () => {
+         this.getLista()
         })
     }
 
@@ -117,6 +117,7 @@ class Felvitel extends React.Component {
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)" }}>
+                <SafeAreaView></SafeAreaView>
                  {this.state.isLoading ? <ActivityIndicator size={"large"} /> :
                  this.state.adatok.length>0?
                  <FlatList

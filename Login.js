@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { ChildComponent, FlatList, Text, StyleSheet, View, TextInput, Button, Dimensions, TouchableOpacity, Pressable, PanResponder } from 'react-native';
+import { Text, StyleSheet, View, TextInput, Modal, Dimensions, TouchableOpacity, Pressable,ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons'; 
 import { ipcim } from "./IPcim";
 const IP = require('./IPcim')
 
@@ -13,7 +14,8 @@ export default class Login extends Component {
     super(props);
 
     this.state = {
-      data: [],
+      toltes:false,
+      data:false,
       felhasznalonev: "",
       jelszo: "",
       felhasznalonevtovabb: "",
@@ -21,7 +23,8 @@ export default class Login extends Component {
       fokusz1: false,
       rosszjelszo: false,
       rosszfelhasznalonev: false,
-      lathatojelszo: true
+      lathatojelszo: true,
+      modal:false
     };
   }
   storeData = async (value) => {
@@ -38,47 +41,40 @@ export default class Login extends Component {
     })
   }
   fiokteszt = () => {
-    let talalt = 0;
-    let nemtalalt = 0;
-    this.state.data.map((item) => {
-      if (item.felhasznalo_nev == this.state.felhasznalonev && item.felhasznalo_jelszo == this.state.jelszo) {
-        talalt += 1
-      }
-      else {
-        nemtalalt += 1
-      }
-    })
-    if (talalt > 0) {
+    if(this.state.data==true)
+    {
       this.storeData(this.state.felhasznalonev)
       this.props.navigation.navigate('Home');
       this.setState({ felhasznalonev: "" })
       this.setState({ jelszo: "" })
-
     }
     else {
-      alert("Nem egyező jelszó/felhasználónév")
+      this.modalMutat()
       this.setState({ rosszjelszo: true })
       this.setState({ rosszfelhasznalonev: true })
     }
-    console.log(this.state.data)
+  this.setState({toltes:false})
   }
+
   bejelentkezes = () => {
-    console.log(this.state.felhasznalonev)
-    console.log(this.state.jelszo)
-    fetch(IP.ipcim + 'felhasznalok')
-      .then((response) => response.json())
-      .then((responseJson) => {
-        this.setState({
-          data: responseJson,
-        }
-          , function () {
-          });
-      }).then(this.fiokteszt)
-
-
+      var bemenet={
+      bevitel1:this.state.felhasznalonev,
+      bevitel2:this.state.jelszo
+     
+    }
+    fetch(ipcim+'felhasznalok', {
+      method: "POST",
+      body: JSON.stringify(bemenet),
+      headers: {"Content-type": "application/json; charset=UTF-8"}
+    }
+    )
+  .then((response) => response.json())
+  .then((responseJson) => {
+      this.setState({data:responseJson})
+  }).then(this.setState({toltes:true})).then(this.fiokteszt)
+    
   }
   JelszoLathato = () => {
-    console.log("elso:", this.state.lathatojelszo)
     if (this.state.lathatojelszo == true) {
       this.setState({ lathatojelszo: false })
     }
@@ -86,12 +82,21 @@ export default class Login extends Component {
       this.setState({ lathatojelszo: true })
     }
   }
-
+  modalMutat=()=> {
+    this.setState({modal:true})
+    setTimeout(() => {
+      this.setState({
+        modal: false
+      });
+    }, 2000);
+   
+  }
 
   render() {
     return (
       <View style={{ flexDirection: 'column', flex: 1, }}>
-
+ 
+      
         <View style={{ flex: 1, alignContent: "center", justifyContent: "center" }}
         >
           <View style={styles.divek}>
@@ -131,7 +136,8 @@ export default class Login extends Component {
 
             </View>
           </View>
-
+          {this.state.toltes?
+      <View><ActivityIndicator size="large" color="#00ff00" /></View>:<Text></Text>}
         </View>
         <View style={{ flex: 2 }}>
           <View style={styles.buttondiv}>
@@ -149,9 +155,24 @@ export default class Login extends Component {
             </TouchableOpacity>
           </View>
 
-
-
         </View>
+        <Modal
+          style={{backgroundColor:"red"}}
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modal}
+          onRequestClose={() => {
+            this.setState({modalVisible: !modalVisible});
+          }}>
+            <View style={styles.modalView}>
+              <View style={{flex:6}}><Text style={{color:"white",alignSelf:"flex-start"}}>Helytelen jelszó vagy Felhasználónév</Text>
+           </View>
+              <View style={{flex:1}}>
+              <Pressable style={{alignSelf:"flex-end"}} onPress={()=>this.setState({modal:false})}><MaterialIcons name="close" size={24} color="white"/>
+              </Pressable></View>
+           
+            </View>
+          </Modal>
       </View>
     );
   }
@@ -232,8 +253,14 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     height: height * 0.05,
     borderRadius: 10
-
-
-
+  },
+   modalView: {
+    flexDirection:"row",
+    bottom:50,
+    position:"absolute",
+    backgroundColor: '#181818',
+    alignItems: 'center',
+    width:"100%",
+    height:"5%"
   }
 });
