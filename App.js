@@ -148,9 +148,9 @@ const menu = () => {
           component={Root}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Listalétrehozása" component={Listainputsr} options={{headerStyle: { backgroundColor: 'rgb(18,18,18)'},headerTitleAlign:"center",headerTintColor: "white" , headerTitle: "Keresés"}} />
-        <Stack.Screen name="Regisztráció" component={Regisztracio} />
-        <Stack.Screen name="Seged" component={Seged} options={{headerStyle: {backgroundColor: 'rgb(18,18,18)' }, headerTintColor: "white", title:"Tartalom",headerTitleAlign:"center" }} />
+        <Stack.Screen name="Listalétrehozása" component={Listainputsr} options={{ headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTitleAlign: "center", headerTintColor: "white", headerTitle: "Keresés" }} />
+        <Stack.Screen name="Regisztráció" options={{ headerStyle: { headerTintColor: "black" } }} component={Regisztracio} />
+        <Stack.Screen name="Seged" component={Seged} options={{ headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: "white", title: "Tartalom", headerTitleAlign: "center" }} />
         <Stack.Screen name="Szerkeszt" component={Szerkeszt} options={{ headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: "white", headerTitle: "Lista módosítása" }} />
       </Stack.Navigator>
     </NavigationContainer>
