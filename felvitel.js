@@ -117,46 +117,46 @@ class Felvitel extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)" }}>
-                <SafeAreaView></SafeAreaView>
-                {this.state.isLoading ? <ActivityIndicator size={"large"} /> :
-                    this.state.adatok.length > 0 ?
-                        <FlatList
-                            data={this.state.adatok}
-                            keyExtractor={(item, index) => String(index)}
-                            renderItem={({ item }) =>
-                            (<List.Section>
-                                <List.Accordion
-                                    theme={{ colors: { background: 'rgb(1,194,154)' } }}
-                                    right={props => <AntDesign name="caretdown" size={20} color="rgb(1,194,154)" />}
-                                    title={<Text style={styles.Title}>{item.listak_nev}</Text>}
-                                    description={<Text style={{ color: "rgb(1,194,154)" }}>{this.getParsedDate(item.listak_keszdatum)}</Text >}
-                                    style={styles.lista}
-                                    expanded={item.kinyitott}
-                                    onPress={() => { this._handlePress(item.listak_id); this.getlistakid(item.listak_id); this.setState({ active: true }) }}
-                                    onLongPress={() => this.props.navigation.navigate('Szerkeszt', { aktid: item.listak_id })}>
+            <SafeAreaView style={{ backgroundColor: "rgb(50,50,50)", flex: 1 }}>
+                <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)" }}>
+                    {this.state.isLoading ? <ActivityIndicator size={"large"} /> :
+                        this.state.adatok.length > 0 ?
+                            <FlatList
+                                data={this.state.adatok}
+                                keyExtractor={(item, index) => String(index)}
+                                renderItem={({ item }) =>
+                                (<List.Section>
+                                    <List.Accordion
+                                        theme={{ colors: { background: 'rgb(1,194,154)' } }}
+                                        right={props => <AntDesign name="caretdown" size={20} color="rgb(1,194,154)" />}
+                                        title={<Text style={styles.Title}>{item.listak_nev}</Text>}
+                                        description={<Text style={{ color: "rgb(1,194,154)" }}>{this.getParsedDate(item.listak_keszdatum)}</Text >}
+                                        style={styles.lista}
+                                        expanded={item.kinyitott}
+                                        onPress={() => { this._handlePress(item.listak_id); this.getlistakid(item.listak_id); this.setState({ active: true }) }}
+                                        onLongPress={() => this.props.navigation.navigate('Szerkeszt', { aktid: item.listak_id })}>
 
-                                    <FlatList
-                                        data={this.state.tartalom}
-                                        renderItem={({ item }) => (
-                                            <List.Item title={item.nev} titleStyle={{ color: "white" }}></List.Item>
-                                        )} />
-                                    <View>
-                                        <Text style={{ fontSize: 20, textAlign: "right", marginRight: 10, color: "white" }}>{item.listak_ar} Ft</Text>
-                                    </View>
-                                </List.Accordion>
-                            </List.Section>
-                            )} />
-                        : <View style={{ alignSelf: "center", flex: 1, justifyContent: "center" }}>
-                            <Text style={{ color: "white", fontSize: 15, margin: 10 }}>Úgy tűnik jelenleg nem fejeztél be egy listát sem.</Text>
-                            <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate("Listák")}>
-                                <Text style={{ alignSelf: "center", color: "rgb(1,194,154)", fontSize: 20 }}>Listáim megtekintése!</Text>
-                            </TouchableOpacity>
-                        </View>}
+                                        <FlatList
+                                            data={this.state.tartalom}
+                                            renderItem={({ item }) => (
+                                                <List.Item title={item.nev} titleStyle={{ color: "white" }}></List.Item>
+                                            )} />
+                                        <View>
+                                            <Text style={{ fontSize: 20, textAlign: "right", marginRight: 10, color: "white" }}>{item.listak_ar} Ft</Text>
+                                        </View>
+                                    </List.Accordion>
+                                </List.Section>
+                                )} />
+                            : <View style={{ alignSelf: "center", flex: 1, justifyContent: "center" }}>
+                                <Text style={{ color: "white", fontSize: 15, margin: 10 }}>Úgy tűnik jelenleg nem fejeztél be egy listát sem.</Text>
+                                <TouchableOpacity
+                                    onPress={() => this.props.navigation.navigate("Listák")}>
+                                    <Text style={{ alignSelf: "center", color: "rgb(1,194,154)", fontSize: 20 }}>Listáim megtekintése!</Text>
+                                </TouchableOpacity>
+                            </View>}
 
-            </View>
-
+                </View>
+            </SafeAreaView>
         );
     }
 }

@@ -283,7 +283,7 @@ export default class Listaad extends Component {
     return (
 
 
-      <ScrollView onScrollEndDrag={this.modalMutat} style={{ flexDirection: "column", backgroundColor: "rgb(50,50,50)" }}>
+      <ScrollView style={{ flexDirection: "column", backgroundColor: "rgb(50,50,50)" }}>
         <View style={[styles.keresesdiv, { flex: 1, flexDirection: "row", backgroundColor: "rgb(18,18,18)" }]}>
           <Feather style={{ paddingTop: 5, }} name="search" size={28} color="white" />
           <TouchableOpacity

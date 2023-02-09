@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, View, TextInput, Modal, Dimensions, TouchableOpacity, Pressable,ActivityIndicator } from 'react-native';
+import { Text, StyleSheet, View, TextInput, Modal, Dimensions, TouchableOpacity, Pressable, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons'; 
+import { MaterialIcons } from '@expo/vector-icons';
 import { ipcim } from "./IPcim";
 const IP = require('./IPcim')
 
@@ -14,8 +14,8 @@ export default class Login extends Component {
     super(props);
 
     this.state = {
-      toltes:false,
-      data:false,
+      toltes: false,
+      data: false,
       felhasznalonev: "",
       jelszo: "",
       felhasznalonevtovabb: "",
@@ -24,7 +24,7 @@ export default class Login extends Component {
       rosszjelszo: false,
       rosszfelhasznalonev: false,
       lathatojelszo: true,
-      modal:false
+      modal: false
     };
   }
   storeData = async (value) => {
@@ -41,8 +41,7 @@ export default class Login extends Component {
     })
   }
   fiokteszt = () => {
-    if(this.state.data==true)
-    {
+    if (this.state.data == true) {
       this.storeData(this.state.felhasznalonev)
       this.props.navigation.navigate('Home');
       this.setState({ felhasznalonev: "" })
@@ -53,26 +52,26 @@ export default class Login extends Component {
       this.setState({ rosszjelszo: true })
       this.setState({ rosszfelhasznalonev: true })
     }
-  this.setState({toltes:false})
+    this.setState({ toltes: false })
   }
 
   bejelentkezes = () => {
-      var bemenet={
-      bevitel1:this.state.felhasznalonev,
-      bevitel2:this.state.jelszo
-     
+    var bemenet = {
+      bevitel1: this.state.felhasznalonev,
+      bevitel2: this.state.jelszo
+
     }
-    fetch(ipcim+'felhasznalok', {
+    fetch(ipcim + 'login', {
       method: "POST",
       body: JSON.stringify(bemenet),
-      headers: {"Content-type": "application/json; charset=UTF-8"}
+      headers: { "Content-type": "application/json; charset=UTF-8" }
     }
     )
-  .then((response) => response.json())
-  .then((responseJson) => {
-      this.setState({data:responseJson})
-  }).then(this.setState({toltes:true})).then(this.fiokteszt)
-    
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({ data: responseJson })
+      }).then(this.setState({ toltes: true })).then(this.fiokteszt)
+
   }
   JelszoLathato = () => {
     if (this.state.lathatojelszo == true) {
@@ -82,21 +81,21 @@ export default class Login extends Component {
       this.setState({ lathatojelszo: true })
     }
   }
-  modalMutat=()=> {
-    this.setState({modal:true})
+  modalMutat = () => {
+    this.setState({ modal: true })
     setTimeout(() => {
       this.setState({
         modal: false
       });
     }, 2000);
-   
+
   }
 
   render() {
     return (
       <View style={{ flexDirection: 'column', flex: 1, }}>
- 
-      
+
+
         <View style={{ flex: 1, alignContent: "center", justifyContent: "center" }}
         >
           <View style={styles.divek}>
@@ -136,8 +135,8 @@ export default class Login extends Component {
 
             </View>
           </View>
-          {this.state.toltes?
-      <View><ActivityIndicator size="large" color="#00ff00" /></View>:<Text></Text>}
+          {this.state.toltes ?
+            <View><ActivityIndicator size="large" color="#00ff00" /></View> : <Text></Text>}
         </View>
         <View style={{ flex: 2 }}>
           <View style={styles.buttondiv}>
@@ -157,22 +156,22 @@ export default class Login extends Component {
 
         </View>
         <Modal
-          style={{backgroundColor:"red"}}
+          style={{ backgroundColor: "red" }}
           animationType="fade"
           transparent={true}
           visible={this.state.modal}
           onRequestClose={() => {
-            this.setState({modalVisible: !modalVisible});
+            this.setState({ modalVisible: !modalVisible });
           }}>
-            <View style={styles.modalView}>
-              <View style={{flex:6}}><Text style={{color:"white",alignSelf:"flex-start"}}>Helytelen jelszó vagy Felhasználónév</Text>
-           </View>
-              <View style={{flex:1}}>
-              <Pressable style={{alignSelf:"flex-end"}} onPress={()=>this.setState({modal:false})}><MaterialIcons name="close" size={24} color="white"/>
-              </Pressable></View>
-           
+          <View style={styles.modalView}>
+            <View style={{ flex: 6 }}><Text style={{ color: "white", alignSelf: "flex-start" }}>Helytelen jelszó vagy Felhasználónév</Text>
             </View>
-          </Modal>
+            <View style={{ flex: 1 }}>
+              <Pressable style={{ alignSelf: "flex-end" }} onPress={() => this.setState({ modal: false })}><MaterialIcons name="close" size={24} color="white" />
+              </Pressable></View>
+
+          </View>
+        </Modal>
       </View>
     );
   }
@@ -254,13 +253,13 @@ const styles = StyleSheet.create({
     height: height * 0.05,
     borderRadius: 10
   },
-   modalView: {
-    flexDirection:"row",
-    bottom:50,
-    position:"absolute",
+  modalView: {
+    flexDirection: "row",
+    bottom: 50,
+    position: "absolute",
     backgroundColor: '#181818',
     alignItems: 'center',
-    width:"100%",
-    height:"5%"
+    width: "100%",
+    height: "5%"
   }
 });

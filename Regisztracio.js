@@ -11,6 +11,7 @@ export default class Regisztracio extends Component {
     super(props);
 
     this.state = {
+      talaltfelh: false,
       data: [],
       regisztralfelh: "",
       regisztraljelsz: "",
@@ -57,6 +58,9 @@ export default class Regisztracio extends Component {
         this.setState({ rosszfelhasznalonev: true })
         this.setState({ rosszjelszo: true })
       }
+      else if (this.state.talaltfelh == true) {
+        alert("A felhasználónév használatban van.")
+      }
       else {
         try {
           var bemenet = {
@@ -83,7 +87,33 @@ export default class Regisztracio extends Component {
 
   }
   regisztracio = () => {
-    this.regisztracioellen()
+    var bemenet = {
+      bevitel1: this.state.regisztralfelh
+
+    }
+    fetch('http://localhost:3000/felhasznalok', {
+      method: "POST",
+      body: JSON.stringify(bemenet),
+      headers: { "Content-type": "application/json; charset=UTF-8" }
+    }
+    ).then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson.length > 0) {
+          this.setState({ talaltfelh: true })
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      }).then(this.regisztracioellen())
+
+  }
+  JelszoLathato = () => {
+    if (this.state.lathatojelszo == true) {
+      this.setState({ lathatojelszo: false })
+    }
+    else if (this.state.lathatojelszo == false) {
+      this.setState({ lathatojelszo: true })
+    }
   }
 
 
@@ -121,7 +151,7 @@ export default class Regisztracio extends Component {
                 onBlur={() => this.setState({ fokusz: false })}
                 style={styles.textinputjelsz}
                 placeholder="Jelszó"
-                secureTextEntry={true}
+                secureTextEntry={this.state.lathatojelszo }
                 onChangeText={(jelszoszoveg) => this.setState({ regisztraljelsz: jelszoszoveg })}
                 onChange={() => this.setState({ rosszjelszo: false })}
                 value={this.state.regisztraljelsz}>
