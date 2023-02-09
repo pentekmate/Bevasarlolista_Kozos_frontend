@@ -66,7 +66,7 @@ export default class Listaad extends Component {
   }
   adatatad = () => {
 
-    if (this.state.data.length == 0 && this.state.segeddata.length == 0) {
+    if (this.state.data?.length == 0 && this.state.segeddata?.length == 0) {
       this.setState({ alertMutatasa: true })
     } else {
       this.setState({ visible: true });
@@ -82,8 +82,8 @@ export default class Listaad extends Component {
 
   submit_atad(input) {
     var tartalom = [];
-    this.state.data.map((item) => tartalom.push(item.megnevezes));
-    this.state.segeddata.map((item) => tartalom.push(item.megnevezes));
+    this.state.data?.map((item) => tartalom.push(item.megnevezes));
+    this.state.segeddata?.map((item) => tartalom.push(item.megnevezes));
     this.state.listanev = input;
     var adatok = {
       bevitel1: this.state.listanev,
@@ -244,17 +244,17 @@ export default class Listaad extends Component {
         }
       }
     })
-    this.state.data.map((termek) => {
+    this.state.data?.map((termek) => {
       if (termeknev == termek.megnevezes) {
         let index = this.state.data?.findIndex((item) => item.megnevezes == termeknev)
         if (index !== -1) {
-          tomb.splice(index, 1);
+          tomb?.splice(index, 1);
           this.setState({ data: tomb });
         }
       }
     })
 
-    this.state.segeddata.map((termek) => {
+    this.state.segeddata?.map((termek) => {
       if (termeknev == termek.megnevezes) {
         let index = this.state.segeddata?.findIndex((item) => item.megnevezes == termeknev)
         if (index !== -1) {
