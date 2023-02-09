@@ -18,7 +18,7 @@ import { Entypo } from '@expo/vector-icons';
 import { ipcim } from "./IPcim";
 import { ScrollView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
-import { MaterialIcons } from '@expo/vector-icons'; 
+import { MaterialIcons } from '@expo/vector-icons';
 import { Row } from "native-base";
 const IP = require('./IPcim')
 
@@ -43,7 +43,7 @@ export default class Listaad extends Component {
     super(props);
 
     this.state = {
-    
+
       alertMutatasa: false,
       data: [],
       segeddata: [],
@@ -60,8 +60,8 @@ export default class Listaad extends Component {
       setVisible: false,
       bevittadat: "",
       felhasznalonev: "",
-      modal:false
-   
+      modal: false
+
     };
   }
   adatatad = () => {
@@ -211,7 +211,7 @@ export default class Listaad extends Component {
       if (nev == termek.megnevezes && termek.isChecked == true) {
         let index = this.state.data?.findIndex((item) => item.megnevezes == nev)
         if (index !== -1) {
-          tomb.splice(index, 1);
+          tomb?.splice(index, 1);
           this.setState({ data: tomb });
           console.log(this.state.data)
         }
@@ -239,7 +239,7 @@ export default class Listaad extends Component {
       if (termeknev == termek.megnevezes) {
         let index = this.state.data?.findIndex((item) => item.megnevezes == termeknev)
         if (index !== -1) {
-          tomb.splice(index, 1);
+          tomb?.splice(index, 1);
           this.setState({ data: tomb });
         }
       }
@@ -270,18 +270,18 @@ export default class Listaad extends Component {
   Ugras = () => {
     this.storeData2(this.state.data).then(console.log("siker")).then(this.props.navigation.navigate('Listalétrehozása'))
   }
-  modalMutat=()=> {
-    this.setState({modal:true})
+  modalMutat = () => {
+    this.setState({ modal: true })
     setTimeout(() => {
       this.setState({
         modal: false
       });
     }, 2000);
-   
+
   }
   render() {
     return (
-      
+
 
       <ScrollView onScrollEndDrag={this.modalMutat} style={{ flexDirection: "column", backgroundColor: "rgb(50,50,50)" }}>
         <View style={[styles.keresesdiv, { flex: 1, flexDirection: "row", backgroundColor: "rgb(18,18,18)" }]}>
@@ -380,51 +380,51 @@ export default class Listaad extends Component {
               </View>
             </View>
           </View>)}
-          {this.state.segeddata?.length>0?
-          this.state.segeddata?.map((item, key) =>
-            <View key={key} style={styles.listatartalom}>
-              <View style={{ flexDirection: "row", flex: 1 }}>
-                <View style={{ flex: 1, justifyContent: "center" }}>
-                  <Entypo style={{ marginLeft: 10 }} name="shop" size={25} color="white" />
+          {this.state.segeddata?.length > 0 ?
+            this.state.segeddata?.map((item, key) =>
+              <View key={key} style={styles.listatartalom}>
+                <View style={{ flexDirection: "row", flex: 1 }}>
+                  <View style={{ flex: 1, justifyContent: "center" }}>
+                    <Entypo style={{ marginLeft: 10 }} name="shop" size={25} color="white" />
+                  </View>
+                  <View style={{ flex: 13, justifyContent: "center" }}>
+                    <Text style={{ color: "white", marginLeft: 10 }}>{item.megnevezes}</Text>
+                  </View>
+                  <View style={styles.torlesgomb}>
+                    <TouchableOpacity onPress={() => this.ListaelemTorles(item.megnevezes)}>
+                      <Ionicons
+                        name="trash-outline"
+                        size={24}
+                        color="white"
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
-                <View style={{ flex: 13, justifyContent: "center" }}>
-                  <Text style={{ color: "white", marginLeft: 10 }}>{item.megnevezes}</Text>
-                </View>
-                <View style={styles.torlesgomb}>
-                  <TouchableOpacity onPress={() => this.ListaelemTorles(item.megnevezes)}>
-                    <Ionicons
-                      name="trash-outline"
-                      size={24}
-                      color="white"
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>):
+              </View>) :
             <Text></Text>}
-          
+
 
         </View>
-            
-          <Modal
-          style={{backgroundColor:"red"}}
+
+        <Modal
+          style={{ backgroundColor: "red" }}
           animationType="fade"
           transparent={true}
           visible={this.state.modal}
           onRequestClose={() => {
             Alert.alert('Modal has been closed.');
-            this.setState({modalVisible: !modalVisible});
+            this.setState({ modalVisible: !modalVisible });
           }}>
-            <View style={styles.modalView}>
-              <View style={{flex:1}}><Text style={{color:"white",alignSelf:"flex-start"}}>A listád mentésre került!</Text>
-           </View>
-              <View style={{flex:1}}>
-              <Pressable style={{alignSelf:"flex-end"}} onPress={()=>this.setState({modal:false})}><MaterialIcons name="close" size={24} color="white"/>
-              </Pressable></View>
-           
+          <View style={styles.modalView}>
+            <View style={{ flex: 1 }}><Text style={{ color: "white", alignSelf: "flex-start" }}>A listád mentésre került!</Text>
             </View>
-          </Modal>
-         
+            <View style={{ flex: 1 }}>
+              <Pressable style={{ alignSelf: "flex-end" }} onPress={() => this.setState({ modal: false })}><MaterialIcons name="close" size={24} color="white" />
+              </Pressable></View>
+
+          </View>
+        </Modal>
+
         <Animated.View
           style={{
             zIndex: 2,
@@ -518,12 +518,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   modalView: {
-    flexDirection:"row",
-    bottom:50,
-    position:"absolute",
+    flexDirection: "row",
+    bottom: 50,
+    position: "absolute",
     backgroundColor: '#181818',
     alignItems: 'center',
-    width:"100%",
-    height:"5%"
+    width: "100%",
+    height: "5%"
   }
 });
