@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { List} from 'react-native-paper';
-import { View, Text, FlatList,ActivityIndicator,TouchableOpacity,StyleSheet} from 'react-native';
+import { List } from 'react-native-paper';
+import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ipcim } from "./IPcim";
 const IP = require('./IPcim')
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign } from '@expo/vector-icons';
 import { ScrollView } from 'react-navigation';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -13,9 +13,9 @@ class Felvitel extends React.Component {
     state = {
         adatok: [],
         tartalom: [],
-        felhasznalonev:"",
-        isLoading:true,
-        active:false
+        felhasznalonev: "",
+        isLoading: true,
+        active: false
     }
     getData = async () => {
         try {
@@ -25,10 +25,10 @@ class Felvitel extends React.Component {
 
         }
     }
-    
-     getLista() {
+
+    getLista() {
         var bemenet = {
-            bevitel1:"Admin"
+            bevitel1: this.state.felhasznalonev
         }
         fetch(IP.ipcim + 'felhasznalolistaikesz', {
             method: "POST",
@@ -37,19 +37,19 @@ class Felvitel extends React.Component {
         }
         ).then((response) => response.json())
             .then((responseJson) => {
-             this.setState({data:responseJson})
+                this.setState({ adatok: responseJson })
             })
             .catch((error) => {
                 console.error(error);
             });
-           
+
 
     }
     componentDidMount() {
         this.getData().then((vissza_adatok2) => {
             this.setState({ felhasznalonev: vissza_adatok2 })
-        }).then(this.getLista)
-       
+        }).then(this.getLista()).then(this.setState({ isLoading: false }))
+
         let tartalomSplitelve = "";
         for (let i = 0; i < this.state.adatok.length; i++) {
             tartalomSplitelve = this.state.adatok[i].listak_tartalom.split(',')
@@ -57,12 +57,13 @@ class Felvitel extends React.Component {
             this.state.adatok[i].kinyitott = false
         }
         this.navFocusListener = this.props.navigation.addListener('focus', () => {
-         this.getLista()
+            this.getLista()
         })
     }
 
     componentWillUnmount() {
         this.navFocusListener();
+        this.getLista();
     }
     _handlePress = (id) => {
         let tombmentese = this.state.adatok
@@ -118,56 +119,56 @@ class Felvitel extends React.Component {
         return (
             <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)" }}>
                 <SafeAreaView></SafeAreaView>
-                 {this.state.isLoading ? <ActivityIndicator size={"large"} /> :
-                 this.state.adatok.length>0?
-                 <FlatList
-                 data={this.state.adatok}
-                 keyExtractor={(item, index) => String(index)}
-                 renderItem={({ item }) =>
-                  (<List.Section>
-                     <List.Accordion
-                         theme={{colors: {background: 'rgb(1,194,154)'}}}
-                         right={props =><AntDesign name="caretdown" size={20} color="rgb(1,194,154)" />}
-                         title={<Text style={styles.Title}>{item.listak_nev}</Text>}
-                         description={<Text style={{color:"rgb(1,194,154)"}}>{this.getParsedDate(item.listak_datum)}</Text >}
-                         style={styles.lista}
-                         expanded={item.kinyitott}
-                         onPress={() => { this._handlePress(item.listak_id); this.getlistakid(item.listak_id);this.setState({active:true}) }}
-                         onLongPress={()=>this.props.navigation.navigate('Szerkeszt', { aktid: item.listak_id}) }>
-                         
-                         <FlatList
-                             data={this.state.tartalom}
-                             renderItem={({ item }) => (
-                                 <List.Item title={item.nev} titleStyle={{ color: "white" }}></List.Item>
-                             )} />
-                         <View>
-                             <Text style={{ fontSize: 20, textAlign: "right", marginRight: 10, color: "white" }}>{item.listak_ar} Ft</Text>
-                         </View>
-                     </List.Accordion>
-                 </List.Section>
-                 )} />
-                :<View style={{alignSelf:"center",flex:1,justifyContent:"center"}}>
-                <Text style={{color:"white",fontSize:15,margin:10}}>Úgy tűnik jelenleg nem fejeztél be egy listát sem.</Text>
-                <TouchableOpacity
-                onPress={()=>this.props.navigation.navigate("Listák")}>
-                    <Text style={{alignSelf:"center",color:"rgb(1,194,154)",fontSize:20}}>Listáim megtekintése!</Text>
-                </TouchableOpacity>
-                </View>}
-                
+                {this.state.isLoading ? <ActivityIndicator size={"large"} /> :
+                    this.state.adatok.length > 0 ?
+                        <FlatList
+                            data={this.state.adatok}
+                            keyExtractor={(item, index) => String(index)}
+                            renderItem={({ item }) =>
+                            (<List.Section>
+                                <List.Accordion
+                                    theme={{ colors: { background: 'rgb(1,194,154)' } }}
+                                    right={props => <AntDesign name="caretdown" size={20} color="rgb(1,194,154)" />}
+                                    title={<Text style={styles.Title}>{item.listak_nev}</Text>}
+                                    description={<Text style={{ color: "rgb(1,194,154)" }}>{this.getParsedDate(item.listak_keszdatum)}</Text >}
+                                    style={styles.lista}
+                                    expanded={item.kinyitott}
+                                    onPress={() => { this._handlePress(item.listak_id); this.getlistakid(item.listak_id); this.setState({ active: true }) }}
+                                    onLongPress={() => this.props.navigation.navigate('Szerkeszt', { aktid: item.listak_id })}>
+
+                                    <FlatList
+                                        data={this.state.tartalom}
+                                        renderItem={({ item }) => (
+                                            <List.Item title={item.nev} titleStyle={{ color: "white" }}></List.Item>
+                                        )} />
+                                    <View>
+                                        <Text style={{ fontSize: 20, textAlign: "right", marginRight: 10, color: "white" }}>{item.listak_ar} Ft</Text>
+                                    </View>
+                                </List.Accordion>
+                            </List.Section>
+                            )} />
+                        : <View style={{ alignSelf: "center", flex: 1, justifyContent: "center" }}>
+                            <Text style={{ color: "white", fontSize: 15, margin: 10 }}>Úgy tűnik jelenleg nem fejeztél be egy listát sem.</Text>
+                            <TouchableOpacity
+                                onPress={() => this.props.navigation.navigate("Listák")}>
+                                <Text style={{ alignSelf: "center", color: "rgb(1,194,154)", fontSize: 20 }}>Listáim megtekintése!</Text>
+                            </TouchableOpacity>
+                        </View>}
+
             </View>
 
         );
     }
 }
 const styles = StyleSheet.create({
-    Title:{
+    Title: {
         color: "white",
-        fontSize:20,
-        textAlignVertical:"top",
+        fontSize: 20,
+        textAlignVertical: "top",
     },
-    lista:{
+    lista: {
         backgroundColor: "rgb(32,32,32)",
-        borderTopRightRadius:15,
+        borderTopRightRadius: 15,
     }
 
 });

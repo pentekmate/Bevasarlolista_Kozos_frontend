@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { View,  Text, Pressable, StyleSheet, Dimensions ,  Animated,PanResponder} from 'react-native';
+import { View, Text, Pressable, StyleSheet, Dimensions, Animated, PanResponder } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
 import ProgressBar from "react-native-animated-progress";
 import DialogInput from "react-native-dialog-input";
 import { ipcim } from "./IPcim";
 import { ScrollView } from 'react-native-gesture-handler';
-import { AntDesign } from '@expo/vector-icons'; 
-import { FontAwesome } from '@expo/vector-icons'; 
+import { AntDesign } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const IP = require('./IPcim')
 
@@ -16,18 +16,18 @@ export default class Seged extends Component {
     pan = new Animated.ValueXY();
 
     panResponder = PanResponder.create({
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderMove: Animated.event([
-        null,
-        { dx: this.pan.x, dy: this.pan.y },],
-        { useNativeDriver: false }
-      ),
-      onPanResponderRelease: () => {
-        Animated.spring(this.pan, {
-          toValue: { x: 0, y: 0 },
-          useNativeDriver: false,
-        }).start();
-      },
+        onMoveShouldSetPanResponder: () => true,
+        onPanResponderMove: Animated.event([
+            null,
+            { dx: this.pan.x, dy: this.pan.y },],
+            { useNativeDriver: false }
+        ),
+        onPanResponderRelease: () => {
+            Animated.spring(this.pan, {
+                toValue: { x: 0, y: 0 },
+                useNativeDriver: false,
+            }).start();
+        },
     });
     constructor(props) {
         super(props);
@@ -244,28 +244,28 @@ export default class Seged extends Component {
                 "Zabkorpás kenyér",
                 "Zsemle"
             ],
-            egyeb:[],
+            egyeb: [],
             zoldseggyumolcsTalal: [],
             tejtermekekTalal: [],
             pekTalal: [],
             valogatott: [],
             szam: 0,
-            tombHossz:0,
-            megvasaroltElemek:0,
-            alertMutatasa:false,
+            tombHossz: 0,
+            megvasaroltElemek: 0,
+            alertMutatasa: false,
         };
     }
     storeListaId = async (value) => {
-        let a= String(this.props.route.params.aktid)
+        let a = String(this.props.route.params.aktid)
         try {
-          const jsonValue = JSON.stringify(value)
-          await AsyncStorage.setItem(a, jsonValue)
+            const jsonValue = JSON.stringify(value)
+            await AsyncStorage.setItem(a, jsonValue)
         } catch (e) {
-          // saving error
+            // saving error
         }
-      }
-      getListaId = async () => {
-        let a= String(this.props.route.params.aktid)
+    }
+    getListaId = async () => {
+        let a = String(this.props.route.params.aktid)
         try {
             const jsonValue = await AsyncStorage.getItem(a)
             return jsonValue != null ? JSON.parse(jsonValue) : null;
@@ -275,22 +275,24 @@ export default class Seged extends Component {
     }
 
     felvitel = (ar) => {
-        try{ var adatok = {
-            bevitel3: ar,
-            bevitel4: this.props.route.params.aktid
+        try {
+            var adatok = {
+                bevitel3: ar,
+                bevitel4: this.props.route.params.aktid
+            }
+
+            const response = fetch(IP.ipcim + 'listabefejezese', {
+                method: "POST",
+                body: JSON.stringify(adatok),
+                headers: { "Content-type": "application/json; charset=UTF-8" }
+            });
+        }
+        catch (e) { console.log(e) }
+        finally {
+            alert("Sikeres mentés")
+            this.setState({ alertMutatasa: false })
         }
 
-        const response = fetch(IP.ipcim + 'listabefejezese', {
-            method: "POST",
-            body: JSON.stringify(adatok),
-            headers: { "Content-type": "application/json; charset=UTF-8" }
-        });}
-        catch(e){console.log(e)}
-        finally{
-            alert("Sikeres mentés")
-            this.setState({alertMutatasa:false})
-        }
-       
     }
 
     funckio = () => {
@@ -299,8 +301,8 @@ export default class Seged extends Component {
         uj = this.state.zsolt?.split(',')
         this.setState({ data: uj })
         this.state.data = uj;
-        let x =uj.length
-        this.setState({tombHossz:x})
+        let x = uj.length
+        this.setState({ tombHossz: x })
 
         this.state.zoldseggyumolcs.map((item) => {
             this.state.data.map((item1) => {
@@ -350,13 +352,13 @@ export default class Seged extends Component {
             }
         }
 
-        if(this.state.data.length>0){
+        if (this.state.data.length > 0) {
             this.state.valogatott.push("Egyéb")
             this.state.data.map((item) => {
                 this.state.valogatott.push(item)
             })
         }
-      
+
 
         for (let i = 0; i < this.state.valogatott.length; i++) {
             this.state.tartalom_tomb.push({
@@ -369,160 +371,158 @@ export default class Seged extends Component {
 
     handleChange = (id) => {
         let Noveltszam = this.state.szam
-        let Megvasarolva=this.state.megvasaroltElemek
+        let Megvasarolva = this.state.megvasaroltElemek
         let novelesErteke = (1 / this.state.tombHossz) * 100
         let zoldNoveles = (100 / 100) * novelesErteke
 
-        
+
         let temp = this.state.tartalom_tomb.map((product) => {
             if (id === product.id) {
                 return { ...product, isChecked: !product.isChecked };
             }
             return product;
         });
-    
+
         this.setState({ tartalom_tomb: temp })
-       
-       temp.map((item) => {
-            if (item.isChecked == true && id==item.id) {
-               Noveltszam+=zoldNoveles
-               Megvasarolva+=1
+
+        temp.map((item) => {
+            if (item.isChecked == true && id == item.id) {
+                Noveltszam += zoldNoveles
+                Megvasarolva += 1
             }
-            else if(item.isChecked==false && id==item.id)
-            {
-                Megvasarolva-=1
-                Noveltszam-=zoldNoveles
+            else if (item.isChecked == false && id == item.id) {
+                Megvasarolva -= 1
+                Noveltszam -= zoldNoveles
             }
         })
 
-        
-        
-        this.setState({megvasaroltElemek:Megvasarolva})
-        this.setState({ szam: Noveltszam})
+
+
+        this.setState({ megvasaroltElemek: Megvasarolva })
+        this.setState({ szam: Noveltszam })
 
     }
 
     componentDidMount() {
         this.funckio();
         fetch(IP.ipcim + 'regilistatorles', { method: 'DELETE' })
-        
+
         this.getListaId().then((vissza_adatok2) => {
-            if(vissza_adatok2?.length>0)
-            {
-                vissza_adatok2?.map((item)=>{
-                    if(item.id==this.props.route.params.aktid)
-                    {
-                        this.setState({tartalom_tomb:item.tartalom})
-                        this.setState({megvasaroltElemek:item.megvasarolva})
-                        this.setState({szam:item.haladas})
+            if (vissza_adatok2?.length > 0) {
+                vissza_adatok2?.map((item) => {
+                    if (item.id == this.props.route.params.aktid) {
+                        this.setState({ tartalom_tomb: item.tartalom })
+                        this.setState({ megvasaroltElemek: item.megvasarolva })
+                        this.setState({ szam: item.haladas })
                     }
                 })
             }
-            else{
-                let osszes=[]
+            else {
+                let osszes = []
                 osszes.push({
-                    id:this.props.route.params.aktid,
-                    tartalom:this.state.tartalom_tomb,
-                    megvasarolva:this.state.megvasaroltElemek,
-                    haladas:this.state.szam
+                    id: this.props.route.params.aktid,
+                    tartalom: this.state.tartalom_tomb,
+                    megvasarolva: this.state.megvasaroltElemek,
+                    haladas: this.state.szam
                 })
+                this.storeListaId([])
                 this.storeListaId(osszes)
             }
         });
 
-       
+
     }
     componentWillUnmount() {
-        let osszes=[]
+        let osszes = []
         osszes?.push({
-            id:this.props.route.params.aktid,
-            tartalom:this.state.tartalom_tomb,
-            megvasarolva:this.state.megvasaroltElemek,
-            haladas:this.state.szam
+            id: this.props.route.params.aktid,
+            tartalom: this.state.tartalom_tomb,
+            megvasarolva: this.state.megvasaroltElemek,
+            haladas: this.state.szam
         })
         this.storeListaId(osszes)
         //this.storeListaId([])
     }
 
-    
-    
+
+
     render() {
         return (
             <ScrollView
-            stickyHeaderIndices={[0]}
-            showsVerticalScrollIndicator={false}
+                stickyHeaderIndices={[0]}
+                showsVerticalScrollIndicator={false}
 
-            style={{backgroundColor: "rgb(50,50,50)"}}>
-            <View style={{position:"relative",backgroundColor:"rgb(18,18,18)",borderBottomRadius:5}}>
-             <View style={{position:"relative",flexDirection:"row",}}>
-             <View style={{flex:10}}><Text style={{color:"white",fontSize:18,margin:10}}>Termékek megvásárolva:</Text></View>
-             <View style={{flex:2}}><Text style={{color:"white",margin:10}}>{this.state.tombHossz}/{this.state.megvasaroltElemek}</Text></View>
-             </View>
-            <View style={{margin:10}}>
-                <ProgressBar 
-                
-                progress={this.state.szam} 
-                height={8} 
-                backgroundColor="rgb(1,194,154)"
-                trackColor="#505050" />
-            </View>
-            </View>
-            
-            <View style={{flex:1,height:height*1.1,flexDirection:"column"}}>
-           
-   
-         
-            <View style={{flex:8}}>
+                style={{ backgroundColor: "rgb(50,50,50)" }}>
+                <View style={{ position: "relative", backgroundColor: "rgb(18,18,18)", borderBottomRadius: 5 }}>
+                    <View style={{ position: "relative", flexDirection: "row", }}>
+                        <View style={{ flex: 10 }}><Text style={{ color: "white", fontSize: 18, margin: 10 }}>Termékek megvásárolva:</Text></View>
+                        <View style={{ flex: 2 }}><Text style={{ color: "white", margin: 10 }}>{this.state.tombHossz}/{this.state.megvasaroltElemek}</Text></View>
+                    </View>
+                    <View style={{ margin: 10 }}>
+                        <ProgressBar
 
-                {this.state.tartalom_tomb.map((item, key) =>
-                    <View key={key}>
-                        <View style={styles.elemektrue}>
-                            {item.nev == "Péksütemény" || item.nev == "Zöldségek" || item.nev == "Tejtermék" || item.nev == "Egyéb" ?
-                                <Text style={styles.kategorianev}> {item.nev}</Text> :
-
-                                <Pressable onPress={() => { this.handleChange(item.id); }}>
-                                    {item.isChecked?<AntDesign name="check" size={27} color="rgb(1,194,154)" />:
-                                    <MaterialIcons name="radio-button-unchecked"size={27} color="rgb(1,194,154)"/>}
-                                    
-                                </Pressable>
-                            }
-                            {item.nev == "Péksütemény" || item.nev == "Zöldségek" || item.nev == "Tejtermék" || item.nev == "Egyéb" ?
-                                <Text style={{ marginBottom: 15 }}></Text> : <Text style={item.isChecked?styles.betutrue:styles.betufalse}> {item.nev}</Text>
-                            }
-
-                        </View>
-                    </View>)}
-                 
+                            progress={this.state.szam}
+                            height={8}
+                            backgroundColor="rgb(1,194,154)"
+                            trackColor="#505050" />
+                    </View>
                 </View>
 
-                <View style={{flex:6}}>
-                <Animated.View
-                style={{
-                    zIndex: 2,
-                    transform: [{ translateX: this.pan.x }, { translateY: this.pan.y }],
-                }}
-                {...this.panResponder.panHandlers}>
-                <View style={{ flex: 1, backgroundColor: "696969" }}>
-                    <TouchableOpacity
-                        onPress={(()=>this.setState({alertMutatasa:true}))}
-                        style={{ backgroundColor: "rgb(1,194,154)", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 1, }}>
-                        <FontAwesome name="money" size={24} color="black" />
-            </TouchableOpacity>
+                <View style={{ flex: 1, height: height * 1.1, flexDirection: "column" }}>
 
-          </View>
-        </Animated.View>
+
+
+                    <View style={{ flex: 8 }}>
+
+                        {this.state.tartalom_tomb.map((item, key) =>
+                            <View key={key}>
+                                <View style={styles.elemektrue}>
+                                    {item.nev == "Péksütemény" || item.nev == "Zöldségek" || item.nev == "Tejtermék" || item.nev == "Egyéb" ?
+                                        <Text style={styles.kategorianev}> {item.nev}</Text> :
+
+                                        <Pressable onPress={() => { this.handleChange(item.id); }}>
+                                            {item.isChecked ? <AntDesign name="check" size={27} color="rgb(1,194,154)" /> :
+                                                <MaterialIcons name="radio-button-unchecked" size={27} color="rgb(1,194,154)" />}
+
+                                        </Pressable>
+                                    }
+                                    {item.nev == "Péksütemény" || item.nev == "Zöldségek" || item.nev == "Tejtermék" || item.nev == "Egyéb" ?
+                                        <Text style={{ marginBottom: 15 }}></Text> : <Text style={item.isChecked ? styles.betutrue : styles.betufalse}> {item.nev}</Text>
+                                    }
+
+                                </View>
+                            </View>)}
+
+                    </View>
+
+                    <View style={{ flex: 6 }}>
+                        <Animated.View
+                            style={{
+                                zIndex: 2,
+                                transform: [{ translateX: this.pan.x }, { translateY: this.pan.y }],
+                            }}
+                            {...this.panResponder.panHandlers}>
+                            <View style={{ flex: 1, backgroundColor: "696969" }}>
+                                <TouchableOpacity
+                                    onPress={(() => this.setState({ alertMutatasa: true }))}
+                                    style={{ backgroundColor: "rgb(1,194,154)", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 1, }}>
+                                    <FontAwesome name="money" size={24} color="black" />
+                                </TouchableOpacity>
+
+                            </View>
+                        </Animated.View>
+                    </View>
+                    <DialogInput
+                        isDialogVisible={this.state.alertMutatasa}
+                        message={"Fizetett összeg:"}
+                        submitInput={(fizetettosszeg) => {
+                            this.felvitel(fizetettosszeg), this.props.navigation.navigate('Listák')
+                        }}
+                        closeDialog={() => this.setState({ alertMutatasa: false })}
+                    ></DialogInput>
+
                 </View>
-                <DialogInput
-                    isDialogVisible={this.state.alertMutatasa}
-                    message={"Fizetett összeg:"}
-                    submitInput={(fizetettosszeg) => {
-                    this.felvitel(fizetettosszeg),this.props.navigation.navigate('Listák')
-                    }}
-                    closeDialog={() => this.setState({ alertMutatasa: false })}
-                ></DialogInput>
-            
-                </View>
-     
+
             </ScrollView>
         );
     }
@@ -533,7 +533,7 @@ const styles = StyleSheet.create({
         backgroundColor: "rgb(50,50,50)",
         flexDirection: 'row',
         alignItems: "center",
-        marginTop:20,
+        marginTop: 20,
     },
     kategorianev: {
         alignSelf: "center",
@@ -544,31 +544,31 @@ const styles = StyleSheet.create({
         backgroundColor: "rgb(18,18,18)",
         borderRadius: 5
     },
-    betutrue:{
-        color:"grey",
-        fontSize:20
+    betutrue: {
+        color: "grey",
+        fontSize: 20
     },
-    betufalse:{
-        color:"white",
-        fontSize:20
+    betufalse: {
+        color: "white",
+        fontSize: 20
     },
-    blur:{
-       width:width*0.3,
-       backgroundColor:"black",
-       borderRadius:5,
-       borderWidth:2,
-       borderColor: "rgb(120, 130, 130)",
+    blur: {
+        width: width * 0.3,
+        backgroundColor: "black",
+        borderRadius: 5,
+        borderWidth: 2,
+        borderColor: "rgb(120, 130, 130)",
     },
-    focus:{
-        width:width*0.3,
-        backgroundColor:"black",
-        borderRadius:5,
-        borderWidth:2,
+    focus: {
+        width: width * 0.3,
+        backgroundColor: "black",
+        borderRadius: 5,
+        borderWidth: 2,
         borderColor: "rgb(1,194,154)",
     },
-    mentesgomb:{
-        width:width*0.3,
-        borderRadius:5,
+    mentesgomb: {
+        width: width * 0.3,
+        borderRadius: 5,
         backgroundColor: "rgb(1,194,154)",
     }
 });

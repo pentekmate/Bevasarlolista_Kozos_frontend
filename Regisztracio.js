@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { ChildComponent, FlatList, Text, StyleSheet, View, TextInput, Button, Dimensions, Pressable, TouchableOpacity } from 'react-native';
-import { withNavigation } from 'react-navigation';
+import { Text, StyleSheet, View, TextInput, Button, Dimensions, Pressable, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { ipcim } from "./IPcim";
@@ -17,7 +17,8 @@ export default class Regisztracio extends Component {
       rosszjelszo: false,
       rosszfelhasznalonev: false,
       fokusz: false,
-      fokusz1: false
+      fokusz1: false,
+      lathatojelszo: true,
     };
   }
   regisztracioellen = () => {
@@ -82,16 +83,7 @@ export default class Regisztracio extends Component {
 
   }
   regisztracio = () => {
-    fetch(IP.ipcim + 'felhasznalok')
-      .then((response) => response.json())
-      .then((responseJson) => {
-        this.setState({
-          data: responseJson,
-        }
-          , function () {
-          });
-      }).then(this.regisztracioellen)
-
+    this.regisztracioellen()
   }
 
 
@@ -107,7 +99,7 @@ export default class Regisztracio extends Component {
             <View style={[this.state.fokusz1 ? styles.felhaszmalodivfocus : styles.felhasznaloodiv, { backgroundColor: this.state.rosszfelhasznalonev ? "red" : "white" }]}>
               <FontAwesome style={{ marginLeft: 5 }} name="user" size={28} color="black" />
               <TextInput
-               cursorColor={"rgb(50,50,50)"}
+                cursorColor={"rgb(50,50,50)"}
                 onFocus={() => this.setState({ fokusz1: true })}
                 onBlur={() => this.setState({ fokusz1: false })}
                 style={styles.textinputfelh}
@@ -124,7 +116,7 @@ export default class Regisztracio extends Component {
             <View style={[this.state.fokusz ? styles.jelszodivfocus : styles.jelszodiv, { backgroundColor: this.state.rosszjelszo ? "red" : "white" }]}>
               <MaterialCommunityIcons name="lock" size={28} color="black" />
               <TextInput
-               cursorColor={"rgb(50,50,50)"}
+                cursorColor={"rgb(50,50,50)"}
                 onFocus={() => this.setState({ fokusz: true })}
                 onBlur={() => this.setState({ fokusz: false })}
                 style={styles.textinputjelsz}
@@ -134,6 +126,7 @@ export default class Regisztracio extends Component {
                 onChange={() => this.setState({ rosszjelszo: false })}
                 value={this.state.regisztraljelsz}>
               </TextInput>
+              <TouchableOpacity onPress={this.JelszoLathato}><Ionicons style={{ justifyContent: "center", paddingRight: 10, alignItems: "center", paddingTop: 6 }} name={this.state.lathatojelszo ? "eye-outline" : "eye-off-outline"} size={24} color="black" /></TouchableOpacity>
             </View>
           </View>
 
