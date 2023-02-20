@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Animated, PanResponder, StyleSheet, View, Dimensions, TouchableOpacity, Text } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
-
+import { ipcim } from "./IPcim";
+const IP = require('./IPcim')
 
 
 export default class Fooldal extends Component {
@@ -24,16 +25,31 @@ export default class Fooldal extends Component {
         super(props);
         this.state = {
             felhasznalonev: "",
-            timePassed: false
+            timePassed: false,
+            id:0
         };
+    }
+    getID = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@ID')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch (e) {
+
+        }
     }
 
     listaletrehozas = () => {
         this.props.navigation.navigate('Listalétrehozás');
     }
     componentDidMount() {
+      
 
-
+    
+           
+        
+    }
+    componentWillUnmount(){
+       
     }
 
     render() {
@@ -59,7 +75,7 @@ export default class Fooldal extends Component {
 
                     </View>
                 </Animated.View>
-
+                    <Text>{this.state.felhasznalonev}</Text>
             </View>
         );
     }

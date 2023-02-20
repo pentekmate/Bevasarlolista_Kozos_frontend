@@ -27,6 +27,38 @@ export default class Login extends Component {
       modal: false
     };
   }
+  idLekeres=()=>{
+    let id=0;
+    var bemenet={
+        bevitel1:this.state.felhasznalonev
+      }
+    fetch(IP.ipcim + 'idlekeres', {
+            method: "POST",
+            body: JSON.stringify(bemenet),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        }
+        )
+            .then((response) => response.json())
+            .then((responseJson) => {
+              console.log(responseJson)
+              responseJson.map((item)=>id=item.felhasznalo_id)
+              this.storeID(id),
+              alert(id)
+            }).then((this.storeID(id)))
+            .catch((error) =>{
+            console.error(error);
+            });
+           
+
+}
+storeID = async (value) => {
+  try {
+    const jsonValue = JSON.stringify(value)
+    await AsyncStorage.setItem('@ID', jsonValue)
+  } catch (e) {
+    // saving error
+  }
+}
   storeData = async (value) => {
     try {
       const jsonValue = JSON.stringify(value)
@@ -37,11 +69,13 @@ export default class Login extends Component {
   }
 
   componentDidMount() {
+    
     this.navFocusListener = this.props.navigation.addListener('focus', () => {
     })
   }
   fiokteszt = () => {
     if (this.state.data == true) {
+      this.idLekeres();
       this.storeData(this.state.felhasznalonev)
       this.props.navigation.navigate('Home');
       this.setState({ felhasznalonev: "" })

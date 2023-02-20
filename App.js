@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Button, View, Text, TextInput, Alert, NativeEventEmitter, } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useIsFocused } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-
+import CustomDrawer from './CustomDrawer';
+import ProfilEdit from './Profszerkesztes';
 import Kiir from './Elso'
 import Listaad from './Lista_input';
 import Listainputsr from './Listainputsr';
@@ -85,10 +86,17 @@ function Prof({ navigation }) {
     <Profil navigation={navigation}></Profil>);
 }
 
+function ProfSzerkesztes({ navigation }) {
+  return (
+    <Profil navigation={navigation}></Profil>);
+}
+
 function Root({ navigation }) {
 
   return (
-    <Drawer.Navigator initialRouteName="Toltokep"
+    <Drawer.Navigator 
+    drawerContent={props => <CustomDrawer {...props} />}
+    initialRouteName="Toltokep" 
       screenOptions=
       {{ lazy: false, headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: 'white', drawerStyle: { backgroundColor: 'rgb(32,32,32)' }, drawerActiveBackgroundColor: "rgb(18,18,18)", drawerActiveTintColor: "white", drawerInactiveTintColor: "white", headerTitleAlign: "center" }} >
       <Drawer.Screen name="Home" component={HomeScreen} options={{
@@ -152,6 +160,7 @@ const menu = () => {
         <Stack.Screen name="Regisztráció" options={{ headerStyle: { headerTintColor: "black" } }} component={Regisztracio} />
         <Stack.Screen name="Seged" component={Seged} options={{ headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: "white", title: "Tartalom", headerTitleAlign: "center" }} />
         <Stack.Screen name="Szerkeszt" component={Szerkeszt} options={{ headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: "white", headerTitle: "Lista módosítása" }} />
+        <Stack.Screen name="Profilom szerkesztése" component={ProfilEdit} options={{ headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: "white", headerTitle: "Profilom szerkesztése",headerTitleAlign: "center" }} />
       </Stack.Navigator>
     </NavigationContainer>
 

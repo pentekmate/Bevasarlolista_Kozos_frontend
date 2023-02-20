@@ -15,11 +15,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DialogInput from "react-native-dialog-input";
 import { Entypo } from '@expo/vector-icons';
-import { ipcim } from "./IPcim";
+
 import { ScrollView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from '@expo/vector-icons';
 import { Row } from "native-base";
+import { ipcim } from "./IPcim";
 const IP = require('./IPcim')
 
 
@@ -88,7 +89,7 @@ export default class Listaad extends Component {
     var adatok = {
       bevitel1: this.state.listanev,
       bevitel2: tartalom,
-      bevitel3: this.state.felhasznalonev
+      bevitel3: this.state.id
     };
     try {
       const response = fetch(IP.ipcim + 'tartalomfel', {
@@ -110,14 +111,6 @@ export default class Listaad extends Component {
     this.storeData([])
     this.storeData2([])
   };
-  getFelhasznalo = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('@felhasznalo')
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
-    } catch (e) {
-      // error reading value
-    }
-  }
 
 
   getLocaladatok = async () => {
@@ -153,11 +146,19 @@ export default class Listaad extends Component {
       // error reading value
     }
   }
+  getID = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@ID')
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+    }
+  }
 
 
   componentDidMount() {
-    this.getFelhasznalo().then((fh) => {
-      this.setState({ felhasznalonev: fh })
+    this.getID().then((vissza_adatok2) => {
+      this.setState({ id: vissza_adatok2 })
     });
     this.getListainputsr().then((vissza_adatok2) => {
       this.setState({ segeddata: vissza_adatok2 })
@@ -167,9 +168,10 @@ export default class Listaad extends Component {
       this.getLocaladatok().then((vissza_adatok2) => {
         this.setState({ data: vissza_adatok2 })
       });
-      this.getFelhasznalo().then((fh) => {
-        this.setState({ felhasznalonev: fh })
+      this.getID().then((vissza_adatok2) => {
+        this.setState({ id: vissza_adatok2 })
       });
+     
       this.getListainputsr().then((vissza_adatok2) => {
         this.setState({ segeddata: vissza_adatok2 })
       });

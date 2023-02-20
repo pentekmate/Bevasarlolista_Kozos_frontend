@@ -1,138 +1,227 @@
-import React, { Component } from 'react';
-import { FlatList, Text, StyleSheet, View, TouchableOpacity, ActivityIndicator } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, FlatList, Dimensions,ActivityIndicator } from 'react-native';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { ipcim } from "./IPcim";
 const IP = require('./IPcim')
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
+const App = () => {
+  const [listData, setListData] = useState(data);
+  const [data, setData] = useState([]);
+  const navigation = useNavigation();
+  const [isLoading,setisLoading]=useState(true)
 
-export default class Kiir extends Component {
-    constructor(props) {
-        super(props);
+  const getID = async () => {
+    let x=0
+    try {
+        const jsonValue = await AsyncStorage.getItem('@ID')
+        await jsonValue != null ? JSON.parse(jsonValue) : null;
+        x=jsonValue
+       
+        
+    } catch (e) {
 
-        this.state = {
-            data: [],
-            felhasznalonev: "",
-            isLoading: true
-        };
     }
-
-    //felhasznalonev tarolasnak lekerese
-    getData = async () => {
+    finally{
+       
+       adatLekeres(x)
+    }
+}
+const adatLekeres=(y)=> {
+    
         try {
-            const jsonValue = await AsyncStorage.getItem('@felhasznalo')
-            return jsonValue != null ? JSON.parse(jsonValue) : null;
-        } catch (e) {
-
-        }
-    }
-    adatLekeres() {
-        this.getData().then((vissza_adatok2) => {
-            this.setState({ felhasznalonev: vissza_adatok2 })
-            this.state.felhasznalonev = vissza_adatok2
-            try {
-                var bemenet = {
-                    bevitel1: this.state.felhasznalonev
-                }
-                //szűrt adatok lefetchelése backendről
-                fetch(IP.ipcim + 'felhasznalolistainincskesz', {
-                    method: "POST",
-                    body: JSON.stringify(bemenet),
-                    headers: { "Content-type": "application/json; charset=UTF-8" }
-                }
-                ).then((response) => response.json())
-                    .then((responseJson) => {
-                        this.setState({ data: responseJson, }, function () { });
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
-            } catch (e) { console.log(e) }
-            finally {
-                // this.setState({isLoading:false})
+            var bemenet = {
+                bevitel1: y
             }
-        });
-    }
-    getParsedDate(strDate) {
-        var strSplitDate = String(strDate).split(' ');
-        var date = new Date(strSplitDate[0]);
-        var dd = date.getDate();
-        var mm = date.getMonth() + 1;
-
-        var yyyy = date.getFullYear();
-        if (dd < 10) {
-            dd = '0' + dd;
+            //szűrt adatok lefetchelése backendről
+            fetch(IP.ipcim + 'felhasznalolistainincskesz', {
+                method: "POST",
+                body: JSON.stringify(bemenet),
+                headers: { "Content-type": "application/json; charset=UTF-8" }
+            }
+            ).then((response) => response.json())
+                .then((responseJson) => {
+                    setData(responseJson)
+                    //console.log(responseJson)
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        } catch (e) { console.log(e) }
+        finally {
+           setisLoading(false)
         }
-        if (mm < 10) {
-            mm = '0' + mm;
+    
+}
+useFocusEffect(
+    React.useCallback(() => {
+        getID()
+    
+    }, [])
+  );
+
+
+  useEffect(() => {
+    getID();
+    
+  }, []);
+
+
+  let row = [];
+  let prevOpenedRow;
+
+  const getParsedDate = (strDate) => {
+    var strSplitDate = String(strDate).split(' ');
+    var date = new Date(strSplitDate[0]);
+    var dd = date.getDate();
+    var mm = date.getMonth() + 1;
+
+    var yyyy = date.getFullYear();
+    if (dd < 10) {
+      dd = '0' + dd;
+    }
+    if (mm < 10) {
+      mm = '0' + mm;
+    }
+    date = yyyy + "-" + mm + "-" + dd;
+    return date.toString();
+  }
+
+
+  const renderItem = ({ item, index }, onClick) => {
+    //
+    const closeRow = (index) => {
+      //console.log('closerow');
+      if (prevOpenedRow && prevOpenedRow !== row[index]) {
+        prevOpenedRow.close();
+      }
+      prevOpenedRow = row[index];
+    };
+
+    const renderRightActions = (progress, dragX, onClick) => {
+      return (
+        <View
+          style={{
+            margin: 0,
+            alignContent: 'center',
+            justifyContent: 'center',
+            backgroundColor: "red",
+            borderRadius: 10,
+            marginTop: 15,
+            height: height*0.11,
+            width: 70,
+          }}>
+          <TouchableOpacity onPress={onClick} >
+            <Text style={{ color: "white", fontSize: 18, textAlign: "center" }}>
+                <Ionicons name="trash-outline" size={22} color="white" /></Text>
+
+          </TouchableOpacity>
+        </View>
+      );
+    };
+
+    return (
+    
+      <TouchableOpacity onPress={() => navigation.navigate('Seged', { aktid: item.listak_id, akttart: item.listak_tartalom })}>
+        <Swipeable
+          renderRightActions={(progress, dragX) =>
+            renderRightActions(progress, dragX, onClick)
+          }
+          onSwipeableOpen={() => closeRow(index)}
+          ref={(ref) => (row[index] = ref)}
+          rightOpenValue={-100}>
+          <View
+            style={{
+              margin: 4,
+              backgroundColor: "rgb(32,32,32)",
+              borderWidth: 1,
+              padding: 9,
+              height:height*0.11,
+              borderRadius:15,
+              marginTop:15,
+
+            }}>
+            <Text style={{ color: "white", fontSize: 20 }}>{item.listak_nev}</Text>
+            <Text style={{marginTop:10,fontSize:15,color:"rgb(1,194,154)"}}>{getParsedDate(item.listak_datum)}</Text>
+          </View>
+        </Swipeable>
+      </TouchableOpacity>
+
+
+      
+    );
+  };
+
+  const removeItem = (id) => {
+    setData((current) =>
+      current.filter((data) => data.listak_id != id))
+  }
+
+  const deleteItem = (id) => {
+    var adatok = {
+      bevitel5: id
+    }
+    try {
+      fetch(IP.ipcim + 'listatorles', {
+        method: 'DELETE',
+        body: JSON.stringify(adatok),
+        headers: { "Content-type": "application/json; charset=UTF-8" }
+      })
+    }
+    catch (e) {
+      //console.log(e)
+    }
+    finally {
+      removeItem(id)
+
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+    {isLoading==true?<ActivityIndicator size="large" color="rgb(1,194,154)" />:data.length>0? <FlatList
+        data={data}
+        renderItem={(v) =>
+          renderItem(v, () => {
+            deleteItem(v.item.listak_id);
+          })
         }
-        date = yyyy + "-" + mm + "-" + dd;
-        return date.toString();
+        keyExtractor={(item) => item.listak_id}></FlatList>
+    :<View style={{flex:1,alignItems:"center",justifyContent:"center"}}>
+    <Text style={{ color: "white", fontSize: 15, margin: 10 }}>Úgy tűnik jelenleg nem hoztál létre egy listát sem.</Text>
+        <TouchableOpacity
+        onPress={() =>navigation.navigate('Listalétrehozás')}>
+         <Text style={{ alignSelf: "center", color: "rgb(1,194,154)", fontSize: 20 }}>Listalétrehozása!</Text>
+        </TouchableOpacity>
+    </View> 
+   
     }
-
-    componentDidMount() {
-        this.getData().then((vissza_adatok2) => {
-            this.setState({ felhasznalonev: vissza_adatok2 })
-            this.adatLekeres()
-            this.setState({ isLoading: false })
-        });
-
-        this.navFocusListener = this.props.navigation.addListener('focus', () => {
-            this.getData().then((vissza_adatok2) => {
-                this.setState({ felhasznalonev: vissza_adatok2 })
-                this.adatLekeres()
-            });
-        })
-    }
-    componentWillUnmount() {
-        this.navFocusListener();
-    }
-
-
-
-
-    render() {
-        return (
-            <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)" }}>
-                {this.state.isLoading ? <ActivityIndicator size={"large"} /> :
-                    this.state.data.length > 0 ?
-                        <FlatList
-                            data={this.state.data}
-                            renderItem={({ item }) => (
-
-                                <TouchableOpacity style={{ backgroundColor: "rgb(32,32, 32)", height: 80, justifyContent: 'center', marginTop: 10, borderRadius: 10 }}
-                                    onPress={() => this.props.navigation.navigate('Seged', { aktid: item.listak_id, akttart: item.listak_tartalom })} >
-                                    <View>
-                                        <Text style={{ fontSize: 20, color: "white", margin: 10 }}>{item.listak_nev}</Text>
-                                        <Text style={{ color: "rgb(1,194,154)", margin: 10 }}>{this.getParsedDate(item.listak_datum)}</Text>
-                                    </View>
-                                </TouchableOpacity>
-
-                            )}
-                        />
-                        : <View style={{ alignSelf: "center", flex: 1, justifyContent: "center" }}>
-                            <Text style={{ color: "white", fontSize: 15, margin: 10 }}>Úgy tűnik jelenleg nem hoztál létre egy listát sem.</Text>
-                            <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate('Listalétrehozás')}>
-                                <Text style={{ alignSelf: "center", color: "rgb(1,194,154)", fontSize: 20 }}>Listalétrehozása!</Text>
-                            </TouchableOpacity>
-                        </View>}
-
-
-            </View>
-        );
-    }
+    
+    
+     
+    </View>
+  );
 };
 
+
+export default App;
+const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
-    button: {
-        alignSelf: "center",
-        alignItems: "center",
-        padding: 10,
-        backgroundColor: "blue",
-        width: 180
-    },
-    countContainer: {
-        alignItems: "center",
-        padding: 10
-    }
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgb(50,50,50)',
+
+
+  },
+  paragraph: {
+    margin: 24,
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
 });

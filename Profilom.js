@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
-import { ChildComponent, FlatList, Text, StyleSheet, View, TextInput, Button, ActivityIndicator } from 'react-native';
+import { Text, StyleSheet, View,Dimensions,TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Feather } from '@expo/vector-icons'; 
+import { AntDesign } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons'; 
+import { FontAwesome5 } from '@expo/vector-icons'; 
+
+
+
+import { ScrollView } from 'react-native-gesture-handler';
+
 import { ipcim } from "./IPcim";
 const IP = require('./IPcim')
 
@@ -9,16 +18,66 @@ export default class Profil extends Component {
         super(props);
 
         this.state = {
+            id:0,
+            maxKiadas:[],
+            atlagKiadas:[],
             osszlista: [],
-            regisztrdatum: [],
+            regisztrdatum:"",
             felhasznalonev: "",
             latszodik: false,
-            isLoading: true
+            erkezo: [],
+            data:[ {value:50}, {value:80}, {value:90}, {value:70} ]
         };
     }
-    getRegisztracioDatum() {
+    getMaxkiadas(){
         var bemenet = {
-            bevitel1: this.state.felhasznalonev
+            bevitel1: this.state.id
+        }
+        fetch(IP.ipcim + 'maxkoltes', {
+            method: "POST",
+            body: JSON.stringify(bemenet),
+            headers: { 
+            "Content-type": "application/json; charset=UTF-8",
+        }
+        }
+
+        ).then((response) => response.json())
+            .then((responseJson) => {
+                (
+                    
+                    this.setState({maxKiadas:responseJson})
+                );
+            })  
+    }
+    getAtlagkiadas(){
+        var bemenet = {
+            bevitel1: this.state.id
+        }
+        fetch(IP.ipcim + 'atlagkoltes', {
+            method: "POST",
+            body: JSON.stringify(bemenet),
+            headers: { 
+            "Content-type": "application/json; charset=UTF-8",
+        }
+        }
+
+        ).then((response) => response.json())
+            .then((responseJson) => {
+                (
+                    console.log("response22:",responseJson),
+                    this.setState({atlagKiadas:responseJson})
+                );
+            })  
+    }
+
+    
+    getRegisztracioDatum() {
+     
+        let ev=""
+        let honap=""
+        let nap=""
+        var bemenet = {
+            bevitel1: this.state.id
         }
         fetch(IP.ipcim + 'regisztraciodatum', {
             method: "POST",
@@ -29,9 +88,32 @@ export default class Profil extends Component {
         ).then((response) => response.json())
             .then((responseJson) => {
                 (
-                    console.log(responseJson),
-                    this.state.regisztrdatum = responseJson, this.setState({ isLoading: false },));
+                   
+                    responseJson.map((item)=>{
+                        ev=item.datum
+                        if(item.honap<10){
+                         honap+="0"+item.honap
+                        }
+                        if(item.nap<10){
+                            nap+="0"+item.nap
+                        }
+                        else{
+                            nap=item.nap
+                        }
+                        this.setState({regisztrdatum:ev+"-"+honap+"-"+nap})
+                       
+                    } 
+                ))
             })
+            //console.log(this.state.regisztrdatum)  
+    }
+    getID = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@ID')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch (e) {
+
+        }
     }
 
     storeData3 = async (value) => {
@@ -42,7 +124,7 @@ export default class Profil extends Component {
           // saving error
         }
       }
-      storeData2 = async (value) => {
+    storeData2 = async (value) => {
         try {
           const jsonValue = JSON.stringify(value)
           await AsyncStorage.setItem('@localadatok', jsonValue)
@@ -50,9 +132,25 @@ export default class Profil extends Component {
           // saving error
         }
       }
+    Szamolas = () => {
+        let seged = this.state.data;
+    
+        for (let i = 0; i < this.state.data.length; i++) {
+          for (let j = 0; j < this.state.erkezo.length; j++) {
+            if (this.state.data[i].label == this.state.erkezo[j].honap) {
+    
+              seged[i].value = this.state.erkezo[j].ar
+    
+              console.log(JSON.stringify(this.state.data))
+              this.setState({ data: seged })
+              break
+            }
+          }
+        }
+      }
     getListakszama() {
         var bemenet = {
-            bevitel1: this.state.felhasznalonev
+            bevitel1: this.state.id
         }
         fetch(IP.ipcim + 'felhasznaloossz', {
             method: "POST",
@@ -66,10 +164,29 @@ export default class Profil extends Component {
             .then((responseJson) => {
                 (
                     console.log("response:",responseJson),
-                    this.setState({osszlista:responseJson}),
-                    this.setState({ isLoading: false },));
-            })
-           
+                    this.setState({osszlista:responseJson})
+                );
+            })  
+    }
+    getLista() {
+        var bemenet = {
+            bevitel1: this.state.felhasznalonev
+        }
+        fetch(IP.ipcim + 'honapok', {
+            method: "POST",
+            body: JSON.stringify(bemenet),
+            headers: { 
+            "Content-type": "application/json; charset=UTF-8",
+        }
+        }
+
+        ).then((response) => response.json())
+            .then((responseJson) => {
+                (
+                    console.log("response1:",responseJson),
+                    this.setState({erkezo:responseJson})
+                );
+            })  
     }
     getData = async () => {
         try {
@@ -88,21 +205,28 @@ export default class Profil extends Component {
         }
     }
     componentDidMount() {
+        this.getID().then((vissza_adatok2) => {
+            this.setState({id:vissza_adatok2})
+            
+            this.getListakszama();
+            this.getRegisztracioDatum();
+            this.getAtlagkiadas();
+            this.getMaxkiadas();
+        });
         this.getData().then((vissza_adatok2) => {
             this.setState({ felhasznalonev: vissza_adatok2 })
             this.state.felhasznalonev = vissza_adatok2
-            this.getListakszama();
-            this.getRegisztracioDatum();
-            console.log(this.state.osszlista)
-         
-           
         });
         this.navFocusListener = this.props.navigation.addListener('focus', () => {
             this.getData().then((vissza_adatok2) => {
-                this.setState({ felhasznalonev: vissza_adatok2 })
-                this.state.felhasznalonev = vissza_adatok2
+                this.setState({ felhasznalonev: vissza_adatok2 }) 
+            });
+            this.getID().then((vissza_adatok2) => {
+                this.setState({id:vissza_adatok2})
                 this.getListakszama();
                 this.getRegisztracioDatum();
+                this.getAtlagkiadas();
+                this.getMaxkiadas();
             });
         })
 
@@ -120,53 +244,97 @@ export default class Profil extends Component {
 
 
     render() {
-        const { data, isLoading } = this.state;
+
         return (
             <View style={{ flexDirection: 'column', flex: 1,backgroundColor:"rgb(50,50,50)"}}>
-                {isLoading ? <ActivityIndicator size={"large"} /> :
-               <View style={{flex:1,marginTop:20}}>
-
-
-                <View style={{borderColor:"rgb(120, 130, 130)",backgroundColor:"rgb(18,18,18)",borderWidth:1,height:'20%',width:'50%',borderRadius:15,alignItems:"center"}}>
-                    <Text style={{color:"white",fontSize:15}}>Felhasználó neved:</Text>
-                    <Text style={{color:"white",fontSize:30,marginTop:20}}>{this.state.felhasznalonev}</Text>
-                </View>
-                <View style={{borderColor:"rgb(120, 130, 130)",backgroundColor:"rgb(18,18,18)",borderWidth:1,height:'30%',width:'45%',borderRadius:15,alignItems:"center",alignSelf:"flex-end",top:'-20%'}}>
-                    <Text style={{color:"white",fontSize:15}}>Összes listád:</Text>
-                {this.state.osszlista.map((item,key)=><Text style={{color:"white",width:"100%",height:"100%",fontSize:50,textAlign:"center",textAlignVertical:"center"}} key={key}>{item.osszes}</Text>)}
-                </View>
-
-
-                <View style={{borderColor:"rgb(120, 130, 130)",backgroundColor:"rgb(18,18,18)",borderWidth:1,height:'20%',width:'50%',borderRadius:15,alignItems:"center",alignSelf:"flex-start",bottom:'26%'}}>
-                    <Text style={{color:"white",fontSize:15}}>Regisztrációd dátuma:</Text>
-                    <Text style={{color:"white"}}>
+                <ScrollView>
+                    <View style={{height:height*0.1,backgroundColor:"rgb(32,32,32)",marginTop:height*0.020,justifyContent:"center",borderTopEndRadius:20,borderTopLeftRadius:20}}>
+                    <Text style={{fontSize:20,alignSelf:"center",fontWeight:"500",alignItems:"flex-end",color:"white"}}>Felhasználó adatai</Text>
+                        <View style={{marginLeft:5,left:0,backgroundColor:"rgb(1,192,154)",position:"absolute",borderRadius:50,width:width*0.11,alignItems:"center",height:height*0.05,justifyContent:"center"}}><AntDesign name="user" size={25} color="white"/></View>   
+                    </View>
+                    <View style={{height:height*0.1,justifyContent:"center",flexDirection:"row",backgroundColor:"rgb(32,32,32)",borderBottomLeftRadius:20,borderBottomRightRadius:20,borderBottomWidth:3,borderBottomColor:"rgb(1,194,154)"}}>
+                       <View style={{flex:2,justifyContent:"center"}}><Text style={{fontSize:18,margin:10,color:"white"}}>Felhasználónév:</Text></View>
+                        <View style={{flex:1,justifyContent:"center"}}><Text style={{fontSize:18,margin:10,color:"white"}}>{this.state.felhasznalonev}</Text>
+                        <View style={{justifyContent:"center",position:"absolute",left:width*0.16}}><TouchableOpacity onPress={()=>this.props.navigation.navigate('Profilom szerkesztése')}><Feather name="edit-2" size={15} color="rgb(1,194,154)" style={{marginBottom:height*0.03}} /></TouchableOpacity></View>
+                        </View>
                         
-                    </Text>
-                </View>
-      
-                <Button title='Kijelentkezés' onPress={this.kilepes}></Button>
+                     
+                      
+                    </View>
+
+                    <View style={{height:height*0.15,backgroundColor:"rgb(32,32,32)",marginTop:height*0.050,justifyContent:"center",borderTopEndRadius:20,borderTopLeftRadius:20}}>
+                        <Text style={{fontSize:20,alignSelf:"center",fontWeight:"500",color:"white"}}>Információk</Text>
+                        <View style={{marginLeft:5,left:0,backgroundColor:"rgb(1,192,154)",position:"absolute",borderRadius:100,width:width*0.11,alignItems:"center",height:height*0.05,justifyContent:"center"}}><Ionicons name="information" size={25} color="white" /></View>   
+                     
+                    </View>
+                    <View style={{height:height*0.2,justifyContent:"center",flexDirection:"column",backgroundColor:"rgb(32,32,32)",borderBottomLeftRadius:20,borderBottomRightRadius:20,borderBottomWidth:3,borderBottomColor:"rgb(1,194,154)"}}>
+                        <View style={{flex:1,flexDirection:"row",backgroundColor:""}}>
+                                <View style={{flex:2,justifyContent:"center"}}><Text style={{fontSize:18,margin:10,color:"white"}}>Regisztrációd dátuma:</Text></View>
+                                <View style={{flex:1,justifyContent:"center"}}><Text style={{fontSize:18,color:"white"}}>{this.state.regisztrdatum}</Text></View>
+                        </View>
+                        <View style={{flex:1,flexDirection:"row",backgroundColor:""}}>
+                                <View style={{flex:2,justifyContent:"center"}}><Text style={{fontSize:18,margin:10,color:"white"}}>Összes listád:</Text></View>
+                                <View style={{flex:1,justifyContent:"center"}}>{this.state.osszlista.map((item,key)=><Text key={key} style={{fontSize:18,color:"white"}}>{item.osszes}</Text>)}</View>
+                        </View>
+                    </View>
 
 
 
+                    
+                    <View style={{height:height*0.15,backgroundColor:"rgb(32,32,32)",marginTop:height*0.050,justifyContent:"center",borderTopEndRadius:20,borderTopLeftRadius:20}}>
+                        <Text style={{fontSize:20,alignSelf:"center",fontWeight:"500",color:"white"}}>Kiadások</Text>
+                        <View style={{marginLeft:5,left:0,backgroundColor:"rgb(1,192,154)",position:"absolute",borderRadius:50,width:width*0.11,alignItems:"center",height:height*0.05,justifyContent:"center"}}><FontAwesome5 name="money-bill-alt" size={25} color="black" /></View>   
+                     
+                    </View>
+                    <View style={{height:height*0.2,justifyContent:"center",flexDirection:"column",backgroundColor:"rgb(32,32,32)",borderBottomLeftRadius:20,borderBottomRightRadius:20,borderBottomWidth:3,borderBottomColor:"rgb(1,194,154)"}}>
+                        <View style={{flex:1,flexDirection:"row",backgroundColor:""}}>
+                                    <View style={{flex:2,justifyContent:"center"}}><Text style={{fontSize:18,margin:10,color:"white"}}>Átlagos havi kiadásod:</Text></View>
+                                    <View style={{flex:1,justifyContent:"center"}}>{this.state.atlagKiadas.map((item,key)=><Text key={key} style={{fontSize:18,color:"white"}}>{item.atlag} ft</Text>)}</View>
+                        </View>
+                        <View style={{flex:1,flexDirection:"row",backgroundColor:""}}>
+                                    <View style={{flex:2,justifyContent:"center"}}><Text style={{fontSize:18,margin:10,color:"white"}}>Legdrágább listád:</Text></View>
+                                    <View style={{flex:1,justifyContent:"center"}}>{this.state.maxKiadas.map((item,key)=><Text key={key} style={{fontSize:18,color:"white"}}>{item.max} ft</Text>)}</View>
+                        </View>
+                       
+                    </View>
 
 
+                    <View style={{height:height*0.1,backgroundColor:"rgb(32,32,32)",marginTop:height*0.050,justifyContent:"center",borderTopEndRadius:20,borderTopLeftRadius:20}}>
+                        <Text style={{fontSize:20,alignSelf:"center",fontWeight:"500",color:"white"}}>Fiók</Text>
+                        <View style={{marginLeft:5,left:0,backgroundColor:"rgb(1,192,154)",position:"absolute",borderRadius:50,width:width*0.11,alignItems:"center",height:height*0.05,justifyContent:"center"}}><FontAwesome5 name="money-bill-alt" size={25} color="black" /></View>   
+                     
+                    </View>
+                    <View style={{height:height*0.2,justifyContent:"center",flexDirection:"column",backgroundColor:"rgb(32,32,32)",borderBottomLeftRadius:20,borderBottomRightRadius:20,borderBottomWidth:3,borderBottomColor:"rgb(1,194,154)"}}>
+                        <View style={{flex:1,flexDirection:"row",backgroundColor:""}}>
+                                    <View style={{flex:2,justifyContent:"center"}}>
+                                        <TouchableOpacity style={{backgroundColor:"red",width:"40%",borderRadius:15}} onPress={()=>this.kilepes()}>
+                                        <Text style={{fontSize:18,margin:10,color:"white"}}>
+                                        <Text><Feather name="log-out" size={24} color="white" /></Text>
+                                        Kijelentkezés
+                                        </Text>
+                                        </TouchableOpacity>
+                                        
+                                    </View>
+                        </View>
+                       
+                       
+                    </View>
+                  
+
+                    
 
 
+                    
+                    
 
 
-
-
-               </View>
-
-
-
-
-        }
+                  
+                </ScrollView>
             </View>
         );
     }
 };
-
+const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
     button: {
         alignSelf: "center",

@@ -12,7 +12,6 @@ export default class Regisztracio extends Component {
 
     this.state = {
       talaltfelh: false,
-      data: [],
       regisztralfelh: "",
       regisztraljelsz: "",
       rosszjelszo: false,
@@ -23,66 +22,50 @@ export default class Regisztracio extends Component {
     };
   }
   regisztracioellen = () => {
-    let x = 0;
-    let ures = 0
-    let specialis = 0;
     var pattern = new RegExp(
       /[A-Z]/
     );
-    this.state.data.map((item) => {
-      if (item.felhasznalo_nev == this.state.regisztralfelh) {
-        x += 1
-      }
-    })
-    if (this.state.regisztralfelh.length == 0 || this.state.regisztraljelsz.length == 0) {
+
+    if (!this.state.regisztralfelh || !this.state.regisztraljelsz) {
       alert("Üresen hagyott Felhasználónév/jelszó")
       this.setState({ rosszfelhasznalonev: true })
       this.setState({ rosszjelszo: true })
     }
-    else {
-      if (pattern.test(this.state.regisztraljelsz)) {
-        specialis += 1
-
-      }
-      if (specialis < 1) {
-        alert("Nem tartalmaz nagybetűt a jelszó!")
-        console.log(specialis)
-        this.setState({ rosszjelszo: true })
-      }
-      else if (this.state.regisztraljelsz.length < 5) {
-        alert("Túl rövid jelszó!")
-        this.setState({ rosszjelszo: true })
-      }
-      else if (x > 0 || ures > 0) {
-        alert("Nem megfelelő adatok!")
-        this.setState({ rosszfelhasznalonev: true })
-        this.setState({ rosszjelszo: true })
-      }
-      else if (this.state.talaltfelh == true) {
-        alert("A felhasználónév használatban van.")
-      }
-      else {
-        try {
-          var bemenet = {
-            bevitel1: this.state.regisztralfelh,
-            bevitel2: this.state.regisztraljelsz
-          }
-          fetch(IP.ipcim + "regisztracio", {
-            method: "POST",
-            body: JSON.stringify(bemenet),
-            headers: { "Content-type": "application/json; charset=UTF-8" }
-          }
-          )
-        }
-        catch (e) { console.log(e) }
-        finally {
-          this.props.navigation.navigate('Bejelentkezes')
-          alert("Sikeres regisztráció")
-        }
-      }
+    else if (this.state.talaltfelh == true) {
+      alert("A felhasználónév használatban van.")
+    }
+    else if (pattern.test(this.state.regisztraljelsz) != true) {
+      alert("A jelszó nem tartalmaz nagybetűt")
     }
 
+    else if (this.state.regisztraljelsz.length < 5) {
+      alert("Túl rövid jelszó!")
+      this.setState({ rosszjelszo: true })
+    }
+    else {
+      try {
+        var bemenet = {
+          bevitel1: this.state.regisztralfelh,
+          bevitel2: this.state.regisztraljelsz
+        }
+        fetch(IP.ipcim + "regisztracio", {
+          method: "POST",
+          body: JSON.stringify(bemenet),
+          headers: { "Content-type": "application/json; charset=UTF-8" }
+        }
+        )
+      }
+      catch (e) { console.log(e) }
+      finally {
+        this.props.navigation.navigate('Bejelentkezes')
+        alert("Sikeres regisztráció")
+
+      }
+
+    }
   }
+
+
   componentDidMount() {
 
   }
@@ -91,20 +74,19 @@ export default class Regisztracio extends Component {
       bevitel1: this.state.regisztralfelh
 
     }
-    fetch('http://localhost:3000/felhasznalok', {
+    fetch(IP.ipcim + "felhasznaloletezik", {
       method: "POST",
       body: JSON.stringify(bemenet),
       headers: { "Content-type": "application/json; charset=UTF-8" }
     }
     ).then((response) => response.json())
       .then((responseJson) => {
-        if (responseJson.length > 0) {
-          this.setState({ talaltfelh: true })
-        }
+        console.log(responseJson)
+        this.setState({ talaltfelh: responseJson })
       })
       .catch((error) => {
         console.error(error);
-      }).then(this.regisztracioellen())
+      }).then(this.regisztracioellen)
 
   }
   JelszoLathato = () => {
@@ -151,7 +133,7 @@ export default class Regisztracio extends Component {
                 onBlur={() => this.setState({ fokusz: false })}
                 style={styles.textinputjelsz}
                 placeholder="Jelszó"
-                secureTextEntry={this.state.lathatojelszo }
+                secureTextEntry={this.state.lathatojelszo}
                 onChangeText={(jelszoszoveg) => this.setState({ regisztraljelsz: jelszoszoveg })}
                 onChange={() => this.setState({ rosszjelszo: false })}
                 value={this.state.regisztraljelsz}>
