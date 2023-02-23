@@ -56,6 +56,7 @@ const App = () => {
         }
         ).then((response) => response.json())
             .then((responseJson) => {
+                responseJson.reverse()
                 setAdatok(responseJson)
             })
             .catch((error) => {
@@ -95,7 +96,7 @@ const App = () => {
     const getParsedDate = (strDate) => {
         var strSplitDate = String(strDate).split(' ');
         var date = new Date(strSplitDate[0]);
-        var dd = date.getDate();
+        var dd = date.getDate()+1;
         var mm = date.getMonth() + 1;
 
         var yyyy = date.getFullYear();

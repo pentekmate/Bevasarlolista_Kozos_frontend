@@ -101,7 +101,7 @@ function Root({ navigation }) {
       screenOptions=
       {{ lazy: false, headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: 'white', drawerStyle: { backgroundColor: 'rgb(32,32,32)' }, drawerActiveBackgroundColor: "rgb(18,18,18)", drawerActiveTintColor: "white", drawerInactiveTintColor: "white", headerTitleAlign: "center" }} >
       <Drawer.Screen name="Home" component={HomeScreen} options={{
-        title: "Home",
+        title: "Bevásárlólistám",
         drawerIcon: ({ }) => (
           <AntDesign name="home" size={24} color="white" />
         ),

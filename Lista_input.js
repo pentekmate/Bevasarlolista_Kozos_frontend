@@ -284,7 +284,7 @@ export default class Listaad extends Component {
   render() {
     return (
 
-
+      <View style={styles.container}>
       <ScrollView style={{ flexDirection: "column", backgroundColor: "rgb(50,50,50)" }}>
         <View style={[styles.keresesdiv, { flex: 1, flexDirection: "row", backgroundColor: "rgb(18,18,18)" }]}>
           <Feather style={{ paddingTop: 5, }} name="search" size={28} color="white" />
@@ -430,30 +430,40 @@ export default class Listaad extends Component {
           </View>
         </Modal>
 
-        <Animated.View
-          style={{
-            zIndex: 2,
-            transform: [{ translateX: this.pan.x }, { translateY: this.pan.y }],
-          }}
-          {...this.panResponder.panHandlers}>
-          <View style={{ flex: 1, backgroundColor: "696969" }}>
-            {this.state.data?.length > 0 || this.state.segeddata?.length > 0 ?
-              <TouchableOpacity
-                onPress={(this.adatatad)}
-                style={{ backgroundColor: "rgb(1,194,154)", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 1, }}>
-                <Feather name="check" size={50} color="black" />
-              </TouchableOpacity> : <Text></Text>}
-
-          </View>
-        </Animated.View>
-
       </ScrollView>
+        <Animated.View
+        style={{
+          position:"absolute",
+          bottom:0,
+          right: 0,
+          margin: 25,
+          zIndex: 2,
+          transform: [{ translateX: this.pan.x }, { translateY: this.pan.y }],
+      }}
+        {...this.panResponder.panHandlers}>
+        <View style={{ flex: 1, backgroundColor: "696969" }}>
+          {this.state.data?.length > 0 || this.state.segeddata?.length > 0 ?
+            <TouchableOpacity
+              onPress={(this.adatatad)}
+              style={{ backgroundColor: "rgb(1,194,154)", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 1, }}>
+              <Feather name="check" size={50} color="black" />
+            </TouchableOpacity> : <Text></Text>}
+
+        </View>
+      </Animated.View>
+      </View>
     );
   }
 }
 const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "rgb(50,50,50)"
+
+},
   listatartalom: {
     backgroundColor: "rgb(18,18,18)",
     height: height * 0.06,

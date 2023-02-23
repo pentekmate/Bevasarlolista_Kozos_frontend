@@ -460,7 +460,6 @@ export default class Seged extends Component {
                     </View>
                     <View style={{ margin: 10 }}>
                         <ProgressBar
-
                             progress={this.state.szam}
                             height={8}
                             backgroundColor="rgb(1,194,154)"

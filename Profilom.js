@@ -251,7 +251,7 @@ export default class Profil extends Component {
                  stickyHeaderIndices={[0, 2, 4,6]}
                 >
                     <View style={{height:height*0.09,backgroundColor:"rgb(18,18,18)",marginTop:height*0.020,borderTopEndRadius:20,borderTopLeftRadius:20}}>
-                    <Text style={{fontSize:20,alignSelf:"center",fontWeight:"bold",color:"white",position:"absolute"}}>Felhasználó adatai</Text>
+                    <Text style={{fontSize:20,alignSelf:"center",fontWeight:"bold",color:"white",position:"absolute",bottom:width*0.05}}>Felhasználó adatai</Text>
                         <View style={{marginLeft:5,left:0,backgroundColor:"rgb(1,192,154)",position:"absolute",borderRadius:50,width:width*0.1,alignItems:"center",height:width*0.1,justifyContent:"center"}}><AntDesign name="user" size={25} color="white"/></View>   
                     </View>
                     <View style={{height:height*0.1,justifyContent:"center",flexDirection:"row",backgroundColor:"rgb(32,32,32)",borderBottomLeftRadius:20,borderBottomRightRadius:20,borderBottomWidth:3,borderBottomColor:"rgb(1,194,154)"}}>
@@ -265,7 +265,7 @@ export default class Profil extends Component {
                     </View>
 
                     <View style={{height:height*0.1,backgroundColor:"rgb(18,18,18)",marginTop:height*0.050,justifyContent:"center",borderTopEndRadius:20,borderTopLeftRadius:20}}>
-                        <Text style={{fontSize:20,alignSelf:"center",fontWeight:"bold",color:"white"}}>Információk</Text>
+                        <Text style={{fontSize:20,alignSelf:"center",fontWeight:"bold",color:"white",position:"absolute",bottom:width*0.05}}>Információk</Text>
                         <View style={{marginLeft:5,left:0,backgroundColor:"rgb(1,192,154)",position:"absolute",borderRadius:100,width:width*0.1,alignItems:"center",height:width*0.1,justifyContent:"center"}}><Ionicons name="information" size={25} color="white" /></View>   
                      
                     </View>
@@ -284,7 +284,7 @@ export default class Profil extends Component {
 
                     
                     <View style={{height:height*0.1,backgroundColor:"rgb(18,18,18)",marginTop:height*0.050,justifyContent:"center",borderTopEndRadius:20,borderTopLeftRadius:20}}>
-                        <Text style={{fontSize:20,alignSelf:"center",fontWeight:"bold",color:"white"}}>Kiadások</Text>
+                        <Text style={{fontSize:20,alignSelf:"center",fontWeight:"bold",color:"white",position:"absolute",bottom:width*0.05}}>Kiadások</Text>
                         <View style={{marginLeft:5,left:0,backgroundColor:"rgb(1,192,154)",position:"absolute",borderRadius:50,width:width*0.1,alignItems:"center",height:width*0.1,justifyContent:"center"}}><FontAwesome5 name="money-bill-alt" size={25} color="white" /></View>   
                      
                     </View>
@@ -302,7 +302,7 @@ export default class Profil extends Component {
 
 
                     <View style={{height:height*0.1,backgroundColor:"rgb(18,18,18)",marginTop:height*0.050,justifyContent:"center",borderTopEndRadius:20,borderTopLeftRadius:20}}>
-                        <Text style={{fontSize:20,alignSelf:"center",fontWeight:"bold",color:"white"}}>Fiók</Text>
+                        <Text style={{fontSize:20,alignSelf:"center",fontWeight:"bold",color:"white",position:"absolute",bottom:width*0.05}}>Fiók</Text>
                         <View style={{marginLeft:5,left:0,backgroundColor:"rgb(1,192,154)",position:"absolute",borderRadius:50,width:width*0.1,alignItems:"center",height:width*0.1,justifyContent:"center"}}><MaterialCommunityIcons name="account-settings-outline" size={25} color="white" /></View>   
                      
                     </View>
