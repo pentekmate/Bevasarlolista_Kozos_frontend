@@ -249,6 +249,7 @@ export default class Profil extends Component {
             <View style={{ flexDirection: 'column', flex: 1,backgroundColor:"rgb(50,50,50)"}}>
                 <ScrollView
                  stickyHeaderIndices={[0, 2, 4,6]}
+                 showsVerticalScrollIndicator={false}
                 >
                     <View style={{height:height*0.09,backgroundColor:"rgb(18,18,18)",marginTop:height*0.020,borderTopEndRadius:20,borderTopLeftRadius:20}}>
                     <Text style={{fontSize:20,alignSelf:"center",fontWeight:"bold",color:"white",position:"absolute",bottom:width*0.05}}>Felhasználó adatai</Text>

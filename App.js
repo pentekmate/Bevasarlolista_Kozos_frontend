@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
+import { Ionicons } from '@expo/vector-icons';
 import CustomDrawer from './CustomDrawer';
 import ProfilEdit from './Profszerkesztes';
 import Kiir from './Elso'
@@ -102,9 +102,8 @@ function Root({ navigation }) {
       {{ lazy: false, headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: 'white', drawerStyle: { backgroundColor: 'rgb(32,32,32)' }, drawerActiveBackgroundColor: "rgb(18,18,18)", drawerActiveTintColor: "white", drawerInactiveTintColor: "white", headerTitleAlign: "center" }} >
       <Drawer.Screen name="Home" component={HomeScreen} options={{
         title: "Bevásárlólistám",
-        drawerIcon: ({ }) => (
-          <AntDesign name="home" size={24} color="white" />
-        ),
+        drawerIcon: ({ color }) => (<Ionicons name="home-outline" size={22} color={color} />)
+        
 
       }} />
 
@@ -116,19 +115,17 @@ function Root({ navigation }) {
         drawerItemStyle: { height: 0 }, headerShown: false,
       }} />
 
-      <Drawer.Screen name="Meglévő listák" component={Listafel} />
+      <Drawer.Screen name="Meglévő listák" component={Listafel} 
+      options={{ drawerIcon: ({ color }) => (<Ionicons name="file-tray-stacked-outline" size={22} color={color} />) }}
+      />
 
       <Drawer.Screen name="Listalétrehozás" component={Elso_lap} options={{
         title: 'Listalétrehozása',
-        drawerIcon: ({ }) => (
-          <MaterialIcons name="post-add" size={24} color="white" />
-        ),
+        drawerIcon: ({ color }) => (<Ionicons name="create-outline" size={22} color={color}/>)
       }} />
       <Drawer.Screen name="Listák" component={Masodik_lap} options={{
         title: 'Listák',
-        drawerIcon: ({ }) => (
-          <MaterialCommunityIcons name="clipboard-list-outline" size={24} color="white" />
-        ),
+        drawerIcon: ({ color }) => (<Ionicons name="ios-clipboard-outline" size={22} color={color} />)
       }} />
       <Drawer.Screen name="Profilom" component={Prof} options={{
         title: 'Profilom',
