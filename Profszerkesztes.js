@@ -36,7 +36,9 @@ export default class ProfilEdit extends Component {
             modal: false,
             kepek:[],
             profkep:"",
-            profIsLoad:true
+            profIsLoad:true,
+            sikeresModal:false
+            
         };
     }
     profilTorles=()=>{
@@ -97,6 +99,15 @@ export default class ProfilEdit extends Component {
                     this.setState({profIsLoad:false})
                }, 200))
     }
+    sikeresModalMutat = () => {
+        this.setState({ sikeresModal: true })
+        setTimeout(() => {
+          this.setState({
+            sikeresModalMutat: false
+          });
+        }, 2000);
+    
+      }
     
     Profkepfrissites=(x)=>{
         console.log(x)
@@ -130,12 +141,12 @@ export default class ProfilEdit extends Component {
     finally{
         this.storeData([])
         this.storeData(this.state.felhasznalonevCsere)
-        alert("sikeres frissites")
+        this.sikeresModalMutat()
     }
     }
     mentes=()=>{
         let egyezomezok=0
-        alert(this.state.felhasznalonevCsere.length)
+       
         if(this.state.felhasznalonevCsere.length<1){
             alert("uresen hagyott mezo")
         }
@@ -328,6 +339,23 @@ export default class ProfilEdit extends Component {
                   
           </View>
         </Modal>
+        <Modal
+          style={{ backgroundColor: "red" }}
+          animationType="fade"
+          transparent={true}
+          visible={this.state.sikeresModal}>
+          <View style={styles.modalView1}>
+            <View style={{ flex: 4.5 }}><Text style={{ color: "white",marginLeft:10 }}>Sikeres mentés!</Text>
+            </View>
+            <View style={{flex:0.5,alignItems:"flex-end",}}>
+            <Pressable onPress={()=>this.props.navigation.goBack()}><Feather name="arrow-left" size={24} color="rgb(1,194,154)" /></Pressable>
+            </View>
+            <View style={{ flex: 0.5 }}>
+              <Pressable style={{ alignSelf: "flex-end" }} onPress={() => this.setState({ sikeresModal: false })}><MaterialIcons name="close" size={24} color="white" />
+              </Pressable></View>
+            
+          </View>
+        </Modal>
             </View>
         );
     }
@@ -389,7 +417,8 @@ const styles = StyleSheet.create({
         padding:5,
         justifyContent: "center",
         height:height*0.08,
-        borderRadius:10,        
+        borderRadius:10,
+        color:"white"        
       },
        textinputfelhact: {
         backgroundColor:"rgb(50,50,50)",
@@ -411,5 +440,15 @@ const styles = StyleSheet.create({
       profdiv:{
         alignItems:"center",
         justifyContent:"center"
-      }
+      },
+      modalView1: {
+        flexDirection: "row",
+        alignContent:"space-between",
+        bottom: 50,
+        position: "absolute",
+        backgroundColor: '#181818',
+        alignItems: 'center',
+        width: "100%",
+        height: "5%"
+      },
 });

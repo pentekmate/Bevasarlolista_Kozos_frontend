@@ -19,7 +19,7 @@ import Toltokep from './Tolto'
 import Fooldal from './Home';
 import Seged from './Seged';
 import Felvitel from './felvitel';
-import Szerkeszt from './Szerkeszt'
+import Szerkeszt from './Szerkeszt';
 
 function HomeScreen({ navigation }) {
 
@@ -34,6 +34,7 @@ function SzerkesztScreen({ navigation }) {
     <Szerkeszt navigation={navigation}></Szerkeszt>
   );
 }
+
 
 function Listafel({ navigation }) {
   return (
@@ -109,7 +110,7 @@ function Root({ navigation }) {
 
 
       <Drawer.Screen name="Bejelentkezes" component={Bejelentkezes} options={{
-        drawerItemStyle: { height: 0 }, headerShown: false,
+        drawerItemStyle: { height: 0 }, headerShown: false,swipeEdgeWidth:0
       }} />
       <Drawer.Screen name="Toltokep" component={Toltes} options={{
         drawerItemStyle: { height: 0 }, headerShown: false,
@@ -137,6 +138,7 @@ function Root({ navigation }) {
         headerRightContainerStyle: { marginRight: 10 },
 
       }} />
+
 
     </Drawer.Navigator>
   )

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Animated, PanResponder, StyleSheet, View, Dimensions, TouchableOpacity, Text } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { ipcim } from "./IPcim";
+import { ScrollView } from "react-native-gesture-handler";
 const IP = require('./IPcim')
 
 
@@ -55,7 +56,18 @@ export default class Fooldal extends Component {
     render() {
         return (
             <View style={styles.container}>
+            <View style={{flex:0.5,backgroundColor:"green"}}>
+            <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={true}
+               
+                >
+                    <View style={{backgroundColor:"red",height:height*1,width:width*1}}><Text>s</Text></View>
+                    <View style={{backgroundColor:"blue",height:height*0.1,width:width*1}}><Text>s</Text></View>
+                </ScrollView>
 
+
+            </View>
                 <Animated.View
                     style={{
                         position: "absolute",
@@ -80,7 +92,7 @@ export default class Fooldal extends Component {
         );
     }
 }
-const { width } = Dimensions.get("window");
+const { width,height } = Dimensions.get("window");
 const styles = StyleSheet.create({
     container: {
         flex: 1,

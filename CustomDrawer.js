@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ImageBackground, Image, Pressable } from 'react-native'
+import { View, Text, ImageBackground, Image, Pressable,Dimensions } from 'react-native'
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
 import Icon from 'react-native-vector-icons/Ionicons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -111,12 +111,16 @@ const CustomDrawer = (props, { navigation }) => {
                 <ImageBackground
                     source={require("./a.png")}
                     style={{ padding: 20 }}>
-                     <TouchableOpacity onPress={()=>props.navigation.navigate('Profilom')}>
-                    <Image
-                        source={{uri:IP.ipcim+profkep}}
-                        style={{ height: 80, width: 80, borderRadius: 40, marginBottom: 10 }}
-                    />
-                    </TouchableOpacity>   
+                          
+                          <TouchableOpacity style={{width:width*0.2,height:width*0.2,backgroundColor:"rgb(50,50,50)",justifyContent:"center",borderRadius:width*0.2/2,alignContent:"center"}} onPress={()=>props.navigation.navigate('Profilom')}>
+                            
+                          <Image
+                                source={{uri:IP.ipcim+profkep}}
+                                style={{ height:"100%", width: "100%", }}
+                            />
+                            </TouchableOpacity>  
+                         
+                     
                     <Text style={{ color: '#fff', fontSize: 20,fontWeight:"bold" }}>{felhasznalo}</Text>
                     <Text style={{ color: '#fff', fontSize: 15 }}>Listák száma: <Text style={{color:"rgb(1,194,154)"}}>{db}</Text></Text>
 
@@ -133,3 +137,4 @@ const CustomDrawer = (props, { navigation }) => {
 }
 
 export default CustomDrawer
+const { width, height } = Dimensions.get("window");

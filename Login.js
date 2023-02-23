@@ -24,7 +24,7 @@ export default class Login extends Component {
       rosszjelszo: false,
       rosszfelhasznalonev: false,
       lathatojelszo: true,
-      modal: false
+      modal: false,
     };
   }
   idLekeres=()=>{
@@ -42,8 +42,8 @@ export default class Login extends Component {
             .then((responseJson) => {
               console.log(responseJson)
               responseJson.map((item)=>id=item.felhasznalo_id)
-              this.storeID(id),
-              alert(id)
+              this.storeID(id)
+             
             }).then((this.storeID(id)))
             .catch((error) =>{
             console.error(error);

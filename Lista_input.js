@@ -418,12 +418,15 @@ export default class Listaad extends Component {
             this.setState({ modalVisible: !modalVisible });
           }}>
           <View style={styles.modalView}>
-            <View style={{ flex: 1 }}><Text style={{ color: "white", alignSelf: "flex-start" }}>A listád mentésre került!</Text>
+            <View style={{ flex: 4.5 }}><Text style={{ color: "white",marginLeft:10 }}>A listád mentésre került!</Text>
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={{flex:0.5,alignItems:"flex-end",}}>
+            <Pressable onPress={()=>this.props.navigation.navigate('Listák')}><Feather name="arrow-right" size={24} color="rgb(1,194,154)" /></Pressable>
+            </View>
+            <View style={{ flex: 0.5 }}>
               <Pressable style={{ alignSelf: "flex-end" }} onPress={() => this.setState({ modal: false })}><MaterialIcons name="close" size={24} color="white" />
               </Pressable></View>
-
+            
           </View>
         </Modal>
 
@@ -521,6 +524,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     flexDirection: "row",
+    alignContent:"space-between",
     bottom: 50,
     position: "absolute",
     backgroundColor: '#181818',
