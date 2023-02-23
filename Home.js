@@ -56,39 +56,39 @@ export default class Fooldal extends Component {
     render() {
         return (
             <View style={styles.container}>
-            <View style={{flex:0.5,backgroundColor:"green"}}>
             <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={true}
-               
-                >
-                    <View style={{backgroundColor:"red",height:height*1,width:width*1}}><Text>s</Text></View>
-                    <View style={{backgroundColor:"blue",height:height*0.1,width:width*1}}><Text>s</Text></View>
-                </ScrollView>
-
-
+            showsVerticalScrollIndicator={false}
+            >
+            <View style={{height:height*0.3,backgroundColor:"red"}}></View>
+            <View style={{height:height*0.7,backgroundColor:"blue"}}>
+            
+          
             </View>
-                <Animated.View
-                    style={{
-                        position: "absolute",
-                        bottom: 0,
-                        right: 0,
-                        margin: 25,
-                        zIndex: 2,
-                        transform: [{ translateX: this.pan.x }, { translateY: this.pan.y }],
-                    }}
-                    {...this.panResponder.panHandlers}>
-                    <View style={{ flex: 1, backgroundColor: "696969" }}>
-                        <TouchableOpacity
-                            onPress={(this.listaletrehozas)}
-                            style={{ backgroundColor: "rgb(1,194,154)", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 1, }}>
-                            <FontAwesome5 name="plus" size={20} color="white" />
-                        </TouchableOpacity>
 
-                    </View>
-                </Animated.View>
-                    <Text>{this.state.felhasznalonev}</Text>
+            </ScrollView>
+            
+            <Animated.View
+                   style={{
+                       position:"absolute",
+                       bottom:0,
+                       right: 0,
+                       margin: 25,
+                       zIndex: 2,
+                       transform: [{ translateX: this.pan.x }, { translateY: this.pan.y }],
+                   }}
+                   {...this.panResponder.panHandlers}>
+                   <View style={{ backgroundColor: "696969" }}>
+                       <TouchableOpacity
+                           onPress={(this.listaletrehozas)}
+                           style={{ backgroundColor: "rgb(1,194,154)", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 1, }}>
+                           <FontAwesome5 name="plus" size={20} color="white" />
+                       </TouchableOpacity>
+
+                   </View>
+               </Animated.View>  
             </View>
+          
+            
         );
     }
 }

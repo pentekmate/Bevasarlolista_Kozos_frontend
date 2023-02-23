@@ -180,8 +180,8 @@ const App = () => {
                         backgroundColor: "red",
                         borderRadius: 10,
                         marginTop: 9,
-                        height: 69,
-                        width: 70,
+                        height: width*0.17,
+                        width: width*0.17,
                     }}>
                     <TouchableOpacity onPress={onClick} ><Text style={{ color: "white", fontSize: 18, textAlign: "center" }}><Ionicons name="trash-outline" size={22} color="white" /></Text>
 
@@ -204,7 +204,7 @@ const App = () => {
                         <List.Accordion
                             right={props => <AntDesign name="caretdown" size={20} color="rgb(1,194,154)" />}
                             theme={{ colors: { background: 'rgb(50,50,50)' } }}
-                            title={<Text style={{ color: "white", fontSize: 20 }}>{item.listak_nev}</Text>}
+                            title={<Text style={{ color: "white", fontSize: 20,fontWeight:"bold" }}>{item.listak_nev}</Text>}
                             description={<Text style={{ color: "rgb(1,194,154)" }}>{getParsedDate(item.listak_keszdatum)}</Text >}
                             style={{ backgroundColor: "rgb(32,32,32)", height: height * 0.1, borderTopRightRadius: 15, margin: 3 }}
                             expanded={item.kinyitott}

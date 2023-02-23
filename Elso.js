@@ -112,8 +112,8 @@ useFocusEffect(
             backgroundColor: "red",
             borderRadius: 10,
             marginTop: 15,
-            height: height*0.11,
-            width: 70,
+            height: width*0.18,
+            width: width*0.18,
           }}>
           <TouchableOpacity onPress={onClick} >
             <Text style={{ color: "white", fontSize: 18, textAlign: "center" }}>
@@ -145,7 +145,7 @@ useFocusEffect(
               marginTop:15,
 
             }}>
-            <Text style={{ color: "white", fontSize: 20 }}>{item.listak_nev}</Text>
+            <Text style={{ color: "white", fontSize: 20 ,fontWeight:"bold"}}>{item.listak_nev}</Text>
             <Text style={{marginTop:10,fontSize:15,color:"rgb(1,194,154)"}}>{getParsedDate(item.listak_datum)}</Text>
           </View>
         </Swipeable>
