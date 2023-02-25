@@ -98,7 +98,7 @@ export default class Fooldal extends Component {
         var bemenet = {
             bevitel1:y
         }
-        fetch(IP.ipcim + 'felhasznaloossz', {
+        fetch(IP.ipcim + 'felhasznaloosszeskesz', {
             method: "POST",
             body: JSON.stringify(bemenet),
             headers: { 
@@ -109,10 +109,9 @@ export default class Fooldal extends Component {
         ).then((response) => response.json())
             .then((responseJson) => {
                 (
-                   
-                    responseJson.map((item)=>{
-                      this.setState({pontok:item.osszes*5})
-                    })
+                 responseJson.map((item)=>{
+                    this.setState({pontok:item.felhasznalo_keszlistakszama*5})
+                 })
                 );
             })  
     }
@@ -121,7 +120,6 @@ export default class Fooldal extends Component {
     }
     componentDidMount() {
         this.getID()
-
         this.navFocusListener = this.props.navigation.addListener('focus', () => {
             this.getID()
         })
@@ -172,16 +170,16 @@ export default class Fooldal extends Component {
            </View>
        </View>
             : 
-            <View style={{height:height*0.11,position:"absolute",top:0,borderColor:"rgb(18,18,18)",borderWidth:1}}>
+            <View style={{height:height*0.11,position:"absolute",top:0,}}>
             <View style={{ position: "relative", backgroundColor: "rgb(18,18,18)", borderBottomRadius: 5 }}>
                     <View style={{ position: "relative", flexDirection: "row", }}>
                         <View style={{ flex: 10 }}><Text style={{ color: "white", fontSize: 18, margin: 10,fontWeight:"bold" }}>Pontjaid:</Text></View>
-                        <View style={{ flex: 2 }}><Text style={{ color: "white", margin: 10 }}>{this.state.pontok}/100</Text></View>
+                        <View style={{ flex: 3 }}><Text style={{ color: "white", margin: 10 }}>{this.state.pontok}/100</Text></View>
                     </View>
                     <View style={{ margin: 10 }}>
                         <ProgressBar
                             progress={this.state.pontok}
-                            height={15}
+                            height={10}
                             backgroundColor="rgb(1,194,154)"
                             trackColor="#505050" />
                     </View>
@@ -200,23 +198,33 @@ export default class Fooldal extends Component {
             <View style={{height:height*0.1,backgroundColor:"rgb(18,18,18)",marginTop:height*0.020,borderTopEndRadius:20,borderTopLeftRadius:20}}>
                     <Text style={{fontSize:20,alignSelf:"center",fontWeight:"bold",color:"white",position:"absolute",bottom:width*0.05}}>Legutóbbi listáid:</Text>
                 </View>
-            <View style={{height:height*0.8,backgroundColor:"rgb(50,50,50)"}}>
+            <View style={{height:height*0.85,backgroundColor:"rgb(50,50,50)"}}>
            
 
                 <View>
                     {this.state.isLoading==true?<ActivityIndicator size="large" color="rgb(1,194,154)"></ActivityIndicator>
-                    :this.state.adatok.map((item, key)=>
-                        <View key={key} style={{margin: 4, backgroundColor: "rgb(32,32,32)", borderWidth: 1, padding: 9, height:height*0.11, borderRadius:15, marginTop:15}}>
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Seged', { aktid: item.listak_id, akttart: item.listak_tartalom })}>
-                                <View key={key}>
-                                    <Text style={{ color: "white", fontSize: 20 ,fontWeight:"bold"}}>{item.listak_nev}</Text>
-                                    <Text style={{marginTop:10,fontSize:15,color:"rgb(1,194,154)"}}>{this.getParsedDate(item.listak_datum)}</Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                    
-                <Text style={{alignSelf:"center",color:"white",fontWeight:"500",fontSize:16,marginTop:30}}>A listáid végére értél.</Text>
+                    :this.state.adatok.length>0?this.state.adatok.map((item, key)=>
+                    <View key={key} style={{margin: 4, backgroundColor: "rgb(32,32,32)", borderWidth: 1, padding: 9, height:height*0.11, borderRadius:15, marginTop:15}}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Seged', { aktid: item.listak_id, akttart: item.listak_tartalom })}>
+                            <View key={key}>
+                                <Text style={{ color: "white", fontSize: 20 ,fontWeight:"bold"}}>{item.listak_nev}</Text>
+                                <Text style={{marginTop:10,fontSize:15,color:"rgb(1,194,154)"}}>{this.getParsedDate(item.listak_datum)}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    )
+                    :
+                    <View style={{alignSelf:"center",marginTop:30}}>
+                    <Text style={{ color: "white", fontSize: 15, margin: 10 }}>Úgy tűnik jelenleg nem hoztál létre egy listát sem.</Text>
+                        <TouchableOpacity
+                        onPress={() =>this.props.navigation.navigate('Listalétrehozás')}>
+                         <Text style={{ alignSelf: "center", color: "rgb(1,194,154)", fontSize: 20 }}>Listalétrehozása!</Text>
+                        </TouchableOpacity>
+                    </View>
+                    }
+                 {this.state.adatok.length>0?<Text style={{alignSelf:"center",color:"white",fontWeight:"500",fontSize:16,marginTop:30}}>A listáid végére értél.</Text>:
+                 <Text></Text>}   
+                
                 </View>
 
             </View>

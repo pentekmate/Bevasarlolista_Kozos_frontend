@@ -253,6 +253,8 @@ export default class Seged extends Component {
             tombHossz: 0,
             megvasaroltElemek: 0,
             alertMutatasa: false,
+            osszeslista:0,
+            felhasznaloid:0
         };
     }
     storeListaId = async (value) => {
@@ -273,7 +275,59 @@ export default class Seged extends Component {
 
         }
     }
+    getID = async () => {
+        let x=0
+        try {
+            const jsonValue = await AsyncStorage.getItem('@ID')
+            await jsonValue != null ? JSON.parse(jsonValue) : null;
+            x=jsonValue
+            
 
+        } catch (e) {
+
+        }
+        finally{
+            this.getListakszama(x)
+            this.setState({felhasznaloid:x})
+        }
+    }
+    getListakszama(y) {
+        var bemenet = {
+            bevitel1:y
+        }
+        fetch(IP.ipcim + 'felhasznaloosszeskesz', {
+            method: "POST",
+            body: JSON.stringify(bemenet),
+            headers: { 
+            "Content-type": "application/json; charset=UTF-8",
+        }
+        }
+
+        ).then((response) => response.json())
+            .then((responseJson) => {
+                (
+                 responseJson.map((item)=>{
+                    this.setState({osszeslista:item.felhasznalo_keszlistakszama})
+                 })
+                );
+            })  
+    }
+    setOsszeslistakszama(){
+        let noveles=this.state.osszeslista+=1
+        var bemenet = {
+            bevitel1:noveles,
+            bevitel2:this.state.felhasznaloid
+        }
+        fetch(IP.ipcim + 'keszlistafrissites', {
+            method: "POST",
+            body: JSON.stringify(bemenet),
+            headers: { 
+            "Content-type": "application/json; charset=UTF-8",
+        }
+        }
+
+        )
+    }
     felvitel = (ar) => {
         try {
             var adatok = {
@@ -289,6 +343,8 @@ export default class Seged extends Component {
         }
         catch (e) { console.log(e) }
         finally {
+            
+            this.setOsszeslistakszama();
             alert("Sikeres mentés")
             this.setState({ alertMutatasa: false })
         }
@@ -404,6 +460,7 @@ export default class Seged extends Component {
     }
 
     componentDidMount() {
+        this.getID();
         this.funckio();
         fetch(IP.ipcim + 'regilistatorles', { method: 'DELETE' })
 

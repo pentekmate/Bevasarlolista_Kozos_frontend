@@ -80,12 +80,26 @@ export default class Listaad extends Component {
 
     return year + "-" + month + "-" + date + ". napi lista";
   };
+  
+  listaNevEllenorzes(nev)
+  {
+    if(!nev){
+     
+      this.state.listanev=this.getCurrentDate();
+      console.log("a")
+    }
+    else{
+     this.state.listanev=nev
+    }
+  }
 
   submit_atad(input) {
+    this.listaNevEllenorzes(input)
+        
     var tartalom = [];
     this.state.data?.map((item) => tartalom.push(item.megnevezes));
     this.state.segeddata?.map((item) => tartalom.push(item.megnevezes));
-    this.state.listanev = input;
+  
     var adatok = {
       bevitel1: this.state.listanev,
       bevitel2: tartalom,
@@ -110,6 +124,7 @@ export default class Listaad extends Component {
     this.setState({ segeddata: [] })
     this.storeData([])
     this.storeData2([])
+  
   };
 
 

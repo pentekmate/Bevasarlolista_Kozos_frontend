@@ -97,7 +97,7 @@ const App = () => {
         var strSplitDate = String(strDate).split(' ');
         var date = new Date(strSplitDate[0]);
         var dd = date.getDate()+1;
-        var mm = date.getMonth() + 1;
+        var mm = date.getMonth();
 
         var yyyy = date.getFullYear();
         if (dd < 10) {
