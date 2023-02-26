@@ -5,6 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import { ImagesAssets } from "./Kepek/kepek";
+
 
 
 export default class ButtonBasics extends Component {
@@ -574,7 +576,7 @@ export default class ButtonBasics extends Component {
                                     onPress={(this.tarol)}
                                     style={{ backgroundColor: "rgb(1,194,154)", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 2, bottom: -width * 1.57, left: -width * 0.03 }}>
                                     <Image
-                                        source={require('./save-removebg-preview.png')}
+                                        source={ImagesAssets.kep2}
                                         style={{ width: 50, height: 50 }}
                                     />
                                 </TouchableOpacity> : <Text></Text>}
@@ -596,7 +598,7 @@ export default class ButtonBasics extends Component {
 
                                         <View key={key} style={styles.listaelemektext} >
                                             <Image
-                                                source={require('./feher-removebg-preview.png')}
+                                                source={ImagesAssets.kep3}
                                                 style={{ width: 23, height: 23 }}
                                             />
                                             <Text key={key} style={{ fontSize: 20, color: "white", fontWeight: "bold", position: "absolute", paddingLeft: 35 }}>{item}</Text>

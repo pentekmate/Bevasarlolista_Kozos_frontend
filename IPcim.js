@@ -1,3 +1,3 @@
 module.exports = {
-    ipcim: 'http://192.168.1.173:3000/'
+    ipcim: 'http://nodejs.dszcbaross.edu.hu:24003/'
 }

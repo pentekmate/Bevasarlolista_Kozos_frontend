@@ -7,7 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ipcim } from "./IPcim";
 const IP = require('./IPcim')
-
+import { ImagesAssets } from './Kepek/kepek';
 export default class ProfilEdit extends Component {
     pan = new Animated.ValueXY();
     panResponder = PanResponder.create({
@@ -247,7 +247,7 @@ export default class ProfilEdit extends Component {
             <View style={{ flexDirection: 'column', flex: 1,backgroundColor:"rgb(50,50,50)"}}>
                 <View style={{flex:0.5}}>
                         <Image
-                        source={require('./a.png')} 
+                        source={ImagesAssets.kep4} 
                         style={{alignSelf:"center",width:'100%',height:'100%',opacity:0.5}}
                     />
                     <View style={styles.diszdiv}><Text></Text></View>
