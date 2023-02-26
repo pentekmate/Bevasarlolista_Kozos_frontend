@@ -95,6 +95,7 @@ export default class Fooldal extends Component {
 
 }
     getListakszama(y) {
+        this.setState({pontok:0})
         var bemenet = {
             bevitel1:y
         }
@@ -105,15 +106,15 @@ export default class Fooldal extends Component {
             "Content-type": "application/json; charset=UTF-8",
         }
         }
-
         ).then((response) => response.json())
             .then((responseJson) => {
                 (
                  responseJson.map((item)=>{
                     this.setState({pontok:item.felhasznalo_keszlistakszama*5})
+                    alert(this.state.pontok)
                  })
                 );
-            })  
+            })
     }
     listaletrehozas = () => {
         this.props.navigation.navigate('Listalétrehozás');
@@ -122,12 +123,12 @@ export default class Fooldal extends Component {
         this.getID()
         this.navFocusListener = this.props.navigation.addListener('focus', () => {
             this.getID()
+            
         })
     }
     componentWillUnmount(){
        this.navFocusListener();
-       clearTimeout(this.timeoutHandle); 
-       
+       clearTimeout(this.timeoutHandle);
     }
     getParsedDate = (strDate) => {
         var strSplitDate = String(strDate).split(' ');

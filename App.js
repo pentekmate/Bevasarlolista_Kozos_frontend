@@ -99,7 +99,9 @@ function Root({ navigation }) {
     drawerContent={props => <CustomDrawer {...props} />}
     initialRouteName="Toltokep" 
       screenOptions=
-      {{ lazy: false, headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: 'white', drawerStyle: { backgroundColor: 'rgb(32,32,32)' }, drawerActiveBackgroundColor: "rgb(18,18,18)", drawerActiveTintColor: "white", drawerInactiveTintColor: "white", headerTitleAlign: "center" }} >
+      {{lazy: true, headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: 'white', drawerStyle: { backgroundColor: 'rgb(32,32,32)' }, drawerActiveBackgroundColor: "rgb(18,18,18)", drawerActiveTintColor: "white", drawerInactiveTintColor: "white", headerTitleAlign: "center" }} >
+       
+
       <Drawer.Screen name="Home" component={HomeScreen} options={{
         title: "Bevásárlólistám",
         drawerIcon: ({ color }) => (<Ionicons name="home-outline" size={22} color={color} />)
@@ -107,10 +109,6 @@ function Root({ navigation }) {
 
       }} />
 
-
-      <Drawer.Screen name="Bejelentkezes" component={Bejelentkezes} options={{
-        drawerItemStyle: { height: 0 }, headerShown: false,swipeEdgeWidth:0
-      }} />
       <Drawer.Screen name="Toltokep" component={Toltes} options={{
         drawerItemStyle: { height: 0 }, headerShown: false,
       }} />
@@ -149,13 +147,15 @@ const Stack = createNativeStackNavigator()
 const menu = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator >
+      <Stack.Navigator  >
         <Stack.Screen
           name="Root"
           component={Root}
-          options={{ headerShown: false }}
+          options={{ headerShown: false}}
         />
-        <Stack.Screen name="Listalétrehozása" component={Listainputsr} options={{ headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTitleAlign: "center", headerTintColor: "white", headerTitle: "Keresés" }} />
+         <Stack.Screen name="Bejelentkezes" options={{ headerShown:false, swipeEnabled:false,
+        drawerItemStyle: { height: 0 }, headerShown: false,swipeEdgeWidth:0 }} component={Bejelentkezes} />
+        <Stack.Screen name="Listalétrehozása" component={Listainputsr} options={{headerStyle: {backgroundColor: 'rgb(18,18,18)' }, headerTitleAlign: "center", headerTintColor: "white", headerTitle: "Keresés" }} />
         <Stack.Screen name="Regisztráció" options={{ headerStyle: { headerTintColor: "black" } }} component={Regisztracio} />
         <Stack.Screen name="Seged" component={Seged} options={{ headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: "white", title: "Tartalom", headerTitleAlign: "center" }} />
         <Stack.Screen name="Szerkeszt" component={Szerkeszt} options={{ headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: "white", headerTitle: "Lista módosítása" }} />
