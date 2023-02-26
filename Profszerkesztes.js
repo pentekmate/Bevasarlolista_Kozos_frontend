@@ -254,7 +254,7 @@ export default class ProfilEdit extends Component {
                     <View style={styles.kor}>
                         {this.state.profIsLoad? <ActivityIndicator size="large" color="rgb(1,194,154)" />
                         :
-                        <TouchableOpacity  onPress={()=>this.modalmutat()}><Image source={{uri:IP.ipcim+this.state.profkep}} style={{width:width*0.3,height:"100%",alignSelf:'center',borderRadius:40}}/>
+                        <TouchableOpacity  onPress={()=>this.modalmutat()}><Image source={{uri:IP.ipcim+this.state.profkep}} style={{width:width*0.3,height:"100%",alignSelf:'center',borderRadius:width*0.3/2}}/>
                         </TouchableOpacity>}
                      
                        

@@ -116,7 +116,7 @@ const CustomDrawer = (props, { navigation }) => {
                             
                           <Image
                                 source={{uri:IP.ipcim+profkep}}
-                                style={{ height:"100%", width: "100%", }}
+                                style={{ height:"100%", width: "100%",borderRadius:width*0.2/2 }}
                             />
                             </TouchableOpacity>  
                          
