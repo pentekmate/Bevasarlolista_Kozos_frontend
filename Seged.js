@@ -258,6 +258,15 @@ export default class Seged extends Component {
             felhasznaloid: 0
         };
     }
+    storeListaElkezdve = async (value) => {
+        try {
+            
+            const jsonValue = JSON.stringify(value)
+            await AsyncStorage.setItem("listakezdve",jsonValue)
+        } catch (e) {
+            // saving error
+        }
+    }
     storeListaId = async (value) => {
         let a = String(this.props.route.params.aktid)
         try {
@@ -424,16 +433,11 @@ export default class Seged extends Component {
             })
         }
     }
-    vegevane() {
-
-        if (this.state.megvasaroltElemek + 1 == this.state.tombHossz) {
-            this.setState({ alertMutatasa: true })
-
-        }
-        console.log("asddsa", this.state.megvasaroltElemek)
-    }
+    
     handleChange = (id) => {
-        this.vegevane()
+       
+    
+    
         let Noveltszam = this.state.szam
         let Megvasarolva = this.state.megvasaroltElemek
         let novelesErteke = (1 / this.state.tombHossz) * 100
@@ -464,9 +468,7 @@ export default class Seged extends Component {
 
         this.setState({ megvasaroltElemek: Megvasarolva })
         this.setState({ szam: Noveltszam })
-
-
-
+      
     }
     componentDidMount() {
         this.getID();
@@ -576,7 +578,7 @@ export default class Seged extends Component {
                     </View>
                     <DialogInput
                         isDialogVisible={this.state.alertMutatasa}
-                        message={"Fizetett összeg:"}
+                        title={"Fizetett összeg:"}
                         submitInput={(fizetettosszeg) => {
                             this.felvitel(fizetettosszeg), this.props.navigation.navigate('Listák')
                         }}

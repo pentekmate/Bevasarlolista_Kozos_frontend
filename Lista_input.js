@@ -312,10 +312,9 @@ export default class Listaad extends Component {
 
           <View style={{ backgroundColor: "brown" }}>
             <DialogInput
-
-              textInputProps={{ maxLength: 12 }}
+              title={"Nevezed el a listádat!"}
+              textInputProps={{ maxLength: 12,autoCapitalize:true }}
               isDialogVisible={this.state.visible}
-              message={"Nevezed el a listádat!"}
               submitInput={(text) => {
                 this.submit_atad(text);
               }}

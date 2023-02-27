@@ -8,7 +8,7 @@ import { ScrollView } from "react-native-gesture-handler";
 const IP = require('./IPcim')
 import ProgressBar from "react-native-animated-progress";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { LinearGradient } from 'expo-linear-gradient';
 export default class Fooldal extends Component {
     pan = new Animated.ValueXY();
     panResponder = PanResponder.create({
@@ -205,14 +205,30 @@ export default class Fooldal extends Component {
                         <View>
                             {this.state.isLoading == true ? <ActivityIndicator size="large" color="rgb(1,194,154)"></ActivityIndicator>
                                 : this.state.adatok.length > 0 ? this.state.adatok.map((item, key) =>
-                                    <View key={key} style={{ margin: 4, backgroundColor: "rgb(32,32,32)", borderWidth: 1, padding: 9, height: height * 0.11, borderRadius: 15, marginTop: 15 }}>
+                                        <LinearGradient
+                                        key={key}
+                                        
+                                        start={{ x: 0.3, y: 0.2 }}
+                                        end={{ x: 1, y: 1 }}
+                                        //colors={['transparent',"#000000","rgb(1,194,154)"]}
+                                        colors={['transparent',"rgb(18,18,18)", "rgb(1,194,154)",]}
+                                        style={{
+                                        padding: 1,
+                                        marginTop: 15,
+                                        height: height * 0.115,
+                                        justifyContent: "center",
+                                        borderRadius: 15,
+                                        }}>
+                                 <View key={key} style={{ margin: 1, backgroundColor: "rgb(32,32,32)",  padding: 10, height: height * 0.11, borderRadius: 15,  }}>
                                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Seged', { aktid: item.listak_id, akttart: item.listak_tartalom })}>
                                             <View key={key}>
                                                 <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>{item.listak_nev}</Text>
                                                 <Text style={{ marginTop: 10, fontSize: 15, color: "rgb(1,194,154)" }}>{this.getParsedDate(item.listak_datum)}</Text>
                                             </View>
+                                            
                                         </TouchableOpacity>
                                     </View>
+                                    </LinearGradient>
                                 )
                                     :
                                     <View style={{ alignSelf: "center", marginTop: 30 }}>

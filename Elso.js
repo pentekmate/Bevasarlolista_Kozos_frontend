@@ -32,8 +32,9 @@ const App = () => {
 
     }
   }
-  const adatLekeres = (y) => {
 
+  const adatLekeres = (y) => {
+    
     try {
       var bemenet = {
         bevitel1: y
@@ -62,6 +63,7 @@ const App = () => {
   useFocusEffect(
     React.useCallback(() => {
       getID()
+     
 
     }, [])
   );
@@ -137,9 +139,9 @@ const App = () => {
           ref={(ref) => (row[index] = ref)}
           rightOpenValue={-100}>
           <LinearGradient
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={["rgb(32,32,32)", "rgb(1,194,154)",]}
+            start={{ x: 0.3, y: 0.2 }}
+            end={{ x: 1, y: 1 }}
+            colors={["rgb(18,18,18)", "rgb(1,194,154)",'transparent']}
             style={{
               padding: 1,
               marginTop: 15,
@@ -157,16 +159,19 @@ const App = () => {
                 height: height * 0.13,
                 borderRadius: 15
               }}>
-
-              <View style={{ flex: 9 }}>
+              
+              <View style={{ flex: 8 }}>
                 <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>{item.listak_nev}</Text>
                 <Text style={{ marginTop: 10, fontSize: 15, color: "rgb(1,194,154)" }}>{getParsedDate(item.listak_datum)}</Text>
               </View>
               <View style={{ flex: 1, justifyContent: "center", alignItems: "flex-end" }}>
                 <Ionicons name="caret-back" size={40} color="white" />
               </View>
+              <TouchableOpacity key={item.listak_id} onPress={()=>alert(key)}><View style={{position:"absolute",top:0,right:0}}><Text>{item.listak_id}</Text></View></TouchableOpacity>
+             
             </View>
           </LinearGradient>
+          
         </Swipeable>
       </TouchableOpacity >
 
