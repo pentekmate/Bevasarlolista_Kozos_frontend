@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, FlatList, Dimensions,ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, FlatList, Dimensions, ActivityIndicator } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,68 +8,68 @@ import { ipcim } from "./IPcim";
 const IP = require('./IPcim')
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
-
+import { LinearGradient } from 'expo-linear-gradient';
 const App = () => {
   const [listData, setListData] = useState(data);
   const [data, setData] = useState([]);
   const navigation = useNavigation();
-  const [isLoading,setisLoading]=useState(true)
+  const [isLoading, setisLoading] = useState(true)
 
   const getID = async () => {
-    let x=0
+    let x = 0
     try {
-        const jsonValue = await AsyncStorage.getItem('@ID')
-        await jsonValue != null ? JSON.parse(jsonValue) : null;
-        x=jsonValue
-       
-        
+      const jsonValue = await AsyncStorage.getItem('@ID')
+      await jsonValue != null ? JSON.parse(jsonValue) : null;
+      x = jsonValue
+
+
     } catch (e) {
 
     }
-    finally{
-       
-       adatLekeres(x)
-      
+    finally {
+
+      adatLekeres(x)
+
     }
-}
-const adatLekeres=(y)=> {
-    
-        try {
-            var bemenet = {
-                bevitel1: y
-            }
-            //szűrt adatok lefetchelése backendről
-            fetch(IP.ipcim + 'felhasznalolistainincskesz', {
-                method: "POST",
-                body: JSON.stringify(bemenet),
-                headers: { "Content-type": "application/json; charset=UTF-8" }
-            }
-            ).then((response) => response.json())
-                .then((responseJson) => {
-                    responseJson.reverse()
-                    setData(responseJson)
-                    //console.log(responseJson)
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        } catch (e) { console.log(e) }
-        finally {
-           setisLoading(false)
-        }
-    
-}
-useFocusEffect(
+  }
+  const adatLekeres = (y) => {
+
+    try {
+      var bemenet = {
+        bevitel1: y
+      }
+      //szűrt adatok lefetchelése backendről
+      fetch(IP.ipcim + 'felhasznalolistainincskesz', {
+        method: "POST",
+        body: JSON.stringify(bemenet),
+        headers: { "Content-type": "application/json; charset=UTF-8" }
+      }
+      ).then((response) => response.json())
+        .then((responseJson) => {
+          responseJson.reverse()
+          setData(responseJson)
+          //console.log(responseJson)
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } catch (e) { console.log(e) }
+    finally {
+      setisLoading(false)
+    }
+
+  }
+  useFocusEffect(
     React.useCallback(() => {
-        getID()
-    
+      getID()
+
     }, [])
   );
 
 
   useEffect(() => {
     getID();
-    
+
   }, []);
 
 
@@ -114,12 +114,12 @@ useFocusEffect(
             backgroundColor: "red",
             borderRadius: 10,
             marginTop: 15,
-            height: width*0.18,
-            width: width*0.18,
+            height: width * 0.18,
+            width: width * 0.18,
           }}>
           <TouchableOpacity onPress={onClick} >
             <Text style={{ color: "white", fontSize: 18, textAlign: "center" }}>
-                <Ionicons name="trash-outline" size={22} color="white" /></Text>
+              <Ionicons name="trash-outline" size={22} color="white" /></Text>
 
           </TouchableOpacity>
         </View>
@@ -127,7 +127,7 @@ useFocusEffect(
     };
 
     return (
-    
+
       <TouchableOpacity onPress={() => navigation.navigate('Seged', { aktid: item.listak_id, akttart: item.listak_tartalom })}>
         <Swipeable
           renderRightActions={(progress, dragX) =>
@@ -136,25 +136,42 @@ useFocusEffect(
           onSwipeableOpen={() => closeRow(index)}
           ref={(ref) => (row[index] = ref)}
           rightOpenValue={-100}>
-          <View
+          <LinearGradient
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            colors={["rgb(32,32,32)", "rgb(1,194,154)",]}
             style={{
-              margin: 4,
-              backgroundColor: "rgb(32,32,32)",
-              borderWidth: 1,
-              padding: 9,
-              height:height*0.11,
-              borderRadius:15,
-              marginTop:15,
+              padding: 1,
+              marginTop: 15,
+              height: height * 0.135,
+              justifyContent: "center",
+              borderRadius: 15,
+            }} >
+            <View
+              style={{
+                flexDirection: "row",
+                flex: 1,
+                margin: 1,
+                backgroundColor: "rgb(32,32,32)",
+                padding: 10,
+                height: height * 0.13,
+                borderRadius: 15
+              }}>
 
-            }}>
-            <Text style={{ color: "white", fontSize: 20 ,fontWeight:"bold"}}>{item.listak_nev}</Text>
-            <Text style={{marginTop:10,fontSize:15,color:"rgb(1,194,154)"}}>{getParsedDate(item.listak_datum)}</Text>
-          </View>
+              <View style={{ flex: 9 }}>
+                <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>{item.listak_nev}</Text>
+                <Text style={{ marginTop: 10, fontSize: 15, color: "rgb(1,194,154)" }}>{getParsedDate(item.listak_datum)}</Text>
+              </View>
+              <View style={{ flex: 1, justifyContent: "center", alignItems: "flex-end" }}>
+                <Ionicons name="caret-back" size={40} color="white" />
+              </View>
+            </View>
+          </LinearGradient>
         </Swipeable>
-      </TouchableOpacity>
+      </TouchableOpacity >
 
 
-      
+
     );
   };
 
@@ -185,26 +202,27 @@ useFocusEffect(
 
   return (
     <View style={styles.container}>
-    {isLoading==true?<ActivityIndicator size="large" color="rgb(1,194,154)" />:data.length>0? <FlatList
-        data={data}
-        renderItem={(v) =>
-          renderItem(v, () => {
-            deleteItem(v.item.listak_id);
-          })
-        }
-        keyExtractor={(item) => item.listak_id}></FlatList>
-    :<View style={{flex:1,alignItems:"center",justifyContent:"center"}}>
-    <Text style={{ color: "white", fontSize: 15, margin: 10 }}>Úgy tűnik jelenleg nem hoztál létre egy listát sem.</Text>
-        <TouchableOpacity
-        onPress={() =>navigation.navigate('Listalétrehozás')}>
-         <Text style={{ alignSelf: "center", color: "rgb(1,194,154)", fontSize: 20 }}>Listalétrehozása!</Text>
-        </TouchableOpacity>
-    </View> 
-   
-    }
-    
-    
-     
+      {isLoading == true ? <ActivityIndicator size="large" color="rgb(1,194,154)" /> : data.length > 0 ?
+        <FlatList
+          data={data}
+          renderItem={(v) =>
+            renderItem(v, () => {
+              deleteItem(v.item.listak_id);
+            })
+          }
+          keyExtractor={(item) => item.listak_id}></FlatList>
+        : <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+          <Text style={{ color: "white", fontSize: 15, margin: 10 }}>Úgy tűnik jelenleg nem hoztál létre egy listát sem.</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Listalétrehozás')}>
+            <Text style={{ alignSelf: "center", color: "rgb(1,194,154)", fontSize: 20 }}>Listalétrehozása!</Text>
+          </TouchableOpacity>
+        </View>
+
+      }
+
+
+
     </View>
   );
 };

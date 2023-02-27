@@ -24,7 +24,7 @@ const App = () => {
     const [tartalom, setTartalom] = useState([]);
     const [azonosito, setAzonosito] = useState(0)
     const [isLoading, setisLoading] = useState(true)
-    const [listanevek,setListanevek]=useState([])
+    const [listanevek, setListanevek] = useState([])
 
 
 
@@ -73,7 +73,7 @@ const App = () => {
     );
 
     useEffect(() => {
-        let tomb=[];
+        let tomb = [];
         getID()
         let tartalomSplitelve = "";
         for (let i = 0; i < adatok.length; i++) {
@@ -86,8 +86,8 @@ const App = () => {
         }
         setListanevek(tomb)
         console.log(listanevek)
-       
-      
+
+
     }, []);
 
     let row = [];
@@ -96,7 +96,7 @@ const App = () => {
     const getParsedDate = (strDate) => {
         var strSplitDate = String(strDate).split(' ');
         var date = new Date(strSplitDate[0]);
-        var dd = date.getDate()+1;
+        var dd = date.getDate() + 1;
         var mm = date.getMonth();
 
         var yyyy = date.getFullYear();
@@ -181,8 +181,8 @@ const App = () => {
                         backgroundColor: "red",
                         borderRadius: 10,
                         marginTop: 9,
-                        height: width*0.17,
-                        width: width*0.17,
+                        height: width * 0.17,
+                        width: width * 0.17,
                     }}>
                     <TouchableOpacity onPress={onClick} ><Text style={{ color: "white", fontSize: 18, textAlign: "center" }}><Ionicons name="trash-outline" size={22} color="white" /></Text>
 
@@ -205,14 +205,14 @@ const App = () => {
                         <List.Accordion
                             right={props => <AntDesign name="caretdown" size={20} color="rgb(1,194,154)" />}
                             theme={{ colors: { background: 'rgb(50,50,50)' } }}
-                            title={<Text style={{ color: "white", fontSize: 20,fontWeight:"bold" }}>{item.listak_nev}</Text>}
+                            title={<Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>{item.listak_nev}</Text>}
                             description={<Text style={{ color: "rgb(1,194,154)" }}>{getParsedDate(item.listak_keszdatum)}</Text >}
                             style={{ backgroundColor: "rgb(32,32,32)", height: height * 0.1, borderTopRightRadius: 15, margin: 3 }}
                             expanded={item.kinyitott}
                             onPress={() => { _handlePress(item.listak_id); getlistakid(item.listak_id) }}>
-                           {tartalom.map((item,key)=>
-                            <List.Item key={key} title={item.nev} titleStyle={{ color: "white" }}></List.Item>
-                           )}
+                            {tartalom.map((item, key) =>
+                                <List.Item key={key} title={item.nev} titleStyle={{ color: "white" }}></List.Item>
+                            )}
                             <View>
                                 <Text style={{ fontSize: 20, textAlign: "right", marginRight: 10, color: "white" }}>{item.listak_ar} Ft</Text>
                             </View>
@@ -258,8 +258,8 @@ const App = () => {
     };
     const DefButtonTxt1 = () => {
         return (
-            <View style={{ flexDirection: 'row',justifyContent:"center" }}>
-                 <Feather style={{ paddingTop: 5, }} name="search" size={20} color="white" />
+            <View style={{ flexDirection: 'row', justifyContent: "center" }}>
+                <Feather style={{ paddingTop: 5, }} name="search" size={20} color="white" />
             </View>
         );
     };
@@ -278,15 +278,14 @@ const App = () => {
             rendezett("listakdatumszerintnov")
         }
     }
-    const textinput =(x)=>{
+    const textinput = (x) => {
         let tomb = adatok
         for (let i = 0; i < adatok.length; i++) {
-           if(adatok[i].listak_nev==x)
-           {
-            tomb=adatok[i]
-            setAdatok(tomb)
-           }
-            
+            if (adatok[i].listak_nev == x) {
+                tomb = adatok[i]
+                setAdatok(tomb)
+            }
+
         }
     }
 
@@ -294,50 +293,50 @@ const App = () => {
         <View style={styles.container}>
             {isLoading == true ? <ActivityIndicator size="large" color="rgb(1,194,154)"></ActivityIndicator> :
                 adatok.length > 0 ?
-                    <View style={{ flex: 1}}>
-                        <View style={{backgroundColor:"rgb(18,18,18)",top:0,height:height*0.05,justifyContent:"center",flexDirection:"row" }}>
-                            <View style={{flex:1,justifyContent:"center"}}>
-                            <SelectDropdown
-                                dropdownIconPosition={"left"}
-                                defaultButtonText={"Rendezes"}
-                                renderDropdownIcon={DefButtonTxt}
-                                rowStyle={{backgroundColor: "rgb(50,50,50)", borderRadius: 10, borderBottomColor: "black", borderWidth: 2 }}
-                                rowTextStyle={{ color: "white" }}
-                                dropdownStyle={{ backgroundColor: 'transparent', width: 200 }}
-                                buttonStyle={{ borderRadius: 20, backgroundColor: "rgb(50,50,50)", width: 150, height: 35, borderColor: "white", borderWidth: 2 }}
-                                data={szavak}
-                                onSelect={(selectedItem, index) => {
-                                    setListaszam(index)
-                                    console.log(selectedItem, index)
-                                    rendezes(index)
-                                }}
-                                buttonTextAfterSelection={(selectedItem, index) => {
-                                    return <View style={{ flexDirection: 'row' }}>
-                                        <Entypo name="select-arrows" size={22} color={"white"} /><Text style={{ color: "white" }}>Rendezés</Text>
-                                    </View>
-                                }}
-                                rowTextForSelection={(item, index) => {
-                                    return item
-                                }}
-                            />
+                    <View style={{ flex: 1 }}>
+                        <View style={{ backgroundColor: "rgb(18,18,18)", top: 0, height: height * 0.05, justifyContent: "center", flexDirection: "row" }}>
+                            <View style={{ flex: 1, justifyContent: "center" }}>
+                                <SelectDropdown
+                                    dropdownIconPosition={"left"}
+                                    defaultButtonText={"Rendezes"}
+                                    renderDropdownIcon={DefButtonTxt}
+                                    rowStyle={{ backgroundColor: "rgb(50,50,50)", borderRadius: 10, borderBottomColor: "black", borderWidth: 2 }}
+                                    rowTextStyle={{ color: "white" }}
+                                    dropdownStyle={{ backgroundColor: 'transparent', width: 200 }}
+                                    buttonStyle={{ borderRadius: 20, backgroundColor: "rgb(50,50,50)", width: 150, height: 35, borderColor: "white", borderWidth: 2 }}
+                                    data={szavak}
+                                    onSelect={(selectedItem, index) => {
+                                        setListaszam(index)
+                                        console.log(selectedItem, index)
+                                        rendezes(index)
+                                    }}
+                                    buttonTextAfterSelection={(selectedItem, index) => {
+                                        return <View style={{ flexDirection: 'row' }}>
+                                            <Entypo name="select-arrows" size={22} color={"white"} /><Text style={{ color: "white" }}>Rendezés</Text>
+                                        </View>
+                                    }}
+                                    rowTextForSelection={(item, index) => {
+                                        return item
+                                    }}
+                                />
                             </View>
-                            <View style={{flex:1,justifyContent:"center"}}>
-                             <SelectDropdown
-                                dropdownIconPosition={"left"}
-                                defaultButtonText={"kereses"}
-                                searchPlaceHolder="Keresés"
-                                renderDropdownIcon={DefButtonTxt1}
-                                buttonStyle={{ borderRadius: 20, backgroundColor: "rgb(50,50,50)", width: "100%", height: 35, borderColor: "white", borderWidth: 2 }}
-                                data={listanevek}
-                                search
-                                onChangeSearchInputText={(text)=>textinput(text)}
-                                buttonTextAfterSelection={(selectedItem, index) => {
-                                    return <View style={{ flexDirection: 'row' }}>
-                                        <Entypo name="select-arrows" size={22} color={"white"} /><Text style={{ color: "white" }}>Rendezés</Text>
-                                    </View>
-                                }}
-                              
-                            />
+                            <View style={{ flex: 1, justifyContent: "center" }}>
+                                <SelectDropdown
+                                    dropdownIconPosition={"left"}
+                                    defaultButtonText={"kereses"}
+                                    searchPlaceHolder="Keresés"
+                                    renderDropdownIcon={DefButtonTxt1}
+                                    buttonStyle={{ borderRadius: 20, backgroundColor: "rgb(50,50,50)", width: "100%", height: 35, borderColor: "white", borderWidth: 2 }}
+                                    data={listanevek}
+                                    search
+                                    onChangeSearchInputText={(text) => textinput(text)}
+                                    buttonTextAfterSelection={(selectedItem, index) => {
+                                        return <View style={{ flexDirection: 'row' }}>
+                                            <Entypo name="select-arrows" size={22} color={"white"} /><Text style={{ color: "white" }}>Rendezés</Text>
+                                        </View>
+                                    }}
+
+                                />
                             </View>
                         </View>
 

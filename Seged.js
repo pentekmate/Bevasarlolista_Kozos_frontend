@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, Pressable, StyleSheet, Dimensions, Animated, PanResponder } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
 import ProgressBar from "react-native-animated-progress";
 import DialogInput from "react-native-dialog-input";
@@ -253,8 +254,8 @@ export default class Seged extends Component {
             tombHossz: 0,
             megvasaroltElemek: 0,
             alertMutatasa: false,
-            osszeslista:0,
-            felhasznaloid:0
+            osszeslista: 0,
+            felhasznaloid: 0
         };
     }
     storeListaId = async (value) => {
@@ -276,54 +277,54 @@ export default class Seged extends Component {
         }
     }
     getID = async () => {
-        let x=0
+        let x = 0
         try {
             const jsonValue = await AsyncStorage.getItem('@ID')
             await jsonValue != null ? JSON.parse(jsonValue) : null;
-            x=jsonValue
-            
+            x = jsonValue
+
 
         } catch (e) {
 
         }
-        finally{
+        finally {
             this.getListakszama(x)
-            this.setState({felhasznaloid:x})
+            this.setState({ felhasznaloid: x })
         }
     }
     getListakszama(y) {
         var bemenet = {
-            bevitel1:y
+            bevitel1: y
         }
         fetch(IP.ipcim + 'felhasznaloosszeskesz', {
             method: "POST",
             body: JSON.stringify(bemenet),
-            headers: { 
-            "Content-type": "application/json; charset=UTF-8",
-        }
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            }
         }
 
         ).then((response) => response.json())
             .then((responseJson) => {
                 (
-                 responseJson.map((item)=>{
-                    this.setState({osszeslista:item.felhasznalo_keszlistakszama})
-                 })
+                    responseJson.map((item) => {
+                        this.setState({ osszeslista: item.felhasznalo_keszlistakszama })
+                    })
                 );
-            })  
+            })
     }
-    setOsszeslistakszama(){
-        let noveles=this.state.osszeslista+=1
+    setOsszeslistakszama() {
+        let noveles = this.state.osszeslista += 1
         var bemenet = {
-            bevitel1:noveles,
-            bevitel2:this.state.felhasznaloid
+            bevitel1: noveles,
+            bevitel2: this.state.felhasznaloid
         }
         fetch(IP.ipcim + 'keszlistafrissites', {
             method: "POST",
             body: JSON.stringify(bemenet),
-            headers: { 
-            "Content-type": "application/json; charset=UTF-8",
-        }
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            }
         }
 
         )
@@ -343,14 +344,13 @@ export default class Seged extends Component {
         }
         catch (e) { console.log(e) }
         finally {
-            
+
             this.setOsszeslistakszama();
             alert("Sikeres mentés")
             this.setState({ alertMutatasa: false })
         }
 
     }
-
     funckio = () => {
         let uj = [];
         this.state.zsolt = this.props.route.params.akttart;
@@ -424,8 +424,16 @@ export default class Seged extends Component {
             })
         }
     }
+    vegevane() {
 
+        if (this.state.megvasaroltElemek + 1 == this.state.tombHossz) {
+            this.setState({ alertMutatasa: true })
+
+        }
+        console.log("asddsa", this.state.megvasaroltElemek)
+    }
     handleChange = (id) => {
+        this.vegevane()
         let Noveltszam = this.state.szam
         let Megvasarolva = this.state.megvasaroltElemek
         let novelesErteke = (1 / this.state.tombHossz) * 100
@@ -457,8 +465,9 @@ export default class Seged extends Component {
         this.setState({ megvasaroltElemek: Megvasarolva })
         this.setState({ szam: Noveltszam })
 
-    }
 
+
+    }
     componentDidMount() {
         this.getID();
         this.funckio();
@@ -501,14 +510,11 @@ export default class Seged extends Component {
         //this.storeListaId([])
     }
 
-
-
     render() {
         return (
             <ScrollView
                 stickyHeaderIndices={[0]}
                 showsVerticalScrollIndicator={false}
-
                 style={{ backgroundColor: "rgb(50,50,50)" }}>
                 <View style={{ position: "relative", backgroundColor: "rgb(18,18,18)", borderBottomRadius: 5 }}>
                     <View style={{ position: "relative", flexDirection: "row", }}>
@@ -525,24 +531,24 @@ export default class Seged extends Component {
                 </View>
 
                 <View style={{ flex: 1, height: height * 1.1, flexDirection: "column" }}>
-
-
-
                     <View style={{ flex: 8 }}>
-
                         {this.state.tartalom_tomb.map((item, key) =>
                             <View key={key}>
                                 <View style={styles.elemektrue}>
-                                    {item.nev == "Péksütemény" || item.nev == "Zöldségek" || item.nev == "Tejtermék" || item.nev == "Egyéb" ?
-                                        <Text style={styles.kategorianev}> {item.nev}</Text> :
-
-                                        <Pressable onPress={() => { this.handleChange(item.id); }}>
-                                            {item.isChecked ? <AntDesign name="check" size={27} color="rgb(1,194,154)" /> :
-                                                <MaterialIcons name="radio-button-unchecked" size={27} color="rgb(1,194,154)" />}
-
-                                        </Pressable>
+                                    {item.nev == "Péksütemény" ? <Text style={styles.kategorianev}>
+                                        <MaterialCommunityIcons name="food-croissant" color="white" size={27} /> {item.nev}</Text>
+                                        : item.nev == "Zöldségek" ? <Text style={styles.kategorianev}>
+                                            <MaterialCommunityIcons name="food-apple-outline" color="white" size={27} /> Zöldség, Gyümölcs</Text>
+                                            : item.nev == "Tejtermék" ? <Text style={styles.kategorianev}>
+                                                <MaterialCommunityIcons name="cow" color="white" size={27} /> {item.nev}</Text>
+                                                : item.nev == "Egyéb" ? <Text style={styles.kategorianev}>
+                                                    <FontAwesome name="shopping-basket" color="white" size={20} /> {item.nev}</Text>
+                                                    : <Pressable onPress={() => { this.handleChange(item.id); }}>
+                                                        {item.isChecked ? <AntDesign name="check" size={27} color="rgb(1,194,154)" /> :
+                                                            <MaterialIcons name="radio-button-unchecked" size={27} color="rgb(1,194,154)" />}
+                                                    </Pressable>
                                     }
-                                    {item.nev == "Péksütemény" || item.nev == "Zöldségek" || item.nev == "Tejtermék" || item.nev == "Egyéb" ?
+                                    {item.nev == "Péksütemény" || item.nev == "Zöldség" || item.nev == "Tejtermék" || item.nev == "Egyéb" ?
                                         <Text style={{ marginBottom: 15 }}></Text> : <Text style={item.isChecked ? styles.betutrue : styles.betufalse}> {item.nev}</Text>
                                     }
 

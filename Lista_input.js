@@ -80,26 +80,26 @@ export default class Listaad extends Component {
 
     return year + "-" + month + "-" + date + ". napi lista";
   };
-  
-  listaNevEllenorzes(nev)
-  {
-    if(!nev){
-     
-      this.state.listanev=this.getCurrentDate();
+
+  listaNevEllenorzes(nev) {
+
+    if (!nev) {
+
+      this.state.listanev = this.getCurrentDate();
       console.log("a")
     }
-    else{
-     this.state.listanev=nev
+    else {
+      this.state.listanev = nev
     }
   }
 
   submit_atad(input) {
     this.listaNevEllenorzes(input)
-        
+
     var tartalom = [];
     this.state.data?.map((item) => tartalom.push(item.megnevezes));
     this.state.segeddata?.map((item) => tartalom.push(item.megnevezes));
-  
+
     var adatok = {
       bevitel1: this.state.listanev,
       bevitel2: tartalom,
@@ -124,7 +124,7 @@ export default class Listaad extends Component {
     this.setState({ segeddata: [] })
     this.storeData([])
     this.storeData2([])
-  
+
   };
 
 
@@ -186,7 +186,7 @@ export default class Listaad extends Component {
       this.getID().then((vissza_adatok2) => {
         this.setState({ id: vissza_adatok2 })
       });
-     
+
       this.getListainputsr().then((vissza_adatok2) => {
         this.setState({ segeddata: vissza_adatok2 })
       });
@@ -300,34 +300,57 @@ export default class Listaad extends Component {
     return (
 
       <View style={styles.container}>
-      <ScrollView style={{ flexDirection: "column", backgroundColor: "rgb(50,50,50)" }}>
-        <View style={[styles.keresesdiv, { flex: 1, flexDirection: "row", backgroundColor: "rgb(18,18,18)" }]}>
-          <Feather style={{ paddingTop: 5, }} name="search" size={28} color="white" />
-          <TouchableOpacity
-            onPress={this.Ugras}
-            style={styles.textInputStyle} >
-            <Text style={{ fontStyle: "italic", color: "white" }}>Termék keresése..</Text>
-          </TouchableOpacity>
-        </View>
+        <ScrollView style={{ flexDirection: "column", backgroundColor: "rgb(50,50,50)" }}>
+          <View style={[styles.keresesdiv, { flex: 1, flexDirection: "row", backgroundColor: "rgb(18,18,18)" }]}>
+            <Feather style={{ paddingTop: 5, }} name="search" size={28} color="white" />
+            <TouchableOpacity
+              onPress={this.Ugras}
+              style={styles.textInputStyle} >
+              <Text style={{ fontStyle: "italic", color: "white" }}>Termék keresése..</Text>
+            </TouchableOpacity>
+          </View>
 
-        <View style={{ backgroundColor: "brown" }}>
-          <DialogInput
-            isDialogVisible={this.state.visible}
-            message={"Nevezed el a listádat!"}
-            submitInput={(text) => {
-              this.submit_atad(text);
-            }}
-            closeDialog={() => this.setState({ visible: false })}
-          ></DialogInput>
-        </View>
-        {/*----FELSŐ CHECKBOX ELEMEI----*/}
-        <View style={{ flex: 11, backgroundColor: "rgb(50,50,50)", marginTop: 20 }}>
+          <View style={{ backgroundColor: "brown" }}>
+            <DialogInput
 
-          {this.state.termekektomb.map((item, key) =>
-            <View key={key} style={{ flexDirection: "row", flex: 1 }}>
-              <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)", justifyContent: "center", alignContent: "center" }}>
-                {item.id <= 2 ? <View
-                  style={styles.felsocheck}
+              textInputProps={{ maxLength: 12 }}
+              isDialogVisible={this.state.visible}
+              message={"Nevezed el a listádat!"}
+              submitInput={(text) => {
+                this.submit_atad(text);
+              }}
+
+              closeDialog={() => this.setState({ visible: false })}
+            ></DialogInput>
+          </View>
+          {/*----FELSŐ CHECKBOX ELEMEI----*/}
+          <View style={{ flex: 11, backgroundColor: "rgb(50,50,50)", marginTop: 20 }}>
+
+            {this.state.termekektomb.map((item, key) =>
+              <View key={key} style={{ flexDirection: "row", flex: 1 }}>
+                <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)", justifyContent: "center", alignContent: "center" }}>
+                  {item.id <= 2 ? <View
+                    style={styles.felsocheck}
+                  >
+                    <View style={styles.icon}>
+                      <Pressable onPress={() => this.handleChange(item.id, item.megnevezes)}>
+                        <MaterialCommunityIcons
+                          name={
+                            item.isChecked
+                              ? "check"
+                              : "plus"
+                          }
+                          size={24}
+                          color="rgb(1,194,154)"
+                        />
+                      </Pressable>
+                    </View>
+                    <Text style={{ color: "white", fontSize: 15 }}>{item.megnevezes}</Text>
+                  </View>
+                    : <Text></Text>}
+                </View>
+                <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)" }}>{item.id > 2 ? <View
+                  style={[styles.felsocheck, { top: '-71%' }]}
                 >
                   <View style={styles.icon}>
                     <Pressable onPress={() => this.handleChange(item.id, item.megnevezes)}>
@@ -344,128 +367,108 @@ export default class Listaad extends Component {
                   </View>
                   <Text style={{ color: "white", fontSize: 15 }}>{item.megnevezes}</Text>
                 </View>
-                  : <Text></Text>}
+                  : <Text></Text>}</View>
+
               </View>
-              <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)" }}>{item.id > 2 ? <View
-                style={[styles.felsocheck, { top: '-71%' }]}
-              >
-                <View style={styles.icon}>
-                  <Pressable onPress={() => this.handleChange(item.id, item.megnevezes)}>
-                    <MaterialCommunityIcons
-                      name={
-                        item.isChecked
-                          ? "check"
-                          : "plus"
-                      }
-                      size={24}
-                      color="rgb(1,194,154)"
-                    />
-                  </Pressable>
-                </View>
-                <Text style={{ color: "white", fontSize: 15 }}>{item.megnevezes}</Text>
-              </View>
-                : <Text></Text>}</View>
 
-            </View>
+            )}
 
-          )}
-
-        </View>
-
-
-        {/*----lISTA ELEMEINEK MUTATÁSA----*/}
-        <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)", paddingTop: 50 }}>
-
-
-          {this.state.data?.map((item, key) => <View key={key} style={styles.listatartalom}>
-
-            <View style={{ flexDirection: "row", flex: 1 }}>
-              <View style={{ flex: 1, justifyContent: "center" }}>
-                <Entypo style={{ marginLeft: 10 }} name="shop" size={25} color="white" />
-              </View>
-              <View style={{ flex: 13, justifyContent: "center" }}>
-                <Text style={{ color: "white", marginLeft: 10 }}>{item.megnevezes}</Text>
-              </View>
-              <View style={styles.torlesgomb}>
-                <TouchableOpacity onPress={() => this.ListaelemTorles(item.megnevezes)}>
-                  <Ionicons
-                    name="trash-outline"
-                    size={24}
-                    color="white"
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>)}
-          {this.state.segeddata?.length > 0 ?
-            this.state.segeddata?.map((item, key) =>
-              <View key={key} style={styles.listatartalom}>
-                <View style={{ flexDirection: "row", flex: 1 }}>
-                  <View style={{ flex: 1, justifyContent: "center" }}>
-                    <Entypo style={{ marginLeft: 10 }} name="shop" size={25} color="white" />
-                  </View>
-                  <View style={{ flex: 13, justifyContent: "center" }}>
-                    <Text style={{ color: "white", marginLeft: 10 }}>{item.megnevezes}</Text>
-                  </View>
-                  <View style={styles.torlesgomb}>
-                    <TouchableOpacity onPress={() => this.ListaelemTorles(item.megnevezes)}>
-                      <Ionicons
-                        name="trash-outline"
-                        size={24}
-                        color="white"
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>) :
-            <Text></Text>}
-
-
-        </View>
-
-        <Modal
-          style={{ backgroundColor: "red" }}
-          animationType="fade"
-          transparent={true}
-          visible={this.state.modal}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-            this.setState({ modalVisible: !modalVisible });
-          }}>
-          <View style={styles.modalView}>
-            <View style={{ flex: 4.5 }}><Text style={{ color: "white",marginLeft:10 }}>A listád mentésre került!</Text>
-            </View>
-            <View style={{flex:0.5,alignItems:"flex-end",}}>
-            <Pressable onPress={()=>this.props.navigation.navigate('Listák')}><Feather name="arrow-right" size={24} color="rgb(1,194,154)" /></Pressable>
-            </View>
-            <View style={{ flex: 0.5 }}>
-              <Pressable style={{ alignSelf: "flex-end" }} onPress={() => this.setState({ modal: false })}><MaterialIcons name="close" size={24} color="white" />
-              </Pressable></View>
-            
           </View>
-        </Modal>
 
-      </ScrollView>
+
+          {/*----lISTA ELEMEINEK MUTATÁSA----*/}
+          <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)", paddingTop: 50 }}>
+
+
+            {this.state.data?.map((item, key) => <View key={key} style={styles.listatartalom}>
+
+              <View style={{ flexDirection: "row", flex: 1 }}>
+                <View style={{ flex: 1, justifyContent: "center" }}>
+                  <Entypo style={{ marginLeft: 10 }} name="shop" size={25} color="white" />
+                </View>
+                <View style={{ flex: 13, justifyContent: "center" }}>
+                  <Text style={{ color: "white", marginLeft: 10 }}>{item.megnevezes}</Text>
+                </View>
+                <View style={styles.torlesgomb}>
+                  <TouchableOpacity onPress={() => this.ListaelemTorles(item.megnevezes)}>
+                    <Ionicons
+                      name="trash-outline"
+                      size={24}
+                      color="white"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>)}
+            {this.state.segeddata?.length > 0 ?
+              this.state.segeddata?.map((item, key) =>
+                <View key={key} style={styles.listatartalom}>
+                  <View style={{ flexDirection: "row", flex: 1 }}>
+                    <View style={{ flex: 1, justifyContent: "center" }}>
+                      <Entypo style={{ marginLeft: 10 }} name="shop" size={25} color="white" />
+                    </View>
+                    <View style={{ flex: 13, justifyContent: "center" }}>
+                      <Text style={{ color: "white", marginLeft: 10 }}>{item.megnevezes}</Text>
+                    </View>
+                    <View style={styles.torlesgomb}>
+                      <TouchableOpacity onPress={() => this.ListaelemTorles(item.megnevezes)}>
+                        <Ionicons
+                          name="trash-outline"
+                          size={24}
+                          color="white"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>) :
+              <Text></Text>}
+
+
+          </View>
+
+          <Modal
+            style={{ backgroundColor: "red" }}
+            animationType="fade"
+            transparent={true}
+            visible={this.state.modal}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+              this.setState({ modalVisible: !modalVisible });
+            }}>
+            <View style={styles.modalView}>
+              <View style={{ flex: 4.5 }}><Text style={{ color: "white", marginLeft: 10 }}>A listád mentésre került!</Text>
+              </View>
+              <View style={{ flex: 0.5, alignItems: "flex-end", }}>
+                <Pressable onPress={() => this.props.navigation.navigate('Listák')}><Feather name="arrow-right" size={24} color="rgb(1,194,154)" /></Pressable>
+              </View>
+              <View style={{ flex: 0.5 }}>
+                <Pressable style={{ alignSelf: "flex-end" }} onPress={() => this.setState({ modal: false })}><MaterialIcons name="close" size={24} color="white" />
+                </Pressable></View>
+
+            </View>
+          </Modal>
+
+        </ScrollView>
         <Animated.View
-        style={{
-          position:"absolute",
-          bottom:0,
-          right: 0,
-          margin: 25,
-          zIndex: 2,
-          transform: [{ translateX: this.pan.x }, { translateY: this.pan.y }],
-      }}
-        {...this.panResponder.panHandlers}>
-        <View style={{ flex: 1, backgroundColor: "696969" }}>
-          {this.state.data?.length > 0 || this.state.segeddata?.length > 0 ?
-            <TouchableOpacity
-              onPress={(this.adatatad)}
-              style={{ backgroundColor: "rgb(1,194,154)", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 1, }}>
-              <Feather name="check" size={50} color="black" />
-            </TouchableOpacity> : <Text></Text>}
+          style={{
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+            margin: 25,
+            zIndex: 2,
+            transform: [{ translateX: this.pan.x }, { translateY: this.pan.y }],
+          }}
+          {...this.panResponder.panHandlers}>
+          <View style={{ flex: 1, backgroundColor: "696969" }}>
+            {this.state.data?.length > 0 || this.state.segeddata?.length > 0 ?
+              <TouchableOpacity
+                onPress={(this.adatatad)}
+                style={{ backgroundColor: "rgb(1,194,154)", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 1, }}>
+                <Feather name="check" size={50} color="black" />
+              </TouchableOpacity> : <Text></Text>}
 
-        </View>
-      </Animated.View>
+          </View>
+        </Animated.View>
       </View>
     );
   }
@@ -478,7 +481,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "rgb(50,50,50)"
 
-},
+  },
   listatartalom: {
     backgroundColor: "rgb(18,18,18)",
     height: height * 0.06,
@@ -549,7 +552,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     flexDirection: "row",
-    alignContent:"space-between",
+    alignContent: "space-between",
     bottom: 50,
     position: "absolute",
     backgroundColor: '#181818',
