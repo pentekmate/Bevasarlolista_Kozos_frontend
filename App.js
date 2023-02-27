@@ -95,17 +95,18 @@ function ProfSzerkesztes({ navigation }) {
 function Root({ navigation }) {
 
   return (
-    <Drawer.Navigator 
-    drawerContent={props => <CustomDrawer {...props} />}
-    initialRouteName="Toltokep" 
+    <Drawer.Navigator
+      drawerContent={props => <CustomDrawer {...props} />}
+      initialRouteName="Toltokep"
       screenOptions=
-      {{lazy: true, headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: 'white', drawerStyle: { backgroundColor: 'rgb(32,32,32)' }, drawerActiveBackgroundColor: "rgb(18,18,18)", drawerActiveTintColor: "white", drawerInactiveTintColor: "white", headerTitleAlign: "center" }} >
-       
+      {{ lazy: true, headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: 'white', drawerStyle: { backgroundColor: 'rgb(32,32,32)' }, drawerActiveBackgroundColor: "rgb(18,18,18)", drawerActiveTintColor: "white", drawerInactiveTintColor: "white", headerTitleAlign: "center" }} >
+
 
       <Drawer.Screen name="Home" component={HomeScreen} options={{
         title: "Bevásárlólistám",
+        headerTintColor: "white",
         drawerIcon: ({ color }) => (<Ionicons name="home-outline" size={22} color={color} />)
-        
+
 
       }} />
 
@@ -113,13 +114,13 @@ function Root({ navigation }) {
         drawerItemStyle: { height: 0 }, headerShown: false,
       }} />
 
-      <Drawer.Screen name="Meglévő listák" component={Listafel} 
-      options={{ drawerIcon: ({ color }) => (<Ionicons name="file-tray-stacked-outline" size={22} color={color} />) }}
+      <Drawer.Screen name="Meglévő listák" component={Listafel}
+        options={{ drawerIcon: ({ color }) => (<Ionicons name="file-tray-stacked-outline" size={22} color={color} />) }}
       />
 
       <Drawer.Screen name="Listalétrehozás" component={Elso_lap} options={{
         title: 'Listalétrehozása',
-        drawerIcon: ({ color }) => (<Ionicons name="create-outline" size={22} color={color}/>)
+        drawerIcon: ({ color }) => (<Ionicons name="create-outline" size={22} color={color} />)
       }} />
       <Drawer.Screen name="Listák" component={Masodik_lap} options={{
         title: 'Listák',
@@ -151,15 +152,17 @@ const menu = () => {
         <Stack.Screen
           name="Root"
           component={Root}
-          options={{ headerShown: false}}
+          options={{ headerShown: false }}
         />
-         <Stack.Screen name="Bejelentkezes" options={{ headerShown:false, swipeEnabled:false,
-        drawerItemStyle: { height: 0 }, headerShown: false,swipeEdgeWidth:0 }} component={Bejelentkezes} />
-        <Stack.Screen name="Listalétrehozása" component={Listainputsr} options={{headerStyle: {backgroundColor: 'rgb(18,18,18)' }, headerTitleAlign: "center", headerTintColor: "white", headerTitle: "Keresés" }} />
+        <Stack.Screen name="Bejelentkezes" options={{
+          headerShown: false, swipeEnabled: false,
+          drawerItemStyle: { height: 0 }, headerShown: false, swipeEdgeWidth: 0
+        }} component={Bejelentkezes} />
+        <Stack.Screen name="Listalétrehozása" component={Listainputsr} options={{ headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTitleAlign: "center", headerTintColor: "white", headerTitle: "Keresés" }} />
         <Stack.Screen name="Regisztráció" options={{ headerStyle: { headerTintColor: "black" } }} component={Regisztracio} />
         <Stack.Screen name="Seged" component={Seged} options={{ headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: "white", title: "Tartalom", headerTitleAlign: "center" }} />
         <Stack.Screen name="Szerkeszt" component={Szerkeszt} options={{ headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: "white", headerTitle: "Lista módosítása" }} />
-        <Stack.Screen name="Profilom szerkesztése" component={ProfilEdit} options={{ headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: "white", headerTitle: "Profilom szerkesztése",headerTitleAlign: "center" }} />
+        <Stack.Screen name="Profilom szerkesztése" component={ProfilEdit} options={{ headerStyle: { backgroundColor: 'rgb(18,18,18)' }, headerTintColor: "white", headerTitle: "Profilom szerkesztése", headerTitleAlign: "center" }} />
       </Stack.Navigator>
     </NavigationContainer>
 
