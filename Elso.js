@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, FlatList, Dimensions, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, FlatList, Dimensions, ActivityIndicator} from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,12 +9,13 @@ const IP = require('./IPcim')
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { AntDesign } from '@expo/vector-icons'; 
 const App = () => {
   const [listData, setListData] = useState(data);
   const [data, setData] = useState([]);
   const navigation = useNavigation();
-  const [isLoading, setisLoading] = useState(true)
-
+  const [isLoading, setisLoading] = useState(true);
+  const [forgat,setForgat]=useState();
   const getID = async () => {
     let x = 0
     try {
@@ -67,6 +68,7 @@ const App = () => {
 
     }, [])
   );
+  
 
 
   useEffect(() => {
@@ -74,10 +76,10 @@ const App = () => {
 
   }, []);
 
-
+  let x=[];
   let row = [];
   let prevOpenedRow;
-
+  let opened;
   const getParsedDate = (strDate) => {
     var strSplitDate = String(strDate).split(' ');
     var date = new Date(strSplitDate[0]);
@@ -96,14 +98,23 @@ const App = () => {
   }
 
 
+
   const renderItem = ({ item, index }, onClick) => {
-    //
+    
+   
+    const forgatas=(index)=>{
+      closeRow(index)
+      setForgat(index)
+    }
     const closeRow = (index) => {
-      //console.log('closerow');
+  
       if (prevOpenedRow && prevOpenedRow !== row[index]) {
         prevOpenedRow.close();
+       
       }
       prevOpenedRow = row[index];
+      
+      
     };
 
     const renderRightActions = (progress, dragX, onClick) => {
@@ -132,16 +143,19 @@ const App = () => {
 
       <TouchableOpacity onPress={() => navigation.navigate('Seged', { aktid: item.listak_id, akttart: item.listak_tartalom })}>
         <Swipeable
+          onSwipeableWillOpen={()=>forgatas(index)}
+          onSwipeableWillClose={()=>setForgat()}
           renderRightActions={(progress, dragX) =>
             renderRightActions(progress, dragX, onClick)
           }
+         
           onSwipeableOpen={() => closeRow(index)}
           ref={(ref) => (row[index] = ref)}
           rightOpenValue={-100}>
           <LinearGradient
             start={{ x: 0.3, y: 0.2 }}
             end={{ x: 1, y: 1 }}
-            colors={["rgb(18,18,18)", "rgb(1,194,154)",'transparent']}
+            colors={forgat==index?["white","red",'transparent']:["rgb(18,18,18)","white", "rgb(1,194,154)",'transparent']}
             style={{
               padding: 1,
               marginTop: 15,
@@ -164,10 +178,12 @@ const App = () => {
                 <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>{item.listak_nev}</Text>
                 <Text style={{ marginTop: 10, fontSize: 15, color: "rgb(1,194,154)" }}>{getParsedDate(item.listak_datum)}</Text>
               </View>
+             
               <View style={{ flex: 1, justifyContent: "center", alignItems: "flex-end" }}>
-                <Ionicons name="caret-back" size={40} color="white" />
+             
+              {forgat==index? <TouchableOpacity onPress={()=>row[index].close()}><AntDesign name="caretright" size={26} color="white" /></TouchableOpacity>: <TouchableOpacity onPress={()=>row[index].openRight()}><AntDesign name="caretleft" size={26} color="white" /></TouchableOpacity>}
               </View>
-              <TouchableOpacity key={item.listak_id} onPress={()=>alert(key)}><View style={{position:"absolute",top:0,right:0}}><Text>{item.listak_id}</Text></View></TouchableOpacity>
+              
              
             </View>
           </LinearGradient>

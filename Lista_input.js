@@ -56,6 +56,8 @@ export default class Listaad extends Component {
         { id: 3, megnevezes: "Kávé", isChecked: false },
         { id: 4, megnevezes: "Cola", isChecked: false },
         { id: 5, megnevezes: "Wc-papír", isChecked: false },
+        { id: 6, megnevezes: "Túró", isChecked: false },
+        
       ],
       visible: false,
       setVisible: false,
@@ -325,10 +327,11 @@ export default class Listaad extends Component {
           {/*----FELSŐ CHECKBOX ELEMEI----*/}
           <View style={{ flex: 11, backgroundColor: "rgb(50,50,50)", marginTop: 20 }}>
 
-            {this.state.termekektomb.map((item, key) =>
+          {this.state.termekektomb.map((item, key) =>
               <View key={key} style={{ flexDirection: "row", flex: 1 }}>
-                <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)", justifyContent: "center", alignContent: "center" }}>
-                  {item.id <= 2 ? <View
+                {item.id%2==0?
+                <View style={{width:"50%",right:0,position:"absolute"}}>
+                <View
                     style={styles.felsocheck}
                   >
                     <View style={styles.icon}>
@@ -346,34 +349,36 @@ export default class Listaad extends Component {
                     </View>
                     <Text style={{ color: "white", fontSize: 15 }}>{item.megnevezes}</Text>
                   </View>
-                    : <Text></Text>}
                 </View>
-                <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)" }}>{item.id > 2 ? <View
-                  style={[styles.felsocheck, { top: '-71%' }]}
-                >
-                  <View style={styles.icon}>
-                    <Pressable onPress={() => this.handleChange(item.id, item.megnevezes)}>
-                      <MaterialCommunityIcons
-                        name={
-                          item.isChecked
-                            ? "check"
-                            : "plus"
-                        }
-                        size={24}
-                        color="rgb(1,194,154)"
-                      />
-                    </Pressable>
+              : <View style={{width:"50%"}}>
+                
+                <View
+                    style={styles.felsocheck}
+                  >
+                    <View style={styles.icon}>
+                      <Pressable onPress={() => this.handleChange(item.id, item.megnevezes)}>
+                        <MaterialCommunityIcons
+                          name={
+                            item.isChecked
+                              ? "check"
+                              : "plus"
+                          }
+                          size={24}
+                          color="rgb(1,194,154)"
+                        />
+                      </Pressable>
+                    </View>
+                    <Text style={{ color: "white", fontSize: 15 }}>{item.megnevezes}</Text>
                   </View>
-                  <Text style={{ color: "white", fontSize: 15 }}>{item.megnevezes}</Text>
-                </View>
-                  : <Text></Text>}</View>
+                
+                
+                </View>}
+               
 
               </View>
 
             )}
-
-          </View>
-
+           </View>
 
           {/*----lISTA ELEMEINEK MUTATÁSA----*/}
           <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)", paddingTop: 50 }}>

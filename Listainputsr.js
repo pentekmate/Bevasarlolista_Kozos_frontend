@@ -575,10 +575,7 @@ export default class ButtonBasics extends Component {
                                 <TouchableOpacity
                                     onPress={(this.tarol)}
                                     style={{ backgroundColor: "rgb(1,194,154)", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 2, bottom: -width * 1.57, left: -width * 0.03 }}>
-                                    <Image
-                                        source={ImagesAssets.kep5}
-                                        style={{ width: 50, height: 50 }}
-                                    />
+                                   <Feather name="save" size={40} color="white" />
                                 </TouchableOpacity> : <Text></Text>}
 
                         </View>

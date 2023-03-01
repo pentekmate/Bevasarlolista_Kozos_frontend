@@ -579,6 +579,7 @@ export default class Seged extends Component {
                     <DialogInput
                         isDialogVisible={this.state.alertMutatasa}
                         title={"Fizetett összeg:"}
+                        textInputProps={{keyboardType:'numeric'}}
                         submitInput={(fizetettosszeg) => {
                             this.felvitel(fizetettosszeg), this.props.navigation.navigate('Listák')
                         }}
@@ -598,6 +599,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: "center",
         marginTop: 20,
+       
     },
     kategorianev: {
         alignSelf: "center",
@@ -606,7 +608,8 @@ const styles = StyleSheet.create({
         width: "100%",
         textAlignVertical: "center",
         backgroundColor: "rgb(18,18,18)",
-        borderRadius: 5
+        borderRadius: 5,
+        justifyContent:"center"
     },
     betutrue: {
         color: "grey",

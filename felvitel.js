@@ -124,7 +124,7 @@ const App = () => {
             //console.log(JSON.stringify(tombmentese))
 
         }
-
+        
     }
 
     const getlistakid = (id) => {
@@ -203,13 +203,13 @@ const App = () => {
                     rightOpenValue={-100}>
                     <List.Section  >
                         <List.Accordion
-                            right={props => <AntDesign name="caretdown" size={20} color="rgb(1,194,154)" />}
+                            right={props =>item.kinyitott==true?<AntDesign name="caretup" size={20} color="rgb(1,194,154)" />:<AntDesign name="caretdown" size={20} color="rgb(1,194,154)" /> }
                             theme={{ colors: { background: 'rgb(50,50,50)' } }}
                             title={<Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>{item.listak_nev}</Text>}
                             description={<Text style={{ color: "rgb(1,194,154)" }}>{getParsedDate(item.listak_keszdatum)}</Text >}
                             style={{ backgroundColor: "rgb(32,32,32)", height: height * 0.1, borderTopRightRadius: 15, margin: 3 }}
                             expanded={item.kinyitott}
-                            onPress={() => { _handlePress(item.listak_id); getlistakid(item.listak_id) }}>
+                            onPress={() => { _handlePress(item.listak_id); getlistakid(item.listak_id); }}>
                             {tartalom.map((item, key) =>
                                 <List.Item key={key} title={item.nev} titleStyle={{ color: "white" }}></List.Item>
                             )}
