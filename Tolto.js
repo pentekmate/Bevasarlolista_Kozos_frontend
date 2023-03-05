@@ -56,7 +56,7 @@ export default class Toltokep extends Component {
             
             <Image
                 source={ImagesAssets.kep1} 
-                style={{alignSelf:"center",width:'70%',height:'50%'}}
+                style={{alignSelf:"center",width:'80%',height:'50%'}}
             />
             
           </View>

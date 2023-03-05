@@ -88,7 +88,7 @@ export default class Listaad extends Component {
     if (!nev) {
 
       this.state.listanev = this.getCurrentDate();
-      console.log("a")
+      //console.log("a")
     }
     else {
       this.state.listanev = nev
@@ -225,14 +225,14 @@ export default class Listaad extends Component {
       }
 
     });
-    console.log(this.state.data)
+   // console.log(this.state.data)
     this.state.termekektomb.map((termek) => {
       if (nev == termek.megnevezes && termek.isChecked == true) {
         let index = this.state.data?.findIndex((item) => item.megnevezes == nev)
         if (index !== -1) {
           tomb?.splice(index, 1);
           this.setState({ data: tomb });
-          console.log(this.state.data)
+          //console.log(this.state.data)
         }
       }
     })
@@ -240,7 +240,7 @@ export default class Listaad extends Component {
 
   };
   ListaelemTorles = (termeknev) => {
-    console.log(this.state.data)
+   // console.log(this.state.data)
     let tomb = this.state.data
     let tomb1 = this.state.termekektomb
     let tomb2 = this.state.segeddata
@@ -287,7 +287,7 @@ export default class Listaad extends Component {
 
   }
   Ugras = () => {
-    this.storeData2(this.state.data).then(console.log("siker")).then(this.props.navigation.navigate('Listalétrehozása'))
+    this.storeData2(this.state.data).then(this.props.navigation.navigate('Listalétrehozása'))
   }
   modalMutat = () => {
     this.setState({ modal: true })
@@ -331,11 +331,12 @@ export default class Listaad extends Component {
               <View key={key} style={{ flexDirection: "row", flex: 1 }}>
                 {item.id%2==0?
                 <View style={{width:"50%",right:0,position:"absolute"}}>
+                    <Pressable onPress={() => this.handleChange(item.id, item.megnevezes)}>
                 <View
                     style={styles.felsocheck}
                   >
                     <View style={styles.icon}>
-                      <Pressable onPress={() => this.handleChange(item.id, item.megnevezes)}>
+                    
                         <MaterialCommunityIcons
                           name={
                             item.isChecked
@@ -345,18 +346,19 @@ export default class Listaad extends Component {
                           size={24}
                           color="rgb(1,194,154)"
                         />
-                      </Pressable>
+                   
                     </View>
                     <Text style={{ color: "white", fontSize: 15 }}>{item.megnevezes}</Text>
                   </View>
+                  </Pressable>
                 </View>
               : <View style={{width:"50%"}}>
-                
+                  <Pressable onPress={() => this.handleChange(item.id, item.megnevezes)}>
                 <View
                     style={styles.felsocheck}
                   >
                     <View style={styles.icon}>
-                      <Pressable onPress={() => this.handleChange(item.id, item.megnevezes)}>
+                    
                         <MaterialCommunityIcons
                           name={
                             item.isChecked
@@ -366,12 +368,12 @@ export default class Listaad extends Component {
                           size={24}
                           color="rgb(1,194,154)"
                         />
-                      </Pressable>
+                     
                     </View>
                     <Text style={{ color: "white", fontSize: 15 }}>{item.megnevezes}</Text>
                   </View>
                 
-                
+                  </Pressable>
                 </View>}
                
 
