@@ -95,7 +95,7 @@ export default class Fooldal extends Component {
 
     }
     getListakszama(y) {
-        this.setState({ pontok: 0 })
+       this.setState({ pontok: 0 })
         var bemenet = {
             bevitel1: y
         }
